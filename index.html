@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Test Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Frontend Testing Platform</h1>
+            <p class="subtitle">Auto-evaluated HTML/CSS/JS Tests</p>
+        </header>
+
+        <div class="test-section">
+            <div class="test-info">
+                <h2>Current Test: <span id="test-title">Build a Button</span></h2>
+                <div class="test-description" id="test-description">
+                    <p>Create a button with the following requirements:</p>
+                    <ul>
+                        <li>Button text should be "Click Me"</li>
+                        <li>Button should have a class "primary-btn"</li>
+                        <li>Background color should be blue (#007bff)</li>
+                        <li>Text color should be white</li>
+                        <li>On click, it should display an alert saying "Hello!"</li>
+                    </ul>
+                </div>
+                <div class="timer">
+                    <span>Time: </span>
+                    <span id="timer">00:00</span>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-panel">
+                    <div class="editor-header">
+                        <span class="editor-label">HTML</span>
+                        <button class="clear-btn" onclick="clearEditor('html')">Clear</button>
+                    </div>
+                    <textarea id="html-editor" class="code-editor" placeholder="Write your HTML code here..."></textarea>
+                </div>
+
+                <div class="editor-panel">
+                    <div class="editor-header">
+                        <span class="editor-label">CSS</span>
+                        <button class="clear-btn" onclick="clearEditor('css')">Clear</button>
+                    </div>
+                    <textarea id="css-editor" class="code-editor" placeholder="Write your CSS code here..."></textarea>
+                </div>
+
+                <div class="editor-panel">
+                    <div class="editor-header">
+                        <span class="editor-label">JavaScript</span>
+                        <button class="clear-btn" onclick="clearEditor('js')">Clear</button>
+                    </div>
+                    <textarea id="js-editor" class="code-editor" placeholder="Write your JavaScript code here..."></textarea>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <button class="btn btn-primary" onclick="runCode()">Run Code</button>
+                <button class="btn btn-success" onclick="submitTest()">Submit & Evaluate</button>
+                <button class="btn btn-secondary" onclick="resetTest()">Reset</button>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-header">
+                    <h3>Preview</h3>
+                    <span class="preview-status" id="preview-status">Ready</span>
+                </div>
+                <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+            </div>
+
+            <div class="results-section" id="results-section" style="display: none;">
+                <h3>Test Results</h3>
+                <div class="score-display">
+                    <span class="score-label">Score: </span>
+                    <span class="score-value" id="score-value">0/100</span>
+                </div>
+                <div class="test-cases" id="test-cases"></div>
+            </div>
+        </div>
+
+        <div class="test-selector">
+            <h3>Available Tests</h3>
+            <div class="test-list">
+                <button class="test-item active" onclick="loadTest(0)">Test 1: Button Component</button>
+                <button class="test-item" onclick="loadTest(1)">Test 2: Responsive Card</button>
+                <button class="test-item" onclick="loadTest(2)">Test 3: Form Validation</button>
+                <button class="test-item" onclick="loadTest(3)">Test 4: Navigation Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

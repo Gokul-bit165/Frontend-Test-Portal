@@ -1,0 +1,266 @@
+[
+  {
+    "id": "10456551-6d65-4c18-bdb7-da5abd8fcc4a",
+    "challengeId": "ch-001",
+    "candidateName": "gokul",
+    "code": {
+      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you want.\r\n  </p>\r\n</div>\r\n",
+      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh; /* Full viewport height */\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n  background-color: #f0f0f0;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": "// No JS required for static card, but you could add interactions here if needed\r\nconsole.log(\"Card component loaded!\");\r\n"
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T03:54:27.436Z",
+    "evaluatedAt": "2025-11-08T04:28:54.762Z",
+    "result": {
+      "submissionId": "10456551-6d65-4c18-bdb7-da5abd8fcc4a",
+      "timestamp": "2025-11-08T04:28:49.560Z",
+      "structureScore": 82,
+      "visualScore": 100,
+      "finalScore": 93,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 82,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > p[1]: <p>"
+          ],
+          "tagMismatches": [
+            "root > div[0] > h1[0]: Expected <h1>, got <h2>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > div[0]: class=\"card\""
+          ],
+          "classMismatches": [],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (2)",
+            "root > div[0] > h1[0]: Correct number of children (0)",
+            "root > div[0] > p[1]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 100,
+        "passed": true,
+        "diffPixels": 4072,
+        "totalPixels": 921600,
+        "diffPercentage": "0.44",
+        "screenshots": {
+          "candidate": "/screenshots/10456551-6d65-4c18-bdb7-da5abd8fcc4a-candidate.png",
+          "expected": "/screenshots/10456551-6d65-4c18-bdb7-da5abd8fcc4a-expected.png",
+          "diff": "/screenshots/10456551-6d65-4c18-bdb7-da5abd8fcc4a-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 93%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (82%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (100%). Your styling matches the expected design."
+        }
+      ]
+    }
+  },
+  {
+    "id": "84162348-0bc5-4bbf-a213-4290566af5ea",
+    "challengeId": "ch-001",
+    "candidateName": "gokul",
+    "code": {
+      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you want.\r\n  </p>\r\n</div>\r\n",
+      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh; /* Full viewport height */\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n  background-color: #f0f0f0;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": "// No JS required for static card, but you could add interactions here if needed\r\nconsole.log(\"Card component loaded!\");\r\n"
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T03:54:36.693Z",
+    "evaluatedAt": "2025-11-08T03:57:49.465Z",
+    "result": {
+      "submissionId": "84162348-0bc5-4bbf-a213-4290566af5ea",
+      "timestamp": "2025-11-08T03:57:44.524Z",
+      "structureScore": 82,
+      "visualScore": 100,
+      "finalScore": 93,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 82,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > p[1]: <p>"
+          ],
+          "tagMismatches": [
+            "root > div[0] > h1[0]: Expected <h1>, got <h2>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > div[0]: class=\"card\""
+          ],
+          "classMismatches": [],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (2)",
+            "root > div[0] > h1[0]: Correct number of children (0)",
+            "root > div[0] > p[1]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 100,
+        "passed": true,
+        "diffPixels": 4072,
+        "totalPixels": 921600,
+        "diffPercentage": "0.44",
+        "screenshots": {
+          "candidate": "/screenshots/84162348-0bc5-4bbf-a213-4290566af5ea-candidate.png",
+          "expected": "/screenshots/84162348-0bc5-4bbf-a213-4290566af5ea-expected.png",
+          "diff": "/screenshots/84162348-0bc5-4bbf-a213-4290566af5ea-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 93%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (82%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (100%). Your styling matches the expected design."
+        }
+      ]
+    }
+  },
+  {
+    "id": "f436ce45-a963-456e-a199-d06440eb8a96",
+    "challengeId": "ch-002",
+    "candidateName": "GOKUL",
+    "code": {
+      "html": "<button id=\"click-btn\">Click Me</button>\r\n",
+      "css": "#click-btn {\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  padding: 12px 24px;\r\n  border: none;\r\n  border-radius: 6px;\r\n  cursor: pointer;\r\n  font-size: 16px;\r\n  transition: background-color 0.3s;\r\n}\r\n\r\n#click-btn:hover {\r\n  background-color: #2563eb; /* darker blue on hover */\r\n}\r\n",
+      "js": "const button = document.getElementById('click-btn');\r\n\r\nbutton.addEventListener('click', () => {\r\n  alert('Button clicked!');\r\n});\r\n"
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T04:02:30.567Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "472af053-2dce-43d8-a82f-a287af3821a0",
+    "challengeId": "ch-002",
+    "candidateName": "GOKUL",
+    "code": {
+      "html": "<button id=\"click-btn\">Click Me</button>\r\n",
+      "css": "#click-btn {\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  padding: 12px 24px;\r\n  border: none;\r\n  border-radius: 6px;\r\n  cursor: pointer;\r\n  font-size: 16px;\r\n  transition: background-color 0.3s;\r\n}\r\n\r\n#click-btn:hover {\r\n  background-color: #2563eb; /* darker blue on hover */\r\n}\r\n",
+      "js": "const button = document.getElementById('click-btn');\r\n\r\nbutton.addEventListener('click', () => {\r\n  alert('Button clicked!');\r\n});\r\n"
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T04:04:02.952Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "8acb86f6-d208-4d4a-b5b8-14070273d3ff",
+    "challengeId": "ch-004",
+    "candidateName": "gokul2",
+    "code": {
+      "html": "<form id=\"email-form\">\r\n  <label for=\"email\">Email:</label>\r\n  <input type=\"email\" id=\"email\" placeholder=\"Enter your email\">\r\n  <button type=\"submit\">Submit</button>\r\n  <div id=\"message\"></div>\r\n</form>\r\n",
+      "css": "body {\r\n  font-family: Arial, sans-serif;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  background-color: #f0f0f0;\r\n  margin: 0;\r\n}\r\n\r\nform {\r\n  background-color: white;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  width: 300px;\r\n  text-align: center;\r\n}\r\n\r\ninput[type=\"email\"] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  margin: 15px 0;\r\n  border-radius: 5px;\r\n  border: 1px solid #ccc;\r\n}\r\n\r\nbutton {\r\n  padding: 10px 20px;\r\n  border-radius: 5px;\r\n  border: none;\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background-color: #2563eb;\r\n}\r\n\r\n#message {\r\n  margin-top: 15px;\r\n  font-weight: bold;\r\n}\r\n",
+      "js": "const form = document.getElementById('email-form');\r\nconst emailInput = document.getElementById('email');\r\nconst messageDiv = document.getElementById('message');\r\n\r\nform.addEventListener('submit', function(e) {\r\n  e.preventDefault(); // Prevent default form submission\r\n  \r\n  const email = emailInput.value.trim();\r\n  \r\n  if (email === '') {\r\n    messageDiv.textContent = 'Please enter an email';\r\n    messageDiv.style.color = 'red';\r\n  } else {\r\n    messageDiv.textContent = 'Form submitted!';\r\n    messageDiv.style.color = 'green';\r\n  }\r\n});\r\n"
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T04:06:41.146Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "a3a37ca2-3d46-4502-b5c5-b1b2754ecd88",
+    "challengeId": "ch-004",
+    "candidateName": "gokul2",
+    "code": {
+      "html": "<form id=\"email-form\">\r\n  <label for=\"email\">Email:</label>\r\n  <input type=\"email\" id=\"email\" placeholder=\"Enter your email\">\r\n  <button type=\"submit\">Submit</button>\r\n  <div id=\"message\"></div>\r\n</form>\r\n",
+      "css": "body {\r\n  font-family: Arial, sans-serif;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  background-color: #f0f0f0;\r\n  margin: 0;\r\n}\r\n\r\nform {\r\n  background-color: white;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  width: 300px;\r\n  text-align: center;\r\n}\r\n\r\ninput[type=\"email\"] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  margin: 15px 0;\r\n  border-radius: 5px;\r\n  border: 1px solid #ccc;\r\n}\r\n\r\nbutton {\r\n  padding: 10px 20px;\r\n  border-radius: 5px;\r\n  border: none;\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background-color: #2563eb;\r\n}\r\n\r\n#message {\r\n  margin-top: 15px;\r\n  font-weight: bold;\r\n}\r\n",
+      "js": "const form = document.getElementById('email-form');\r\nconst emailInput = document.getElementById('email');\r\nconst messageDiv = document.getElementById('message');\r\n\r\nform.addEventListener('submit', function(e) {\r\n  e.preventDefault(); // Prevent default form submission\r\n  \r\n  const email = emailInput.value.trim();\r\n  \r\n  if (email === '') {\r\n    messageDiv.textContent = 'Please enter an email';\r\n    messageDiv.style.color = 'red';\r\n  } else {\r\n    messageDiv.textContent = 'Form submitted!';\r\n    messageDiv.style.color = 'green';\r\n  }\r\n});\r\n"
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T04:08:20.759Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "2614c9bf-1db5-4351-b5c3-b9ce2ae9b3f3",
+    "challengeId": "ch-004",
+    "candidateName": "gokul3",
+    "code": {
+      "html": "<form id=\"email-form\">\r\n  <label for=\"email\">Email:</label>\r\n  <input type=\"email\" id=\"email\" placeholder=\"Enter your email\">\r\n  <button type=\"submit\">Submit</button>\r\n  <div id=\"message\"></div>\r\n</form>\r\n",
+      "css": "body {\r\n  font-family: Arial, sans-serif;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  background-color: #f0f0f0;\r\n  margin: 0;\r\n}\r\n\r\nform {\r\n  background-color: white;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  width: 300px;\r\n  text-align: center;\r\n}\r\n\r\ninput[type=\"email\"] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  margin: 15px 0;\r\n  border-radius: 5px;\r\n  border: 1px solid #ccc;\r\n}\r\n\r\nbutton {\r\n  padding: 10px 20px;\r\n  border-radius: 5px;\r\n  border: none;\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background-color: #2563eb;\r\n}\r\n\r\n#message {\r\n  margin-top: 15px;\r\n  font-weight: bold;\r\n}\r\n",
+      "js": "const form = document.getElementById('email-form');\r\nconst emailInput = document.getElementById('email');\r\nconst messageDiv = document.getElementById('message');\r\n\r\nform.addEventListener('submit', function(e) {\r\n  e.preventDefault(); // Prevent default form submission\r\n  \r\n  const email = emailInput.value.trim();\r\n  \r\n  if (email === '') {\r\n    messageDiv.textContent = 'Please enter an email';\r\n    messageDiv.style.color = 'red';\r\n  } else {\r\n    messageDiv.textContent = 'Form submitted!';\r\n    messageDiv.style.color = 'green';\r\n  }\r\n});\r\n"
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T04:13:44.567Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "48a47f71-a7e5-47e1-b61b-52ad667b8b47",
+    "challengeId": "ch-001",
+    "candidateName": "gokul4",
+    "code": {
+      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you like.\r\n  </p>\r\n</div>\r\n",
+      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  margin: 0;\r\n  background-color: #f0f0f0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": "// Optional: add interactions if needed\r\nconsole.log(\"Card loaded successfully\");\r\n"
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T04:23:55.617Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "fd1d96dd-8bf4-4760-8ef3-0d3314d4d807",
+    "challengeId": "ch-001",
+    "candidateName": "gokul5",
+    "code": {
+      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you like.\r\n  </p>\r\n</div>\r\n",
+      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  margin: 0;\r\n  background-color: #f0f0f0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": "// Optional: add interactions if needed\r\nconsole.log(\"Card loaded successfully\");\r\n"
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T04:30:49.049Z",
+    "evaluatedAt": null,
+    "result": null
+  }
+]

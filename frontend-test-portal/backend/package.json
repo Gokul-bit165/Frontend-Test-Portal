@@ -1,0 +1,26 @@
+{
+  "name": "frontend-test-portal-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Frontend Test Portal with hybrid evaluation",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": ["evaluation", "frontend", "testing", "dom", "pixel-matching"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "jsdom": "^23.0.0",
+    "puppeteer": "^21.5.0",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "body-parser": "^1.20.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
