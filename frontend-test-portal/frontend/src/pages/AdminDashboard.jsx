@@ -80,6 +80,12 @@ export default function AdminDashboard() {
               📚 Manage Courses
             </button>
             <button
+              onClick={() => navigate('/admin/users')}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+            >
+              👥 Manage Users
+            </button>
+            <button
               onClick={() => navigate('/admin/challenges')}
               className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
             >

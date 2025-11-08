@@ -15,6 +15,7 @@ const submissionsRouter = require('./routes/submissions');
 const evaluationRouter = require('./routes/evaluation');
 const adminRouter = require('./routes/admin');
 const coursesRouter = require('./routes/courses');
+const usersRouter = require('./routes/users');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -48,6 +49,8 @@ app.use('/api/courses', coursesRouter);
 app.use('/api/challenges', challengesRouter);
 app.use('/api/submissions', submissionsRouter);
 app.use('/api/evaluate', evaluationRouter);
+app.use('/api/auth', usersRouter);
+app.use('/api/users', usersRouter);
 app.use('/api/admin', adminRouter);
 
 // Error handling middleware

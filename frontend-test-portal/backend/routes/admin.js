@@ -8,6 +8,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 const usersPath = path.join(__dirname, '../data/users.json');
 const challengesPath = path.join(__dirname, '../data/challenges.json');
@@ -47,25 +48,40 @@ router.post('/login', (req, res) => {
     }
     
     const users = getUsers();
-    const user = users.find(u => u.username === username && u.password === password);
+    const user = users.find(u => u.username === username);
     
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // In production, generate JWT token here
+    // Check if user is admin
+    if (user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admin only.' });
+    }
+    
+    // Hash the provided password and compare
+    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+    
+    if (user.password !== hashedPassword) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    // Generate admin token
+    const token = crypto.randomBytes(32).toString('hex');
+    
     res.json({
       message: 'Login successful',
       user: {
+        id: user.id,
         username: user.username,
-        name: user.name,
+        name: user.fullName || user.name,
         role: user.role
       },
-      // Mock token for prototype
-      token: `mock-token-${Date.now()}`
+      token: token
     });
     
   } catch (error) {
+    console.error('Admin login error:', error);
     res.status(500).json({ error: 'Login failed' });
   }
 });

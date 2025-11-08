@@ -15,5 +15,33 @@
     "totalPoints": 0,
     "achievements": [],
     "createdAt": "2025-01-15T10:00:00.000Z"
+  },
+  {
+    "userId": "default-user",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [
+          1
+        ],
+        "currentLevel": 2,
+        "totalPoints": 277
+      }
+    ],
+    "totalPoints": 277,
+    "achievements": []
+  },
+  {
+    "userId": "user-1762598416289-0p5li3q2w",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [],
+        "currentLevel": 1,
+        "totalPoints": 186
+      }
+    ],
+    "totalPoints": 186,
+    "achievements": []
   }
 ]

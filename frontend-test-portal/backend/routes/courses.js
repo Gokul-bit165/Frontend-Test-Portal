@@ -11,6 +11,7 @@ const path = require('path');
 const coursesPath = path.join(__dirname, '../data/courses.json');
 const challengesPath = path.join(__dirname, '../data/challenges-new.json');
 const progressPath = path.join(__dirname, '../data/user-progress.json');
+const assignmentsPath = path.join(__dirname, '../data/user-assignments.json');
 
 // Helper functions
 const getCourses = () => {
@@ -34,6 +35,19 @@ const getProgress = () => {
 
 const saveProgress = (progress) => {
   fs.writeFileSync(progressPath, JSON.stringify(progress, null, 2));
+};
+
+const getAssignments = () => {
+  try {
+    const data = fs.readFileSync(assignmentsPath, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+};
+
+const saveAssignments = (assignments) => {
+  fs.writeFileSync(assignmentsPath, JSON.stringify(assignments, null, 2));
 };
 
 /**
@@ -102,23 +116,65 @@ router.get('/:courseId/levels', (req, res) => {
 
 /**
  * GET /api/courses/:courseId/levels/:level/questions
- * Get all questions for a specific level
+ * Get assigned questions for a specific level (2 random questions)
+ * Query params: userId (optional, defaults to 'default-user')
  */
 router.get('/:courseId/levels/:level/questions', (req, res) => {
   try {
     const challenges = getChallenges();
     const { courseId, level } = req.params;
+    const userId = req.query.userId || 'default-user';
     
-    const questions = challenges.filter(
+    // Get all questions for this level (question bank)
+    const allQuestions = challenges.filter(
       c => c.courseId === courseId && c.level === parseInt(level)
     ).sort((a, b) => a.questionNumber - b.questionNumber);
     
-    if (questions.length === 0) {
+    if (allQuestions.length === 0) {
       return res.status(404).json({ error: 'No questions found for this level' });
     }
     
-    res.json(questions);
+    // Check if user already has assigned questions for this level
+    const assignments = getAssignments();
+    const assignmentKey = `${userId}-${courseId}-${level}`;
+    let userAssignment = assignments.find(a => a.key === assignmentKey);
+    
+    if (!userAssignment) {
+      // First time user accesses this level - assign 2 random questions
+      const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+      const selectedQuestions = shuffled.slice(0, Math.min(2, allQuestions.length));
+      
+      userAssignment = {
+        key: assignmentKey,
+        userId,
+        courseId,
+        level: parseInt(level),
+        assignedQuestions: selectedQuestions.map(q => q.id),
+        completedQuestions: [],
+        assignedAt: new Date().toISOString(),
+        totalAvailable: allQuestions.length
+      };
+      
+      assignments.push(userAssignment);
+      saveAssignments(assignments);
+      
+      console.log(`✅ Assigned ${selectedQuestions.length} random questions to ${userId} for ${courseId} Level ${level}`);
+    }
+    
+    // Return only the assigned questions
+    const assignedQuestions = allQuestions.filter(q => 
+      userAssignment.assignedQuestions.includes(q.id)
+    );
+    
+    // Add completion status to each question
+    const questionsWithStatus = assignedQuestions.map(q => ({
+      ...q,
+      isCompleted: userAssignment.completedQuestions.includes(q.id)
+    }));
+    
+    res.json(questionsWithStatus);
   } catch (error) {
+    console.error('Failed to fetch questions:', error);
     res.status(500).json({ error: 'Failed to fetch questions' });
   }
 });
@@ -169,66 +225,102 @@ router.get('/progress/:userId', (req, res) => {
 
 /**
  * POST /api/courses/progress/:userId/complete
- * Mark a question as completed
+ * Mark a question as completed and check if level is unlocked
+ * Body: { questionId, courseId, level, score }
  */
 router.post('/progress/:userId/complete', (req, res) => {
   try {
     const { userId } = req.params;
-    const { courseId, questionId, points, level } = req.body;
+    const { questionId, courseId, level, score } = req.body;
     
-    let allProgress = getProgress();
-    let userProgress = allProgress.find(p => p.userId === userId);
+    if (!questionId || !courseId || !level) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
     
-    // Create new user progress if doesn't exist
-    if (!userProgress) {
-      userProgress = {
+    // Update assignment to mark question as completed
+    const assignments = getAssignments();
+    const assignmentKey = `${userId}-${courseId}-${level}`;
+    const assignmentIndex = assignments.findIndex(a => a.key === assignmentKey);
+    
+    if (assignmentIndex === -1) {
+      return res.status(404).json({ error: 'Assignment not found' });
+    }
+    
+    const assignment = assignments[assignmentIndex];
+    
+    // Add to completed questions if not already there
+    if (!assignment.completedQuestions.includes(questionId)) {
+      assignment.completedQuestions.push(questionId);
+      assignment.lastCompletedAt = new Date().toISOString();
+    }
+    
+    // Check if level is complete (all assigned questions done)
+    const levelComplete = assignment.completedQuestions.length === assignment.assignedQuestions.length;
+    assignment.isLevelComplete = levelComplete;
+    
+    if (levelComplete) {
+      assignment.completedAt = new Date().toISOString();
+      console.log(`🎉 ${userId} completed ${courseId} Level ${level}!`);
+    }
+    
+    assignments[assignmentIndex] = assignment;
+    saveAssignments(assignments);
+    
+    // Update user progress
+    const allProgress = getProgress();
+    let userProgressIndex = allProgress.findIndex(p => p.userId === userId);
+    
+    if (userProgressIndex === -1) {
+      // Create new progress entry
+      allProgress.push({
         userId,
-        username: userId,
         courses: [],
         totalPoints: 0,
-        achievements: [],
-        createdAt: new Date().toISOString()
-      };
-      allProgress.push(userProgress);
+        achievements: []
+      });
+      userProgressIndex = allProgress.length - 1;
     }
+    
+    const userProgress = allProgress[userProgressIndex];
     
     // Find or create course progress
     let courseProgress = userProgress.courses.find(c => c.courseId === courseId);
     if (!courseProgress) {
       courseProgress = {
         courseId,
-        enrolledAt: new Date().toISOString(),
+        completedLevels: [],
         currentLevel: 1,
-        completedQuestions: [],
-        totalPoints: 0,
-        progress: 0
+        totalPoints: 0
       };
       userProgress.courses.push(courseProgress);
     }
     
-    // Add question to completed if not already there
-    if (!courseProgress.completedQuestions.includes(questionId)) {
-      courseProgress.completedQuestions.push(questionId);
-      courseProgress.totalPoints += points;
-      userProgress.totalPoints += points;
+    // Update points
+    const question = getChallenges().find(q => q.id === questionId);
+    const points = score || question?.points || 100;
+    courseProgress.totalPoints += points;
+    userProgress.totalPoints += points;
+    
+    // Mark level as complete and unlock next level
+    if (levelComplete && !courseProgress.completedLevels.includes(parseInt(level))) {
+      courseProgress.completedLevels.push(parseInt(level));
+      courseProgress.currentLevel = Math.min(parseInt(level) + 1, 6); // Max 6 levels
       
-      // Update current level if needed
-      if (level > courseProgress.currentLevel) {
-        courseProgress.currentLevel = level;
-      }
-      
-      // Calculate progress percentage
-      const challenges = getChallenges();
-      const totalQuestionsInCourse = challenges.filter(c => c.courseId === courseId).length;
-      courseProgress.progress = Math.round((courseProgress.completedQuestions.length / totalQuestionsInCourse) * 100);
+      console.log(`🔓 Unlocked Level ${courseProgress.currentLevel} for ${userId}`);
     }
     
-    // Save progress
+    allProgress[userProgressIndex] = userProgress;
     saveProgress(allProgress);
     
     res.json({
       message: 'Progress updated',
-      progress: userProgress
+      levelComplete,
+      nextLevelUnlocked: levelComplete,
+      nextLevel: levelComplete ? Math.min(parseInt(level) + 1, 6) : parseInt(level),
+      completedQuestions: assignment.completedQuestions.length,
+      totalQuestions: assignment.assignedQuestions.length,
+      points,
+      totalPoints: courseProgress.totalPoints
     });
   } catch (error) {
     console.error('Progress update error:', error);

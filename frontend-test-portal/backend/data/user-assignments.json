@@ -1,0 +1,74 @@
+[
+  {
+    "key": "default-user-course-html-css-1",
+    "userId": "default-user",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "html-css-l1-q2",
+      "html-css-l1-q1"
+    ],
+    "completedQuestions": [
+      "html-css-l1-q1",
+      "html-css-l1-q2"
+    ],
+    "assignedAt": "2025-11-08T10:05:07.963Z",
+    "totalAvailable": 2,
+    "lastCompletedAt": "2025-11-08T10:22:23.035Z",
+    "isLevelComplete": true,
+    "completedAt": "2025-11-08T10:22:23.035Z"
+  },
+  {
+    "key": "default-user-course-html-css-2",
+    "userId": "default-user",
+    "courseId": "course-html-css",
+    "level": 2,
+    "assignedQuestions": [
+      "html-css-l2-q1"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-08T10:22:35.478Z",
+    "totalAvailable": 1
+  },
+  {
+    "key": "user-1762598416289-0p5li3q2w-course-html-css-1",
+    "userId": "user-1762598416289-0p5li3q2w",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "course-html-css-l1-q1",
+      "html-css-l1-q1"
+    ],
+    "completedQuestions": [
+      "html-css-l1-q1"
+    ],
+    "assignedAt": "2025-11-08T10:45:17.239Z",
+    "totalAvailable": 4,
+    "lastCompletedAt": "2025-11-08T10:53:21.695Z",
+    "isLevelComplete": false
+  },
+  {
+    "key": "user-1762598416289-0p5li3q2w-course-javascript-1",
+    "userId": "user-1762598416289-0p5li3q2w",
+    "courseId": "course-javascript",
+    "level": 1,
+    "assignedQuestions": [
+      "javascript-l1-q1"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-08T10:57:30.409Z",
+    "totalAvailable": 1
+  },
+  {
+    "key": "default-user-course-javascript-1",
+    "userId": "default-user",
+    "courseId": "course-javascript",
+    "level": 1,
+    "assignedQuestions": [
+      "javascript-l1-q1"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-08T10:57:31.126Z",
+    "totalAvailable": 1
+  }
+]

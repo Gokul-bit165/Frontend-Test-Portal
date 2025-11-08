@@ -15,12 +15,14 @@ export default function LevelPage() {
 
   const loadLevelData = async () => {
     try {
+      const userId = localStorage.getItem('userId') || 'default-user';
+      
       const [courseRes, questionsRes] = await Promise.all([
         getCourse(courseId),
-        getLevelQuestions(courseId, level)
+        getLevelQuestions(courseId, level, userId) // Pass userId to get assigned questions
       ]);
       setCourse(courseRes.data);
-      setQuestions(questionsRes.data);
+      setQuestions(questionsRes.data); // Will be only 2 random questions
     } catch (error) {
       console.error('Failed to load level:', error);
     } finally {
@@ -64,25 +66,27 @@ export default function LevelPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             {course?.icon} Level {level} Challenges
           </h1>
-          <p className="text-gray-600">
-            Complete all challenges to unlock the next level
+          <p className="text-gray-600 mb-2">
+            Complete both challenges to unlock the next level
           </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+            <p className="text-sm text-blue-800">
+              🎲 <strong>Randomized Questions:</strong> You've been assigned <strong>{questions.length} random questions</strong> from the question bank for this level.
+              Complete both to progress!
+            </p>
+          </div>
         </div>
 
         {/* Questions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {questions.map((question, index) => {
-            const isLocked = question.isLocked || false;
+            const isCompleted = question.isCompleted || false;
             
             return (
               <div
                 key={question.id}
-                onClick={() => !isLocked && navigate(`/challenge/${question.id}`)}
-                className={`bg-white rounded-xl shadow-lg overflow-hidden ${
-                  isLocked 
-                    ? 'opacity-50 cursor-not-allowed' 
-                    : 'cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl'
-                }`}
+                onClick={() => navigate(`/challenge/${question.id}`)}
+                className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               >
                 {/* Question Header */}
                 <div 
@@ -98,8 +102,11 @@ export default function LevelPage() {
                         <span className="text-2xl font-bold text-gray-700">
                           #{index + 1}
                         </span>
-                        {isLocked && <span className="text-2xl">🔒</span>}
-                        {question.completed && <span className="text-2xl">✅</span>}
+                        {isCompleted ? (
+                          <span className="text-2xl" title="Completed">✅</span>
+                        ) : (
+                          <span className="text-2xl" title="Not started">📝</span>
+                        )}
                       </div>
                       <h3 className="text-xl font-bold text-gray-900">
                         {question.title}
@@ -147,18 +154,13 @@ export default function LevelPage() {
 
                   {/* Action Button */}
                   <button
-                    disabled={isLocked}
                     className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                      isLocked
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : question.completed
+                      isCompleted
                         ? 'bg-green-600 text-white hover:bg-green-700'
                         : 'bg-indigo-600 text-white hover:bg-indigo-700'
                     }`}
                   >
-                    {isLocked 
-                      ? '🔒 Complete previous challenge' 
-                      : question.completed 
+                    {isCompleted 
                       ? '✅ Completed - Review' 
                       : 'Start Challenge →'
                     }
@@ -189,19 +191,19 @@ export default function LevelPage() {
             <div className="flex items-center justify-between mb-2">
               <span className="text-gray-600">Completed</span>
               <span className="font-semibold text-gray-900">
-                {questions.filter(q => q.completed).length} / {questions.length}
+                {questions.filter(q => q.isCompleted).length} / {questions.length}
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div 
                 className="bg-indigo-600 h-3 rounded-full transition-all duration-300"
                 style={{ 
-                  width: `${(questions.filter(q => q.completed).length / questions.length) * 100}%` 
+                  width: `${(questions.filter(q => q.isCompleted).length / questions.length) * 100}%` 
                 }}
               ></div>
             </div>
             <div className="mt-4 text-sm text-gray-600">
-              {questions.filter(q => q.completed).length === questions.length ? (
+              {questions.filter(q => q.isCompleted).length === questions.length ? (
                 <span className="text-green-600 font-semibold">
                   🎉 Level Complete! Next level unlocked.
                 </span>

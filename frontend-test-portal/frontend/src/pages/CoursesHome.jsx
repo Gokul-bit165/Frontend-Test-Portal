@@ -22,6 +22,14 @@ export default function CoursesHome() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userRole');
+    navigate('/login');
+  };
+
   const getDifficultyColor = (difficulty) => {
     const colors = {
       'Beginner': 'bg-green-100 text-green-800',
@@ -50,31 +58,30 @@ export default function CoursesHome() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Frontend Test Portal</h1>
-              <p className="text-gray-600 mt-1">Learn frontend development through structured courses</p>
+              <p className="text-gray-600 mt-1">
+                Welcome, {localStorage.getItem('username') || 'Student'}! 👋
+              </p>
             </div>
-            <button
-              onClick={() => navigate('/admin/login')}
-              className="text-gray-600 hover:text-gray-900 font-medium"
-            >
-              Admin Login
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => navigate('/admin/login')}
+                className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"
+              >
+                Admin Login
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Choose Your Learning Path 🚀
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Master frontend development with our structured courses. Each course contains 6 levels 
-            with hands-on challenges that progressively unlock as you complete them.
-          </p>
-        </div>
-
         {/* Courses Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {courses.map((course) => (

@@ -36,7 +36,7 @@ export default function CodeEditor({ code, onChange }) {
       {/* Editor */}
       <div className="flex-1 border border-gray-200 rounded-lg overflow-hidden">
         <Editor
-          height="400px"
+          height="100%"
           language={tabs.find(t => t.id === activeTab)?.language}
           value={code[activeTab]}
           onChange={handleEditorChange}

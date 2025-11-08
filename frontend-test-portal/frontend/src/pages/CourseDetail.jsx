@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCourse, getCourseLevels } from '../services/api';
+import { getCourse, getCourseLevels, getUserProgress } from '../services/api';
 
 export default function CourseDetail() {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [levels, setLevels] = useState([]);
+  const [userProgress, setUserProgress] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,12 +16,17 @@ export default function CourseDetail() {
 
   const loadCourseData = async () => {
     try {
-      const [courseRes, levelsRes] = await Promise.all([
+      const userId = localStorage.getItem('userId') || 'default-user';
+      
+      const [courseRes, levelsRes, progressRes] = await Promise.all([
         getCourse(courseId),
-        getCourseLevels(courseId)
+        getCourseLevels(courseId),
+        getUserProgress(userId)
       ]);
+      
       setCourse(courseRes.data);
       setLevels(levelsRes.data);
+      setUserProgress(progressRes.data);
     } catch (error) {
       console.error('Failed to load course:', error);
     } finally {
@@ -28,10 +34,22 @@ export default function CourseDetail() {
     }
   };
 
-  const getLevelStatus = (level) => {
-    // For now, level 1 is always unlocked
-    if (level.level === 1) return 'unlocked';
-    // Check if previous level is completed (simplified for now)
+  const getLevelStatus = (levelNumber) => {
+    // Level 1 is always unlocked
+    if (levelNumber === 1) return 'unlocked';
+    
+    // Check if user has completed previous level
+    if (userProgress) {
+      const courseProgress = userProgress.courses?.find(c => c.courseId === courseId);
+      if (courseProgress) {
+        const completedLevels = courseProgress.completedLevels || [];
+        // Level is unlocked if previous level is completed
+        if (completedLevels.includes(levelNumber - 1)) {
+          return 'unlocked';
+        }
+      }
+    }
+    
     return 'locked';
   };
 
@@ -151,7 +169,7 @@ export default function CourseDetail() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {levels.map((level) => {
-            const status = getLevelStatus(level);
+            const status = getLevelStatus(level.level);
             const isLocked = status === 'locked';
             
             return (
@@ -176,10 +194,18 @@ export default function CourseDetail() {
                   )}
                 </div>
 
+                {isLocked && (
+                  <div className="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                    <p className="text-sm text-yellow-800">
+                      🔒 Complete Level {level.level - 1} to unlock
+                    </p>
+                  </div>
+                )}
+
                 {/* Questions Count */}
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-gray-600">
-                    📝 {level.questions.length} Challenge{level.questions.length !== 1 ? 's' : ''}
+                    📝 {level.totalQuestions} Question{level.totalQuestions !== 1 ? 's' : ''} Available
                   </span>
                   {level.totalPoints > 0 && (
                     <span className="text-indigo-600 font-semibold">

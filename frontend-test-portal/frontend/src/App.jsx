@@ -9,6 +9,9 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import CourseManager from './pages/CourseManager';
 import ChallengeManager from './pages/ChallengeManager';
+import UserLogin from './pages/UserLogin';
+import UserManagement from './pages/UserManagement';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -23,18 +26,21 @@ function App() {
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <div className="min-h-screen bg-gray-50">
         <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<CoursesHome />} />
-          <Route path="/course/:courseId" element={<CourseDetail />} />
-          <Route path="/course/:courseId/level/:level" element={<LevelPage />} />
-          <Route path="/old-challenges" element={<CandidateDashboard />} />
-          <Route path="/challenge/:id" element={<ChallengeView />} />
-          
-          {/* Admin Routes */}
+          {/* Public Routes - Only Login Pages */}
+          <Route path="/login" element={<UserLogin />} />
           <Route 
             path="/admin/login" 
             element={<AdminLogin onLogin={() => setIsAdmin(true)} />} 
           />
+          
+          {/* Protected Student Routes - Require Login */}
+          <Route path="/" element={<ProtectedRoute><CoursesHome /></ProtectedRoute>} />
+          <Route path="/course/:courseId" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
+          <Route path="/course/:courseId/level/:level" element={<ProtectedRoute><LevelPage /></ProtectedRoute>} />
+          <Route path="/old-challenges" element={<ProtectedRoute><CandidateDashboard /></ProtectedRoute>} />
+          <Route path="/challenge/:id" element={<ProtectedRoute><ChallengeView /></ProtectedRoute>} />
+          
+          {/* Admin Routes - Require Admin Login */}
           <Route 
             path="/admin/dashboard" 
             element={isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" />} 
@@ -47,9 +53,13 @@ function App() {
             path="/admin/challenges" 
             element={isAdmin ? <ChallengeManager /> : <Navigate to="/admin/login" />} 
           />
+          <Route 
+            path="/admin/users" 
+            element={isAdmin ? <UserManagement /> : <Navigate to="/admin/login" />} 
+          />
           
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* Fallback - Redirect to login */}
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>

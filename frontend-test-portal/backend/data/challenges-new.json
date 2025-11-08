@@ -22,7 +22,12 @@
       "Center elements with text-align or flexbox",
       "Add box-shadow for depth effect"
     ],
-    "tags": ["HTML", "CSS", "Card", "Image"],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Card",
+      "Image"
+    ],
     "timeLimit": 15,
     "points": 100,
     "passingThreshold": {
@@ -63,7 +68,12 @@
       "Make button interactive with :hover",
       "Use bold font for price"
     ],
-    "tags": ["HTML", "CSS", "E-commerce", "Card"],
+    "tags": [
+      "HTML",
+      "CSS",
+      "E-commerce",
+      "Card"
+    ],
     "timeLimit": 20,
     "points": 100,
     "passingThreshold": {
@@ -104,7 +114,12 @@
       "Add a semi-transparent overlay with ::before",
       "Use min-height: 100vh for full height"
     ],
-    "tags": ["HTML", "CSS", "Hero", "Background"],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Hero",
+      "Background"
+    ],
     "timeLimit": 25,
     "points": 150,
     "passingThreshold": {
@@ -150,7 +165,12 @@
       "Store count in a variable",
       "Update innerText to show count"
     ],
-    "tags": ["JavaScript", "Events", "DOM", "Logic"],
+    "tags": [
+      "JavaScript",
+      "Events",
+      "DOM",
+      "Logic"
+    ],
     "timeLimit": 20,
     "points": 100,
     "passingThreshold": {
@@ -192,7 +212,12 @@
       "Check email with regex or includes('@')",
       "Display errors dynamically with JavaScript"
     ],
-    "tags": ["Full Stack", "Forms", "Validation", "JavaScript"],
+    "tags": [
+      "Full Stack",
+      "Forms",
+      "Validation",
+      "JavaScript"
+    ],
     "timeLimit": 35,
     "points": 200,
     "passingThreshold": {
@@ -209,5 +234,90 @@
     },
     "createdAt": "2025-01-18T10:00:00.000Z",
     "updatedAt": "2025-01-18T10:00:00.000Z"
+  },
+  {
+    "id": "course-html-css-l1-q1",
+    "courseId": "course-html-css",
+    "level": 1,
+    "questionNumber": 1,
+    "title": "Build a Profile Card",
+    "description": "Create a centered profile card with user information and avatar image.",
+    "instructions": "Follow these steps to complete the task:\n- Create a div with class 'profile-card'.\n- Inside it, include an image with src='/assets/images/avatar-1.png' and class 'profile-img'.\n- Add a heading with the name 'John Doe'.\n- Add a paragraph with class 'role' containing 'Web Developer'.\n- Add another paragraph with a short bio.\n- Center the card horizontally and vertically.\n- Set width to 300px, white background, 15px border radius, and box shadow.",
+    "assets": {
+      "images": [
+        {
+          "name": "avatar-1.png",
+          "path": "/assets/images/avatar-1.png",
+          "description": "Profile avatar image."
+        }
+      ],
+      "reference": "/assets/references/course-html-css-l1-q1-ref.png"
+    },
+    "hints": [
+      "Hint 1: Use flexbox to center the card.",
+      "Hint 2: Apply box-shadow for depth.",
+      "Hint 3: Use border-radius for rounded corners."
+    ],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Flexbox"
+    ],
+    "timeLimit": 15,
+    "points": 100,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<div class=\"profile-card\">\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\n  <h2>John Doe</h2>\n  <p class=\"role\">Web Developer</p>\n  <p>Passionate about creating responsive and user-friendly web applications. Always eager to learn new technologies and improve coding skills.</p>\n</div>",
+      "css": "body {\n  margin: 0;\n  height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  background-color: #f3f4f6;\n  font-family: Arial, sans-serif;\n}\n\n.profile-card {\n  width: 300px;\n  background-color: white;\n  border-radius: 15px;\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\n  text-align: center;\n  padding: 20px;\n}\n\n.profile-img {\n  width: 100px;\n  height: 100px;\n  border-radius: 50%;\n  object-fit: cover;\n  margin-bottom: 15px;\n}\n\n.profile-card h2 {\n  margin: 10px 0 5px;\n  color: #111827;\n}\n\n.role {\n  margin: 0 0 15px;\n  color: #374151;\n  font-weight: normal;\n}\n\n.profile-card p {\n  color: #4b5563;\n  font-size: 14px;\n  line-height: 1.5;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-08T10:12:31.887Z",
+    "updatedAt": "2025-11-08T10:12:31.887Z"
+  },
+  {
+    "id": "course-html-css-l1-q2",
+    "courseId": "course-html-css",
+    "level": 1,
+    "questionNumber": 2,
+    "title": "Create a Navigation Bar",
+    "description": "Build a responsive fixed navigation bar using flexbox.",
+    "instructions": "Follow these steps:\n- Create a nav element with class 'navbar'.\n- Inside it, include 4 anchor links: Home, About, Services, and Contact.\n- Use flexbox to evenly space the links.\n- Fix the navbar to the top of the page.\n- Use background color #1f2937 and white text.\n- On hover, change the link color to #60a5fa.\n- Add padding of 20px.",
+    "assets": {
+      "images": [],
+      "reference": "/assets/references/course-html-css-l1-q2-ref.png"
+    },
+    "hints": [
+      "Hint 1: Use 'display: flex' and 'justify-content: space-around'.",
+      "Hint 2: Add 'position: fixed' for a top-fixed navbar.",
+      "Hint 3: Use the :hover pseudo-class for color change."
+    ],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Flexbox",
+      "Navbar"
+    ],
+    "timeLimit": 20,
+    "points": 150,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": "course-html-css-l1-q1",
+    "expectedSolution": {
+      "html": "<nav class=\"navbar\">\n  <a href=\"#\">Home</a>\n  <a href=\"#\">About</a>\n  <a href=\"#\">Services</a>\n  <a href=\"#\">Contact</a>\n</nav>",
+      "css": "body {\n  margin: 0;\n  font-family: Arial, sans-serif;\n}\n\n.navbar {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  background-color: #1f2937;\n  display: flex;\n  justify-content: space-around;\n  align-items: center;\n  padding: 20px;\n}\n\n.navbar a {\n  color: white;\n  text-decoration: none;\n  font-weight: bold;\n  transition: color 0.3s;\n}\n\n.navbar a:hover {\n  color: #60a5fa;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-08T10:12:31.887Z",
+    "updatedAt": "2025-11-08T10:12:31.887Z"
   }
 ]

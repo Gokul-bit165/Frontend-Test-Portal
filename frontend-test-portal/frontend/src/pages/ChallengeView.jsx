@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getChallenge, submitSolution, evaluateSolution, getSubmissionResult, getLevelQuestions } from '../services/api';
+import { getChallenge, submitSolution, evaluateSolution, getSubmissionResult, getLevelQuestions, completeQuestion } from '../services/api';
 import CodeEditor from '../components/CodeEditor';
 import PreviewFrame from '../components/PreviewFrame';
 import ResultsPanel from '../components/ResultsPanel';
@@ -22,6 +22,7 @@ export default function ChallengeView() {
   const [showNameModal, setShowNameModal] = useState(false);
   const [showExpectedScreenshot, setShowExpectedScreenshot] = useState(false);
   const [expectedScreenshotUrl, setExpectedScreenshotUrl] = useState('');
+  const [showInstructions, setShowInstructions] = useState(true); // Toggle for instructions
   
   const previewRef = useRef();
 
@@ -125,8 +126,41 @@ export default function ChallengeView() {
         
         // Evaluation complete - show result immediately
         setEvaluationStep('✅ Complete!');
-        setResult(evalResponse.data.result);
+        const evaluationResult = evalResponse.data.result;
+        setResult(evaluationResult);
         setEvaluating(false);
+        
+        // If passed, mark question as complete
+        if (evaluationResult.passed && challenge.courseId && challenge.level) {
+          try {
+            const userId = localStorage.getItem('userId') || 'default-user';
+            const completeResponse = await completeQuestion(userId, {
+              questionId: id,
+              courseId: challenge.courseId,
+              level: challenge.level,
+              score: evaluationResult.finalScore
+            });
+            
+            // Show level completion message
+            if (completeResponse.data.levelComplete) {
+              setTimeout(() => {
+                const message = completeResponse.data.nextLevelUnlocked 
+                  ? `🎉 Congratulations!\n\nYou completed ${completeResponse.data.completedQuestions}/${completeResponse.data.totalQuestions} questions!\n\n✅ Level ${challenge.level} Complete!\n🔓 Level ${completeResponse.data.nextLevel} Unlocked!\n\n📊 Points earned: ${completeResponse.data.points}\n🏆 Total points: ${completeResponse.data.totalPoints}`
+                  : `✅ Question Complete!\n\n📊 Score: ${evaluationResult.finalScore}%\n💰 Points: ${completeResponse.data.points}`;
+                
+                alert(message);
+                
+                // Navigate to course detail to see unlocked level
+                if (completeResponse.data.nextLevelUnlocked) {
+                  navigate(`/course/${challenge.courseId}`);
+                }
+              }, 1000);
+            }
+          } catch (progressError) {
+            console.error('Failed to update progress:', progressError);
+            // Don't show error to user, just log it
+          }
+        }
         
       } catch (evalError) {
         console.error('Evaluation failed:', evalError);
@@ -250,7 +284,26 @@ export default function ChallengeView() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6" style={{ height: 'calc(100vh - 80px)' }}>
         {/* Left Panel: Instructions & Code Editors */}
         <div className="flex flex-col gap-4 overflow-auto">
+          {/* Toggle Instructions Button */}
+          <button
+            onClick={() => setShowInstructions(!showInstructions)}
+            className="flex items-center justify-between px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            <span className="font-semibold">
+              {showInstructions ? '📖 Hide Instructions' : '📖 Show Instructions'}
+            </span>
+            <svg 
+              className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''}`}
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
           {/* Instructions */}
+          {showInstructions && (
           <div className="card">
             <h2 className="text-lg font-bold mb-3">Challenge Instructions</h2>
             
@@ -331,9 +384,10 @@ export default function ChallengeView() {
               </div>
             )}
           </div>
+          )}
 
           {/* Code Editors */}
-          <div className="card flex-1">
+          <div className={`card ${showInstructions ? 'flex-1' : 'flex-1'}`} style={!showInstructions ? { minHeight: 'calc(100vh - 200px)' } : {}}>
             <CodeEditor
               code={code}
               onChange={setCode}

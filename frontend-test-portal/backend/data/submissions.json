@@ -1032,5 +1032,789 @@
         }
       ]
     }
+  },
+  {
+    "id": "58cadf1e-c304-46e0-9b7b-694a7289a11c",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test",
+    "code": {
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\r\n  <h2>John Doe</h2>\r\n  <h4>Web Developer</h4>\r\n  <p>\r\n    Passionate about creating responsive and user-friendly web applications.\r\n    Always eager to learn new technologies and improve coding skills.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;  /* Center horizontally */\r\n  align-items: center;      /* Center vertically */\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\n.profile-img {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.profile-card h2 {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.profile-card h4 {\r\n  margin: 0 0 15px;\r\n  color: #374151;\r\n  font-weight: normal;\r\n}\r\n\r\n.profile-card p {\r\n  color: #4b5563;\r\n  font-size: 14px;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T10:06:10.589Z",
+    "evaluatedAt": "2025-11-08T10:06:13.367Z",
+    "result": {
+      "submissionId": "58cadf1e-c304-46e0-9b7b-694a7289a11c",
+      "timestamp": "2025-11-08T10:06:10.705Z",
+      "structureScore": 70,
+      "visualScore": 99,
+      "finalScore": 87,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 70,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > h2[1]: <h2>",
+            "root > div[0] > p[3]: <p>"
+          ],
+          "tagMismatches": [
+            "root > div[0] > p[2]: Expected <p>, got <h4>"
+          ],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/avatar-1.png\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [],
+          "classMismatches": [
+            "root > div[0]: Missing class=\"card\"",
+            "root > div[0] > img[0]: Missing class=\"avatar\"",
+            "root > div[0] > p[2]: Missing class=\"role\"",
+            "root > div[0] > p[3]: Missing class=\"bio\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (4)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > h2[1]: Correct number of children (0)",
+            "root > div[0] > p[2]: Correct number of children (0)",
+            "root > div[0] > p[3]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 5635,
+        "totalPixels": 921600,
+        "diffPercentage": "0.61",
+        "screenshots": {
+          "candidate": "/screenshots/58cadf1e-c304-46e0-9b7b-694a7289a11c-candidate.png",
+          "expected": "/screenshots/58cadf1e-c304-46e0-9b7b-694a7289a11c-expected.png",
+          "diff": "/screenshots/58cadf1e-c304-46e0-9b7b-694a7289a11c-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 87%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (70%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        }
+      ]
+    }
+  },
+  {
+    "id": "3a419a11-d628-4c19-9eff-2c34e0e0b205",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test1",
+    "code": {
+      "html": "<section class=\"card\">\r\n  <figure class=\"avatar\">\r\n    <img src=\"/assets/images/avatar-1.png\" alt=\"John Doe\" />\r\n  </figure>\r\n  <header>\r\n    <h1>John Doe</h1>\r\n    <h3>Web Developer</h3>\r\n  </header>\r\n  <article class=\"bio\">\r\n    <p>\r\n      Passionate about creating responsive and user-friendly web applications.\r\n      Always eager to learn new technologies and improve coding skills.\r\n    </p>\r\n  </article>\r\n</section>\r\n\r\n",
+      "css": "html, body {\r\n  margin: 0;\r\n  padding: 0;\r\n  height: 100%;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  background: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.card {\r\n  width: 300px;\r\n  background: #fff;\r\n  border-radius: 15px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  padding: 20px;\r\n  text-align: center;\r\n}\r\n\r\n.avatar img {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  display: block;\r\n  margin: 0 auto 15px;\r\n}\r\n\r\nheader h1 {\r\n  color: #111827;\r\n  margin: 10px 0 5px;\r\n  font-size: 22px;\r\n}\r\n\r\nheader h3 {\r\n  color: #374151;\r\n  margin: 0 0 15px;\r\n  font-weight: normal;\r\n  font-size: 16px;\r\n}\r\n\r\n.bio p {\r\n  color: #4b5563;\r\n  font-size: 14px;\r\n  line-height: 1.5;\r\n  margin: 0;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-08T10:08:21.996Z",
+    "evaluatedAt": "2025-11-08T10:08:23.824Z",
+    "result": {
+      "submissionId": "3a419a11-d628-4c19-9eff-2c34e0e0b205",
+      "timestamp": "2025-11-08T10:08:22.159Z",
+      "structureScore": 38,
+      "visualScore": 99,
+      "finalScore": 75,
+      "passed": false,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 38,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>"
+          ],
+          "tagMismatches": [
+            "root > div[0]: Expected <div>, got <section>",
+            "root > div[0] > img[0]: Expected <img>, got <figure>",
+            "root > div[0] > h2[1]: Expected <h2>, got <header>",
+            "root > div[0] > p[2]: Expected <p>, got <article>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [
+            "root > div[0] > img[0]: Expected src=\"/assets/images/avatar-1.png\", got \"none\""
+          ],
+          "classMatches": [
+            "root > div[0]: class=\"card\"",
+            "root > div[0] > img[0]: class=\"avatar\""
+          ],
+          "classMismatches": [
+            "root > div[0] > p[2]: Missing class=\"role\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)"
+          ],
+          "structureMismatches": [
+            "root > div[0]: Expected 4 children, got 3",
+            "root > div[0] > img[0]: Expected 0 children, got 1",
+            "root > div[0] > h2[1]: Expected 0 children, got 2",
+            "root > div[0] > p[2]: Expected 0 children, got 1"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 5490,
+        "totalPixels": 921600,
+        "diffPercentage": "0.60",
+        "screenshots": {
+          "candidate": "/screenshots/3a419a11-d628-4c19-9eff-2c34e0e0b205-candidate.png",
+          "expected": "/screenshots/3a419a11-d628-4c19-9eff-2c34e0e0b205-expected.png",
+          "diff": "/screenshots/3a419a11-d628-4c19-9eff-2c34e0e0b205-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 75% (required: 75%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (38%, required: 70%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > div[0]: Expected <div>, got <section>; root > div[0] > img[0]: Expected <img>, got <figure>; root > div[0] > h2[1]: Expected <h2>, got <header>"
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing CSS classes: root > div[0] > p[2]: Missing class=\"role\""
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
+  },
+  {
+    "id": "9f0d4884-7a04-4031-9d0d-a752ed275993",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test2",
+    "code": {
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\r\n  <h2>John Doe</h2>\r\n  <p class=\"role\">Web Developer</p>\r\n  <p>\r\n    Passionate about creating responsive and user-friendly web applications.\r\n    Always eager to learn new technologies and improve coding skills.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\n.profile-img {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.profile-card h2 {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.role {\r\n  margin: 0 0 15px;\r\n  color: #374151;\r\n  font-weight: normal;\r\n}\r\n\r\n.profile-card p {\r\n  color: #4b5563;\r\n  font-size: 14px;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T10:09:38.173Z",
+    "evaluatedAt": "2025-11-08T10:09:40.015Z",
+    "result": {
+      "submissionId": "9f0d4884-7a04-4031-9d0d-a752ed275993",
+      "timestamp": "2025-11-08T10:09:38.311Z",
+      "structureScore": 80,
+      "visualScore": 99,
+      "finalScore": 91,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 80,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > h2[1]: <h2>",
+            "root > div[0] > p[2]: <p>",
+            "root > div[0] > p[3]: <p>"
+          ],
+          "tagMismatches": [],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/avatar-1.png\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > div[0] > p[2]: class=\"role\""
+          ],
+          "classMismatches": [
+            "root > div[0]: Missing class=\"card\"",
+            "root > div[0] > img[0]: Missing class=\"avatar\"",
+            "root > div[0] > p[3]: Missing class=\"bio\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (4)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > h2[1]: Correct number of children (0)",
+            "root > div[0] > p[2]: Correct number of children (0)",
+            "root > div[0] > p[3]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 5521,
+        "totalPixels": 921600,
+        "diffPercentage": "0.60",
+        "screenshots": {
+          "candidate": "/screenshots/9f0d4884-7a04-4031-9d0d-a752ed275993-candidate.png",
+          "expected": "/screenshots/9f0d4884-7a04-4031-9d0d-a752ed275993-expected.png",
+          "diff": "/screenshots/9f0d4884-7a04-4031-9d0d-a752ed275993-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 91%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (80%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        }
+      ]
+    }
+  },
+  {
+    "id": "4746687f-1576-469b-8991-8af4b92cf8dd",
+    "challengeId": "html-css-l1-q2",
+    "candidateName": "test3",
+    "code": {
+      "html": "<div class=\"product-card\">\r\n  <img src=\"/assets/images/product-1.png\" alt=\"Wireless Headphones\" class=\"product-img\" />\r\n  <h2 class=\"product-name\">Wireless Headphones</h2>\r\n  <p class=\"product-price\">$99.99</p>\r\n  <button class=\"add-to-cart\">Add to Cart</button>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  background-color: #f3f4f6;\r\n  font-family: \"Arial\", sans-serif;\r\n}\r\n\r\n.product-card {\r\n  width: 280px;\r\n  background-color: #ffffff;\r\n  border-radius: 12px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  text-align: center;\r\n  padding: 20px;\r\n  transition: transform 0.3s ease;\r\n}\r\n\r\n.product-card:hover {\r\n  transform: translateY(-5px);\r\n}\r\n\r\n.product-img {\r\n  width: 100%;\r\n  height: auto;\r\n  border-radius: 10px;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.product-name {\r\n  font-size: 18px;\r\n  color: #111827;\r\n  margin: 10px 0 5px;\r\n}\r\n\r\n.product-price {\r\n  color: #2563eb;\r\n  font-size: 16px;\r\n  font-weight: bold;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.add-to-cart {\r\n  background-color: #2563eb;\r\n  color: white;\r\n  border: none;\r\n  padding: 10px 16px;\r\n  border-radius: 6px;\r\n  cursor: pointer;\r\n  transition: background-color 0.3s ease;\r\n  font-size: 14px;\r\n}\r\n\r\n.add-to-cart:hover {\r\n  background-color: #1e40af; /* darker blue */\r\n}\r\n",
+      "js": "document.querySelector('.add-to-cart').addEventListener('click', () => {\r\n  alert('Product added to cart!');\r\n});\r\n"
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-08T10:20:04.871Z",
+    "evaluatedAt": "2025-11-08T10:20:07.708Z",
+    "result": {
+      "submissionId": "4746687f-1576-469b-8991-8af4b92cf8dd",
+      "timestamp": "2025-11-08T10:20:05.056Z",
+      "structureScore": 58,
+      "visualScore": 99,
+      "finalScore": 83,
+      "passed": false,
+      "thresholds": {
+        "structure": 75,
+        "visual": 80,
+        "overall": 77
+      },
+      "dom": {
+        "score": 58,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>"
+          ],
+          "tagMismatches": [
+            "root > div[0] > div[1]: Expected <div>, got <h2>"
+          ],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/product-1.png\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > div[0]: class=\"product-card\""
+          ],
+          "classMismatches": [
+            "root > div[0] > img[0]: Missing class=\"product-image\"",
+            "root > div[0] > div[1]: Missing class=\"product-info\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0] > img[0]: Correct number of children (0)"
+          ],
+          "structureMismatches": [
+            "root > div[0]: Expected 2 children, got 4",
+            "root > div[0] > div[1]: Expected 3 children, got 0"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 12997,
+        "totalPixels": 921600,
+        "diffPercentage": "1.41",
+        "screenshots": {
+          "candidate": "/screenshots/4746687f-1576-469b-8991-8af4b92cf8dd-candidate.png",
+          "expected": "/screenshots/4746687f-1576-469b-8991-8af4b92cf8dd-expected.png",
+          "diff": "/screenshots/4746687f-1576-469b-8991-8af4b92cf8dd-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 83% (required: 77%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (58%, required: 75%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > div[0] > div[1]: Expected <div>, got <h2>"
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing CSS classes: root > div[0] > img[0]: Missing class=\"product-image\"; root > div[0] > div[1]: Missing class=\"product-info\""
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
+  },
+  {
+    "id": "efec3385-02d5-41a3-b77a-2daaae73150d",
+    "challengeId": "html-css-l1-q2",
+    "candidateName": "test4",
+    "code": {
+      "html": "<div class=\"product-card\">\r\n  <div class=\"product-header\">\r\n    <h3>Headphones</h3>\r\n  </div>\r\n  <div class=\"product-info\">\r\n    <h2>Wireless Headphones</h2>\r\n    <p class=\"price\">$99.99</p>\r\n    <button class=\"add-to-cart\">Add to Cart</button>\r\n  </div>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.product-card {\r\n  width: 280px;\r\n  background-color: white;\r\n  border-radius: 12px;\r\n  box-shadow: 0 4px 12px rgba(0,0,0,0.1);\r\n  overflow: hidden;\r\n  text-align: center;\r\n}\r\n\r\n.product-header {\r\n  background-color: #3490dc; /* blue */\r\n  padding: 40px 20px;\r\n  color: white;\r\n  font-weight: 600;\r\n  font-size: 20px;\r\n}\r\n\r\n.product-info {\r\n  padding: 20px;\r\n}\r\n\r\n.product-info h2 {\r\n  margin: 0 0 10px 0;\r\n  font-weight: bold;\r\n  color: #111827;\r\n  font-size: 18px;\r\n}\r\n\r\n.price {\r\n  color: #22c55e; /* green */\r\n  font-weight: 600;\r\n  font-size: 18px;\r\n  margin-bottom: 20px;\r\n}\r\n\r\n.add-to-cart {\r\n  background-color: #3490dc;\r\n  border: none;\r\n  color: white;\r\n  padding: 10px 16px;\r\n  font-size: 14px;\r\n  border-radius: 6px;\r\n  cursor: pointer;\r\n  transition: background-color 0.3s ease;\r\n  width: 100%;\r\n}\r\n\r\n.add-to-cart:hover {\r\n  background-color: #2779bd; /* darker blue */\r\n}\r\n",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-08T10:21:14.176Z",
+    "evaluatedAt": "2025-11-08T10:21:16.109Z",
+    "result": {
+      "submissionId": "efec3385-02d5-41a3-b77a-2daaae73150d",
+      "timestamp": "2025-11-08T10:21:14.313Z",
+      "structureScore": 74,
+      "visualScore": 95,
+      "finalScore": 87,
+      "passed": false,
+      "thresholds": {
+        "structure": 75,
+        "visual": 80,
+        "overall": 77
+      },
+      "dom": {
+        "score": 74,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > div[1]: <div>",
+            "root > div[0] > div[1] > p[1]: <p>",
+            "root > div[0] > div[1] > button[2]: <button>"
+          ],
+          "tagMismatches": [
+            "root > div[0] > img[0]: Expected <img>, got <div>",
+            "root > div[0] > div[1] > h3[0]: Expected <h3>, got <h2>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [
+            "root > div[0] > img[0]: Expected src=\"/assets/images/product-1.png\", got \"none\""
+          ],
+          "classMatches": [
+            "root > div[0]: class=\"product-card\"",
+            "root > div[0] > div[1]: class=\"product-info\"",
+            "root > div[0] > div[1] > p[1]: class=\"price\""
+          ],
+          "classMismatches": [
+            "root > div[0] > img[0]: Missing class=\"product-image\"",
+            "root > div[0] > div[1] > button[2]: Missing class=\"buy-btn\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (2)",
+            "root > div[0] > div[1]: Correct number of children (3)",
+            "root > div[0] > div[1] > h3[0]: Correct number of children (0)",
+            "root > div[0] > div[1] > p[1]: Correct number of children (0)",
+            "root > div[0] > div[1] > button[2]: Correct number of children (0)"
+          ],
+          "structureMismatches": [
+            "root > div[0] > img[0]: Expected 0 children, got 1"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 95,
+        "passed": true,
+        "diffPixels": 46449,
+        "totalPixels": 921600,
+        "diffPercentage": "5.04",
+        "screenshots": {
+          "candidate": "/screenshots/efec3385-02d5-41a3-b77a-2daaae73150d-candidate.png",
+          "expected": "/screenshots/efec3385-02d5-41a3-b77a-2daaae73150d-expected.png",
+          "diff": "/screenshots/efec3385-02d5-41a3-b77a-2daaae73150d-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 87% (required: 77%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (74%, required: 75%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > div[0] > img[0]: Expected <img>, got <div>; root > div[0] > div[1] > h3[0]: Expected <h3>, got <h2>"
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing CSS classes: root > div[0] > img[0]: Missing class=\"product-image\"; root > div[0] > div[1] > button[2]: Missing class=\"buy-btn\""
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (95%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
+  },
+  {
+    "id": "19f06a8c-af30-4b10-8e15-dbeba6ca0355",
+    "challengeId": "html-css-l1-q2",
+    "candidateName": "test5",
+    "code": {
+      "html": "<div class=\"product-card\">\r\n  <img src=\"/assets/images/product-1.png\" alt=\"Wireless Headphones\" class=\"product-image\" />\r\n  <div class=\"product-info\">\r\n    <h3>Wireless Headphones</h3>\r\n    <p class=\"price\">$99.99</p>\r\n    <button class=\"buy-btn\">Add to Cart</button>\r\n  </div>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.product-card {\r\n  width: 280px;\r\n  background-color: white;\r\n  border-radius: 12px;\r\n  box-shadow: 0 4px 12px rgba(0,0,0,0.1);\r\n  overflow: hidden;\r\n  text-align: center;\r\n}\r\n\r\n.product-image {\r\n  width: 100%;\r\n  display: block;\r\n}\r\n\r\n.product-info {\r\n  padding: 20px;\r\n}\r\n\r\n.product-info h3 {\r\n  margin: 0 0 10px 0;\r\n  font-weight: bold;\r\n  color: #111827;\r\n  font-size: 18px;\r\n}\r\n\r\n.price {\r\n  color: #22c55e; /* green */\r\n  font-weight: 600;\r\n  font-size: 18px;\r\n  margin-bottom: 20px;\r\n}\r\n\r\n.buy-btn {\r\n  background-color: #3490dc;\r\n  border: none;\r\n  color: white;\r\n  padding: 10px 16px;\r\n  font-size: 14px;\r\n  border-radius: 6px;\r\n  cursor: pointer;\r\n  transition: background-color 0.3s ease;\r\n  width: 100%;\r\n}\r\n\r\n.buy-btn:hover {\r\n  background-color: #2779bd; /* darker blue */\r\n}\r\n",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T10:22:21.209Z",
+    "evaluatedAt": "2025-11-08T10:22:22.983Z",
+    "result": {
+      "submissionId": "19f06a8c-af30-4b10-8e15-dbeba6ca0355",
+      "timestamp": "2025-11-08T10:22:21.383Z",
+      "structureScore": 100,
+      "visualScore": 99,
+      "finalScore": 99,
+      "passed": true,
+      "thresholds": {
+        "structure": 75,
+        "visual": 80,
+        "overall": 77
+      },
+      "dom": {
+        "score": 100,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > div[1]: <div>",
+            "root > div[0] > div[1] > h3[0]: <h3>",
+            "root > div[0] > div[1] > p[1]: <p>",
+            "root > div[0] > div[1] > button[2]: <button>"
+          ],
+          "tagMismatches": [],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/product-1.png\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > div[0]: class=\"product-card\"",
+            "root > div[0] > img[0]: class=\"product-image\"",
+            "root > div[0] > div[1]: class=\"product-info\"",
+            "root > div[0] > div[1] > p[1]: class=\"price\"",
+            "root > div[0] > div[1] > button[2]: class=\"buy-btn\""
+          ],
+          "classMismatches": [],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (2)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > div[1]: Correct number of children (3)",
+            "root > div[0] > div[1] > h3[0]: Correct number of children (0)",
+            "root > div[0] > div[1] > p[1]: Correct number of children (0)",
+            "root > div[0] > div[1] > button[2]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 4664,
+        "totalPixels": 921600,
+        "diffPercentage": "0.51",
+        "screenshots": {
+          "candidate": "/screenshots/19f06a8c-af30-4b10-8e15-dbeba6ca0355-candidate.png",
+          "expected": "/screenshots/19f06a8c-af30-4b10-8e15-dbeba6ca0355-expected.png",
+          "diff": "/screenshots/19f06a8c-af30-4b10-8e15-dbeba6ca0355-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 99%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (100%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        }
+      ]
+    }
+  },
+  {
+    "id": "ec9727ed-7b5f-4e5d-b22f-6d45ccb6b821",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test6",
+    "code": {
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-image\" />\r\n  <h2 class=\"name\">John Doe</h2>\r\n  <p class=\"role\">Web Developer</p>\r\n  <p class=\"bio\">\r\n    Passionate about building responsive web applications and learning new technologies.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;   /* Center horizontally */\r\n  align-items: center;       /* Center vertically */\r\n  background-color: #f0f0f0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);\r\n  padding: 20px;\r\n  text-align: center;\r\n}\r\n\r\n.profile-image {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.name {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.role {\r\n  margin: 0 0 15px;\r\n  color: #555;\r\n  font-weight: 600;\r\n}\r\n\r\n.bio {\r\n  font-size: 14px;\r\n  color: #666;\r\n  line-height: 1.4;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T10:53:18.819Z",
+    "evaluatedAt": "2025-11-08T10:53:21.621Z",
+    "result": {
+      "submissionId": "ec9727ed-7b5f-4e5d-b22f-6d45ccb6b821",
+      "timestamp": "2025-11-08T10:53:19.076Z",
+      "structureScore": 85,
+      "visualScore": 99,
+      "finalScore": 93,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 85,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > h2[1]: <h2>",
+            "root > div[0] > p[2]: <p>",
+            "root > div[0] > p[3]: <p>"
+          ],
+          "tagMismatches": [],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/avatar-1.png\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > div[0] > p[2]: class=\"role\"",
+            "root > div[0] > p[3]: class=\"bio\""
+          ],
+          "classMismatches": [
+            "root > div[0]: Missing class=\"card\"",
+            "root > div[0] > img[0]: Missing class=\"avatar\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (4)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > h2[1]: Correct number of children (0)",
+            "root > div[0] > p[2]: Correct number of children (0)",
+            "root > div[0] > p[3]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 5293,
+        "totalPixels": 921600,
+        "diffPercentage": "0.57",
+        "screenshots": {
+          "candidate": "/screenshots/ec9727ed-7b5f-4e5d-b22f-6d45ccb6b821-candidate.png",
+          "expected": "/screenshots/ec9727ed-7b5f-4e5d-b22f-6d45ccb6b821-expected.png",
+          "diff": "/screenshots/ec9727ed-7b5f-4e5d-b22f-6d45ccb6b821-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 93%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (85%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        }
+      ]
+    }
+  },
+  {
+    "id": "33d51f67-d67e-4e15-949d-ff9594b23f9b",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test7",
+    "code": {
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-image\" />\r\n  <h2 class=\"name\">John Doe</h2>\r\n  <p class=\"role\">Web Developer</p>\r\n  <p class=\"bio\">\r\n    Passionate about building responsive web applications and learning new technologies.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;   /* Center horizontally */\r\n  align-items: center;       /* Center vertically */\r\n  background-color: #f0f0f0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);\r\n  padding: 20px;\r\n  text-align: center;\r\n}\r\n\r\n.profile-image {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.name {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.role {\r\n  margin: 0 0 15px;\r\n  color: #555;\r\n  font-weight: 600;\r\n}\r\n\r\n.bio {\r\n  font-size: 14px;\r\n  color: #666;\r\n  line-height: 1.4;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T10:54:39.874Z",
+    "evaluatedAt": "2025-11-08T10:54:41.697Z",
+    "result": {
+      "submissionId": "33d51f67-d67e-4e15-949d-ff9594b23f9b",
+      "timestamp": "2025-11-08T10:54:40.048Z",
+      "structureScore": 85,
+      "visualScore": 99,
+      "finalScore": 93,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 85,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > h2[1]: <h2>",
+            "root > div[0] > p[2]: <p>",
+            "root > div[0] > p[3]: <p>"
+          ],
+          "tagMismatches": [],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/avatar-1.png\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > div[0] > p[2]: class=\"role\"",
+            "root > div[0] > p[3]: class=\"bio\""
+          ],
+          "classMismatches": [
+            "root > div[0]: Missing class=\"card\"",
+            "root > div[0] > img[0]: Missing class=\"avatar\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (4)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > h2[1]: Correct number of children (0)",
+            "root > div[0] > p[2]: Correct number of children (0)",
+            "root > div[0] > p[3]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 5293,
+        "totalPixels": 921600,
+        "diffPercentage": "0.57",
+        "screenshots": {
+          "candidate": "/screenshots/33d51f67-d67e-4e15-949d-ff9594b23f9b-candidate.png",
+          "expected": "/screenshots/33d51f67-d67e-4e15-949d-ff9594b23f9b-expected.png",
+          "diff": "/screenshots/33d51f67-d67e-4e15-949d-ff9594b23f9b-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 93%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (85%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        }
+      ]
+    }
   }
 ]

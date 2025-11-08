@@ -34,8 +34,10 @@ export const getChallenge = (id) => api.get(`/challenges/${id}`);
 export const getCourses = () => api.get('/courses');
 export const getCourse = (courseId) => api.get(`/courses/${courseId}`);
 export const getCourseLevels = (courseId) => api.get(`/courses/${courseId}/levels`);
-export const getLevelQuestions = (courseId, level) => api.get(`/courses/${courseId}/levels/${level}/questions`);
-export const completeQuestion = (userId, questionId) => api.post(`/courses/progress/${userId}/complete`, { questionId });
+export const getLevelQuestions = (courseId, level, userId = 'default-user') => 
+  api.get(`/courses/${courseId}/levels/${level}/questions?userId=${userId}`);
+export const completeQuestion = (userId, data) => api.post(`/courses/progress/${userId}/complete`, data);
+export const getUserProgress = (userId) => api.get(`/courses/progress/${userId}`);
 
 // Course Management (Admin)
 export const updateCourse = (courseId, course) => api.put(`/courses/${courseId}`, course);
