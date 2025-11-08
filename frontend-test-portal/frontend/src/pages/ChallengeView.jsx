@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getChallenge, submitSolution, evaluateSolution, getSubmissionResult } from '../services/api';
+import { getChallenge, submitSolution, evaluateSolution, getSubmissionResult, getLevelQuestions } from '../services/api';
 import CodeEditor from '../components/CodeEditor';
 import PreviewFrame from '../components/PreviewFrame';
 import ResultsPanel from '../components/ResultsPanel';
@@ -10,13 +10,18 @@ export default function ChallengeView() {
   const navigate = useNavigate();
   
   const [challenge, setChallenge] = useState(null);
+  const [allLevelQuestions, setAllLevelQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [code, setCode] = useState({ html: '', css: '', js: '' });
   const [submitting, setSubmitting] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
+  const [evaluationStep, setEvaluationStep] = useState(''); // Track evaluation progress
   const [result, setResult] = useState(null);
   const [candidateName, setCandidateName] = useState('');
   const [showNameModal, setShowNameModal] = useState(false);
+  const [showExpectedScreenshot, setShowExpectedScreenshot] = useState(false);
+  const [expectedScreenshotUrl, setExpectedScreenshotUrl] = useState('');
   
   const previewRef = useRef();
 
@@ -27,11 +32,48 @@ export default function ChallengeView() {
   const loadChallenge = async () => {
     try {
       const response = await getChallenge(id);
-      setChallenge(response.data);
+      const challengeData = response.data;
+      setChallenge(challengeData);
+      
+      // Load all questions from the same level for navigation
+      if (challengeData.courseId && challengeData.level) {
+        try {
+          const levelQuestionsRes = await getLevelQuestions(challengeData.courseId, challengeData.level);
+          const questions = levelQuestionsRes.data;
+          setAllLevelQuestions(questions);
+          
+          // Find current question index
+          const currentIndex = questions.findIndex(q => q.id === id);
+          setCurrentQuestionIndex(currentIndex);
+        } catch (err) {
+          console.error('Failed to load level questions:', err);
+        }
+      }
+      
+      // Generate expected screenshot URL if available
+      if (challengeData.expectedSolution) {
+        // Create a preview URL for the expected solution
+        const blob = new Blob([challengeData.expectedSolution.html || ''], { type: 'text/html' });
+        setExpectedScreenshotUrl(URL.createObjectURL(blob));
+      }
     } catch (error) {
       console.error('Failed to load challenge:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      const prevQuestion = allLevelQuestions[currentQuestionIndex - 1];
+      navigate(`/challenge/${prevQuestion.id}`);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < allLevelQuestions.length - 1) {
+      const nextQuestion = allLevelQuestions[currentQuestionIndex + 1];
+      navigate(`/challenge/${nextQuestion.id}`);
     }
   };
 
@@ -67,77 +109,41 @@ export default function ChallengeView() {
 
       const submissionId = submitResponse.data.submissionId;
       
-      // Start evaluation
+      // Start evaluation with real-time progress
       setEvaluating(true);
-      setEvaluationStep('Starting evaluation...');
+      setEvaluationStep('🚀 Starting evaluation...');
       
       try {
-        await evaluateSolution(submissionId);
-        setEvaluationStep('Running hybrid evaluation...');
-      } catch (evalError) {
-        console.warn('Evaluation request failed, will poll for results:', evalError);
-        setEvaluationStep('Checking evaluation status...');
-        // Continue to polling even if evaluation endpoint fails
-        // The submission was saved, so we can still check for results
+        // Show progress stages
+        setTimeout(() => setEvaluationStep('📸 Rendering screenshots...'), 500);
+        setTimeout(() => setEvaluationStep('🔍 Comparing DOM structure...'), 2000);
+        setTimeout(() => setEvaluationStep('🎨 Matching pixels...'), 4000);
+        setTimeout(() => setEvaluationStep('📊 Calculating final score...'), 6000);
         
-        // If 404 or connection refused, likely server needs restart
-        if (evalError.code === 'ERR_NETWORK' || evalError.response?.status === 404) {
-          console.error('⚠️ Backend evaluation endpoint not responding.');
-          console.error('💡 Solution: Restart the backend server (npm run dev)');
-          setEvaluationStep('⚠️ Evaluation service not responding - polling for results...');
-        }
+        // Call evaluation and WAIT for the result (same as admin panel)
+        const evalResponse = await evaluateSolution(submissionId);
+        
+        // Evaluation complete - show result immediately
+        setEvaluationStep('✅ Complete!');
+        setResult(evalResponse.data.result);
+        setEvaluating(false);
+        
+      } catch (evalError) {
+        console.error('Evaluation failed:', evalError);
+        setEvaluating(false);
+        setEvaluationStep('');
+        
+        const errorMsg = evalError.response?.data?.details || evalError.message;
+        alert(
+          `❌ Evaluation failed: ${errorMsg}\n\n` +
+          'Your submission was saved, but evaluation encountered an error.\n\n' +
+          'Solutions:\n' +
+          '1. Check the admin panel for your submission\n' +
+          '2. Ask admin to re-evaluate\n' +
+          '3. Check if backend server is running (port 5000)\n' +
+          '4. Check browser console for details'
+        );
       }
-
-      // Poll for results
-      let pollCount = 0;
-      const maxPolls = 30; // 60 seconds max (30 polls × 2 seconds)
-      
-      const pollResult = async () => {
-        try {
-          pollCount++;
-          
-          // Update progress message
-          if (pollCount <= 3) {
-            setEvaluationStep('📸 Rendering screenshots...');
-          } else if (pollCount <= 6) {
-            setEvaluationStep('🔍 Comparing DOM structure...');
-          } else if (pollCount <= 10) {
-            setEvaluationStep('🎨 Matching pixel-by-pixel...');
-          } else if (pollCount <= 15) {
-            setEvaluationStep('📊 Calculating scores...');
-          } else {
-            setEvaluationStep(`⏳ Still evaluating... (${pollCount * 2}s)`);
-          }
-          
-          const resultResponse = await getSubmissionResult(submissionId);
-          if (resultResponse.data.status !== 'pending') {
-            setEvaluationStep('✅ Complete!');
-            setResult(resultResponse.data.result);
-            setEvaluating(false);
-          } else {
-            if (pollCount >= maxPolls) {
-              throw new Error('Evaluation timeout');
-            }
-            setTimeout(pollResult, 2000);
-          }
-        } catch (error) {
-          console.error('Error fetching result:', error);
-          // If polling fails after multiple attempts, show error
-          setEvaluating(false);
-          setEvaluationStep('');
-          alert('⚠️ Evaluation is taking longer than expected.\n\n' +
-                'Your submission was saved successfully.\n\n' +
-                'Possible causes:\n' +
-                '• Backend server needs restart\n' +
-                '• Evaluation process is slow\n\n' +
-                'Solutions:\n' +
-                '1. Check the admin panel for your submission\n' +
-                '2. Ask admin to re-evaluate\n' +
-                '3. Restart backend server if you have access');
-        }
-      };
-
-      setTimeout(pollResult, 1000);
 
     } catch (error) {
       console.error('Submission error:', error);
@@ -191,10 +197,41 @@ export default function ChallengeView() {
             </button>
             <div>
               <h1 className="text-xl font-bold text-gray-900">{challenge.title}</h1>
-              <p className="text-sm text-gray-600">{challenge.difficulty} • {challenge.timeLimit} min</p>
+              <p className="text-sm text-gray-600">
+                {challenge.difficulty && `${challenge.difficulty} • `}
+                {challenge.timeLimit ? `${challenge.timeLimit} min` : '30 min'}
+                {allLevelQuestions.length > 0 && ` • Question ${currentQuestionIndex + 1} of ${allLevelQuestions.length}`}
+              </p>
             </div>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
+            {/* Question Navigation */}
+            {allLevelQuestions.length > 1 && (
+              <div className="flex gap-2 mr-4">
+                <button
+                  onClick={handlePreviousQuestion}
+                  disabled={currentQuestionIndex === 0}
+                  className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                  title="Previous Question"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Previous
+                </button>
+                <button
+                  onClick={handleNextQuestion}
+                  disabled={currentQuestionIndex === allLevelQuestions.length - 1}
+                  className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                  title="Next Question"
+                >
+                  Next
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
             <button onClick={handleRunCode} className="btn-secondary">
               ▶ Run Code
             </button>
@@ -216,16 +253,83 @@ export default function ChallengeView() {
           {/* Instructions */}
           <div className="card">
             <h2 className="text-lg font-bold mb-3">Challenge Instructions</h2>
-            <div className="text-gray-700 whitespace-pre-wrap">{challenge.instructions}</div>
             
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-semibold text-blue-900 mb-2">Passing Criteria:</h3>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>• Structure Score: ≥ {challenge.passingThreshold.structure}%</li>
-                <li>• Visual Score: ≥ {challenge.passingThreshold.visual}%</li>
-                <li>• Overall Score: ≥ {challenge.passingThreshold.overall}%</li>
-              </ul>
-            </div>
+            {/* Course/Level Breadcrumb (for new format) */}
+            {challenge.courseId && (
+              <div className="mb-3 text-sm text-gray-600">
+                <span className="font-medium">Course:</span> {challenge.courseId.toUpperCase()} • 
+                <span className="ml-2 font-medium">Level:</span> {challenge.level} • 
+                <span className="ml-2 font-medium">Points:</span> {challenge.points || 100}
+              </div>
+            )}
+            
+            <div className="text-gray-700 whitespace-pre-wrap mb-4">{challenge.instructions}</div>
+            
+            {/* Assets Section (for new format) */}
+            {challenge.assets?.images && challenge.assets.images.length > 0 && (
+              <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <h3 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Assets for this challenge:
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {challenge.assets.images.map((img, index) => (
+                    <div key={index} className="bg-white p-3 rounded-lg border border-purple-100">
+                      <img 
+                        src={img.path} 
+                        alt={img.name}
+                        className="w-full h-32 object-cover rounded mb-2"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'block';
+                        }}
+                      />
+                      <div style={{display: 'none'}} className="w-full h-32 bg-gray-200 rounded mb-2 flex items-center justify-center text-gray-400 text-xs">
+                        Image not found
+                      </div>
+                      <p className="text-xs font-medium text-gray-900">{img.name}</p>
+                      <p className="text-xs text-gray-600 mt-1">{img.description}</p>
+                      <code className="text-xs text-purple-700 bg-purple-50 px-2 py-1 rounded mt-2 block">
+                        {img.path}
+                      </code>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Hints Section (for new format) */}
+            {challenge.hints && challenge.hints.length > 0 && (
+              <details className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg cursor-pointer">
+                <summary className="font-semibold text-yellow-900 cursor-pointer flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  💡 Hints ({challenge.hints.length})
+                </summary>
+                <div className="mt-3 space-y-2">
+                  {challenge.hints.map((hint, index) => (
+                    <p key={index} className="text-sm text-yellow-800 pl-4 border-l-2 border-yellow-300">
+                      {index + 1}. {hint}
+                    </p>
+                  ))}
+                </div>
+              </details>
+            )}
+            
+            {/* Passing Criteria (for old format with passingThreshold) */}
+            {challenge.passingThreshold && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-semibold text-blue-900 mb-2">Passing Criteria:</h3>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Structure Score: ≥ {challenge.passingThreshold.structure}%</li>
+                  <li>• Visual Score: ≥ {challenge.passingThreshold.visual}%</li>
+                  <li>• Overall Score: ≥ {challenge.passingThreshold.overall}%</li>
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Code Editors */}
@@ -241,9 +345,46 @@ export default function ChallengeView() {
         <div className="flex flex-col gap-4 overflow-auto">
           {/* Preview */}
           <div className="card flex-1">
-            <h2 className="text-lg font-bold mb-3">Live Preview</h2>
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-bold">Live Preview</h2>
+              <button
+                onClick={() => setShowExpectedScreenshot(!showExpectedScreenshot)}
+                className="text-sm px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                title="Toggle expected result view"
+              >
+                {showExpectedScreenshot ? '👁️ Hide' : '🎯 Show'} Expected Result
+              </button>
+            </div>
             <PreviewFrame ref={previewRef} code={code} />
           </div>
+
+          {/* Expected Screenshot */}
+          {showExpectedScreenshot && challenge?.expectedSolution && (
+            <div className="card">
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-bold text-green-700">✅ Expected Result</h2>
+                <span className="text-xs text-gray-500">This is what your solution should look like</span>
+              </div>
+              <div className="border-2 border-green-200 rounded-lg overflow-hidden bg-white">
+                <PreviewFrame 
+                  code={{
+                    html: challenge.expectedSolution.html || '',
+                    css: challenge.expectedSolution.css || '',
+                    js: challenge.expectedSolution.js || ''
+                  }} 
+                />
+              </div>
+              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-800">
+                  <strong>💡 Tip:</strong> Your solution will be compared against this expected result using:
+                </p>
+                <ul className="text-xs text-green-700 mt-2 space-y-1 ml-4">
+                  <li>• <strong>DOM Structure</strong> (40%) - HTML elements and hierarchy</li>
+                  <li>• <strong>Visual Appearance</strong> (60%) - Pixel-by-pixel comparison (921,600 pixels)</li>
+                </ul>
+              </div>
+            </div>
+          )}
 
           {/* Results */}
           {(evaluating || result) && (

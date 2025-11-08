@@ -14,6 +14,7 @@ const challengesRouter = require('./routes/challenges');
 const submissionsRouter = require('./routes/submissions');
 const evaluationRouter = require('./routes/evaluation');
 const adminRouter = require('./routes/admin');
+const coursesRouter = require('./routes/courses');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,12 +26,17 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 // Create necessary directories
 const screenshotsDir = path.join(__dirname, 'screenshots');
+const assetsDir = path.join(__dirname, 'assets');
 if (!fs.existsSync(screenshotsDir)) {
   fs.mkdirSync(screenshotsDir, { recursive: true });
 }
+if (!fs.existsSync(assetsDir)) {
+  fs.mkdirSync(assetsDir, { recursive: true });
+}
 
-// Static file serving for screenshots (temporary storage)
+// Static file serving for screenshots and assets
 app.use('/screenshots', express.static(screenshotsDir));
+app.use('/assets', express.static(assetsDir));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -38,6 +44,7 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
+app.use('/api/courses', coursesRouter);
 app.use('/api/challenges', challengesRouter);
 app.use('/api/submissions', submissionsRouter);
 app.use('/api/evaluate', evaluationRouter);

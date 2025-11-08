@@ -11,6 +11,7 @@ const path = require('path');
 
 const submissionsPath = path.join(__dirname, '../data/submissions.json');
 const challengesPath = path.join(__dirname, '../data/challenges.json');
+const challengesNewPath = path.join(__dirname, '../data/challenges-new.json');
 
 // Helper functions
 const getSubmissions = () => {
@@ -25,6 +26,37 @@ const saveSubmissions = (submissions) => {
 const getChallenges = () => {
   const data = fs.readFileSync(challengesPath, 'utf8');
   return JSON.parse(data);
+};
+
+// Get challenge from either old or new format
+const getChallenge = (challengeId) => {
+  try {
+    // Try old format first
+    const oldChallenges = getChallenges();
+    let challenge = oldChallenges.find(c => c.id === challengeId);
+    
+    if (challenge) {
+      console.log(`📄 Found challenge in old format: ${challengeId}`);
+      return challenge;
+    }
+    
+    // If not found, try new format
+    if (fs.existsSync(challengesNewPath)) {
+      const newData = fs.readFileSync(challengesNewPath, 'utf8');
+      const newChallenges = JSON.parse(newData);
+      challenge = newChallenges.find(c => c.id === challengeId);
+      
+      if (challenge) {
+        console.log(`📄 Found challenge in new format: ${challengeId}`);
+        return challenge;
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error loading challenge:', error);
+    return null;
+  }
 };
 
 /**
@@ -49,10 +81,10 @@ router.post('/', async (req, res) => {
     }
     
     // Get challenge with expected solution
-    const challenges = getChallenges();
-    const challenge = challenges.find(c => c.id === submission.challengeId);
+    const challenge = getChallenge(submission.challengeId);
     
     if (!challenge) {
+      console.error(`❌ Challenge not found: ${submission.challengeId}`);
       return res.status(404).json({ error: 'Challenge not found' });
     }
     
@@ -110,10 +142,10 @@ router.post('/quick', async (req, res) => {
     }
     
     // Get challenge
-    const challenges = getChallenges();
-    const challenge = challenges.find(c => c.id === challengeId);
+    const challenge = getChallenge(challengeId);
     
     if (!challenge) {
+      console.error(`❌ Challenge not found: ${challengeId}`);
       return res.status(404).json({ error: 'Challenge not found' });
     }
     

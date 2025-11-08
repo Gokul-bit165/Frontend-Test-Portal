@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function SubmissionList({ submissions, onReEvaluate }) {
+export default function SubmissionList({ submissions, onReEvaluate, onDelete }) {
   const [expandedId, setExpandedId] = useState(null);
   const [screenshotModal, setScreenshotModal] = useState(null); // { src, title }
 
@@ -123,6 +123,12 @@ export default function SubmissionList({ submissions, onReEvaluate }) {
               className="text-green-600 hover:text-green-700 text-sm font-medium"
             >
               🔄 Re-evaluate
+            </button>
+            <button
+              onClick={() => onDelete(submission.id)}
+              className="text-red-600 hover:text-red-700 text-sm font-medium"
+            >
+              🗑️ Delete
             </button>
           </div>
 

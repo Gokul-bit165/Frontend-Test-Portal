@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllSubmissions, reEvaluateSubmission } from '../services/api';
+import { getAllSubmissions, reEvaluateSubmission, deleteSubmission } from '../services/api';
 import SubmissionList from '../components/SubmissionList';
 
 export default function AdminDashboard() {
@@ -45,6 +45,18 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDelete = async (submissionId) => {
+    if (!confirm('Are you sure you want to delete this submission? This action cannot be undone.')) return;
+    
+    try {
+      await deleteSubmission(submissionId);
+      await loadSubmissions();
+      alert('Submission deleted successfully!');
+    } catch (error) {
+      alert('Failed to delete submission: ' + error.message);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
@@ -62,10 +74,16 @@ export default function AdminDashboard() {
           </div>
           <div className="flex gap-3">
             <button
-              onClick={() => navigate('/admin/challenges')}
+              onClick={() => navigate('/admin/courses')}
               className="btn-primary"
             >
-              Manage Challenges
+              📚 Manage Courses
+            </button>
+            <button
+              onClick={() => navigate('/admin/challenges')}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              Old Challenges
             </button>
             <button
               onClick={handleLogout}
@@ -112,6 +130,7 @@ export default function AdminDashboard() {
             <SubmissionList
               submissions={submissions}
               onReEvaluate={handleReEvaluate}
+              onDelete={handleDelete}
             />
           )}
         </div>

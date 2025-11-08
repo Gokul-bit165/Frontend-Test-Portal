@@ -1,0 +1,213 @@
+[
+  {
+    "id": "html-css-l1-q1",
+    "courseId": "course-html-css",
+    "level": 1,
+    "questionNumber": 1,
+    "title": "Simple Profile Card",
+    "description": "Create a basic profile card with an image, name, and description. Use the provided avatar image in your design.",
+    "instructions": "Build a profile card containing:\n- Profile image (use: /assets/images/avatar-1.png)\n- Name heading: 'John Doe'\n- Role text: 'Web Developer'\n- Short bio paragraph\n- Centered layout\n- Width: 300px\n- White background with shadow\n- Border radius: 15px",
+    "assets": {
+      "images": [
+        {
+          "name": "avatar-1.png",
+          "path": "/assets/images/avatar-1.png",
+          "description": "Profile avatar image"
+        }
+      ],
+      "reference": "/assets/references/html-css-l1-q1-ref.png"
+    },
+    "hints": [
+      "Use <img> tag for the profile picture",
+      "Center elements with text-align or flexbox",
+      "Add box-shadow for depth effect"
+    ],
+    "tags": ["HTML", "CSS", "Card", "Image"],
+    "timeLimit": 15,
+    "points": 100,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Profile Card</title>\n</head>\n<body>\n  <div class=\"card\">\n    <img src=\"/assets/images/avatar-1.png\" alt=\"Profile\" class=\"avatar\">\n    <h2>John Doe</h2>\n    <p class=\"role\">Web Developer</p>\n    <p class=\"bio\">Passionate about creating beautiful and functional websites.</p>\n  </div>\n</body>\n</html>",
+      "css": "body {\n  margin: 0;\n  padding: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: #f5f5f5;\n  font-family: Arial, sans-serif;\n}\n\n.card {\n  width: 300px;\n  padding: 30px;\n  background: white;\n  border-radius: 15px;\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\n  text-align: center;\n}\n\n.avatar {\n  width: 120px;\n  height: 120px;\n  border-radius: 50%;\n  object-fit: cover;\n  margin-bottom: 15px;\n}\n\nh2 {\n  margin: 10px 0;\n  color: #333;\n  font-size: 24px;\n}\n\n.role {\n  color: #666;\n  font-size: 14px;\n  margin: 5px 0 15px;\n}\n\n.bio {\n  color: #888;\n  font-size: 14px;\n  line-height: 1.6;\n  margin: 0;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-01-15T10:00:00.000Z",
+    "updatedAt": "2025-01-15T10:00:00.000Z"
+  },
+  {
+    "id": "html-css-l1-q2",
+    "courseId": "course-html-css",
+    "level": 1,
+    "questionNumber": 2,
+    "title": "Product Card with Image",
+    "description": "Design a product card showcasing an item with image, title, price, and a buy button. Reference image provided.",
+    "instructions": "Create a product card with:\n- Product image (use: /assets/images/product-1.png)\n- Product name: 'Wireless Headphones'\n- Price: '$99.99'\n- 'Add to Cart' button\n- Card width: 280px\n- Hover effect on button\n- Clean, modern design",
+    "assets": {
+      "images": [
+        {
+          "name": "product-1.png",
+          "path": "/assets/images/product-1.png",
+          "description": "Product image - wireless headphones"
+        }
+      ],
+      "reference": "/assets/references/html-css-l1-q2-ref.png"
+    },
+    "hints": [
+      "Use overflow: hidden on card for clean edges",
+      "Make button interactive with :hover",
+      "Use bold font for price"
+    ],
+    "tags": ["HTML", "CSS", "E-commerce", "Card"],
+    "timeLimit": 20,
+    "points": 100,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 77
+    },
+    "isLocked": false,
+    "prerequisite": "html-css-l1-q1",
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Product Card</title>\n</head>\n<body>\n  <div class=\"product-card\">\n    <img src=\"/assets/images/product-1.png\" alt=\"Product\" class=\"product-image\">\n    <div class=\"product-info\">\n      <h3>Wireless Headphones</h3>\n      <p class=\"price\">$99.99</p>\n      <button class=\"buy-btn\">Add to Cart</button>\n    </div>\n  </div>\n</body>\n</html>",
+      "css": "body {\n  margin: 0;\n  padding: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: #f0f0f0;\n  font-family: Arial, sans-serif;\n}\n\n.product-card {\n  width: 280px;\n  background: white;\n  border-radius: 12px;\n  overflow: hidden;\n  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);\n}\n\n.product-image {\n  width: 100%;\n  height: 200px;\n  object-fit: cover;\n}\n\n.product-info {\n  padding: 20px;\n  text-align: center;\n}\n\nh3 {\n  margin: 0 0 10px;\n  color: #333;\n  font-size: 20px;\n}\n\n.price {\n  font-size: 24px;\n  font-weight: bold;\n  color: #2ecc71;\n  margin: 10px 0 15px;\n}\n\n.buy-btn {\n  width: 100%;\n  padding: 12px;\n  background: #3498db;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  font-size: 16px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: background 0.3s;\n}\n\n.buy-btn:hover {\n  background: #2980b9;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-01-15T11:00:00.000Z",
+    "updatedAt": "2025-01-15T11:00:00.000Z"
+  },
+  {
+    "id": "html-css-l2-q1",
+    "courseId": "course-html-css",
+    "level": 2,
+    "questionNumber": 1,
+    "title": "Hero Section with Background",
+    "description": "Create an eye-catching hero section with a background image, heading, and call-to-action button.",
+    "instructions": "Build a hero section with:\n- Background image (use: /assets/images/hero-bg-1.jpg)\n- Overlay for text readability\n- Main heading: 'Welcome to Our Platform'\n- Subheading: 'Start your journey today'\n- 'Get Started' button\n- Centered content\n- Full viewport height",
+    "assets": {
+      "images": [
+        {
+          "name": "hero-bg-1.jpg",
+          "path": "/assets/images/hero-bg-1.jpg",
+          "description": "Hero background image"
+        }
+      ],
+      "reference": "/assets/references/html-css-l2-q1-ref.png"
+    },
+    "hints": [
+      "Use background-image CSS property",
+      "Add a semi-transparent overlay with ::before",
+      "Use min-height: 100vh for full height"
+    ],
+    "tags": ["HTML", "CSS", "Hero", "Background"],
+    "timeLimit": 25,
+    "points": 150,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 85,
+      "overall": 80
+    },
+    "isLocked": false,
+    "prerequisite": "html-css-l1-q2",
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Hero Section</title>\n</head>\n<body>\n  <section class=\"hero\">\n    <div class=\"hero-content\">\n      <h1>Welcome to Our Platform</h1>\n      <p>Start your journey today</p>\n      <button class=\"cta-btn\">Get Started</button>\n    </div>\n  </section>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n}\n\n.hero {\n  position: relative;\n  min-height: 100vh;\n  background-image: url('/assets/images/hero-bg-1.jpg');\n  background-size: cover;\n  background-position: center;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.hero::before {\n  content: '';\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n.hero-content {\n  position: relative;\n  z-index: 1;\n  text-align: center;\n  color: white;\n}\n\nh1 {\n  font-size: 48px;\n  margin-bottom: 15px;\n}\n\np {\n  font-size: 20px;\n  margin-bottom: 30px;\n}\n\n.cta-btn {\n  padding: 15px 40px;\n  background: #e74c3c;\n  color: white;\n  border: none;\n  border-radius: 30px;\n  font-size: 18px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: transform 0.3s, background 0.3s;\n}\n\n.cta-btn:hover {\n  background: #c0392b;\n  transform: scale(1.05);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-01-16T10:00:00.000Z",
+    "updatedAt": "2025-01-16T10:00:00.000Z"
+  },
+  {
+    "id": "javascript-l1-q1",
+    "courseId": "course-javascript",
+    "level": 1,
+    "questionNumber": 1,
+    "title": "Interactive Counter",
+    "description": "Create a simple counter with increment and decrement buttons using JavaScript.",
+    "instructions": "Build a counter app with:\n- Display showing current count (starts at 0)\n- '+' button to increment\n- '-' button to decrement\n- Counter cannot go below 0\n- Use provided icon images for buttons\n- Center the counter on page",
+    "assets": {
+      "images": [
+        {
+          "name": "plus-icon.png",
+          "path": "/assets/images/plus-icon.png",
+          "description": "Plus button icon"
+        },
+        {
+          "name": "minus-icon.png",
+          "path": "/assets/images/minus-icon.png",
+          "description": "Minus button icon"
+        }
+      ],
+      "reference": "/assets/references/javascript-l1-q1-ref.png"
+    },
+    "hints": [
+      "Use addEventListener for button clicks",
+      "Store count in a variable",
+      "Update innerText to show count"
+    ],
+    "tags": ["JavaScript", "Events", "DOM", "Logic"],
+    "timeLimit": 20,
+    "points": 100,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 75,
+      "overall": 72
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Counter</title>\n</head>\n<body>\n  <div class=\"counter-container\">\n    <button id=\"decrease\" class=\"btn\">-</button>\n    <span id=\"count\" class=\"count\">0</span>\n    <button id=\"increase\" class=\"btn\">+</button>\n  </div>\n</body>\n</html>",
+      "css": "body {\n  margin: 0;\n  padding: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  font-family: Arial, sans-serif;\n}\n\n.counter-container {\n  background: white;\n  padding: 40px 60px;\n  border-radius: 15px;\n  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);\n  display: flex;\n  align-items: center;\n  gap: 30px;\n}\n\n.count {\n  font-size: 60px;\n  font-weight: bold;\n  color: #333;\n  min-width: 80px;\n  text-align: center;\n}\n\n.btn {\n  width: 50px;\n  height: 50px;\n  background: #667eea;\n  color: white;\n  border: none;\n  border-radius: 50%;\n  font-size: 30px;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\n.btn:hover {\n  background: #764ba2;\n  transform: scale(1.1);\n}\n\n.btn:active {\n  transform: scale(0.95);\n}",
+      "js": "let count = 0;\nconst countDisplay = document.getElementById('count');\nconst increaseBtn = document.getElementById('increase');\nconst decreaseBtn = document.getElementById('decrease');\n\nincreaseBtn.addEventListener('click', function() {\n  count++;\n  countDisplay.innerText = count;\n});\n\ndecreaseBtn.addEventListener('click', function() {\n  if (count > 0) {\n    count--;\n    countDisplay.innerText = count;\n  }\n});"
+    },
+    "createdAt": "2025-01-17T10:00:00.000Z",
+    "updatedAt": "2025-01-17T10:00:00.000Z"
+  },
+  {
+    "id": "fullstack-l1-q1",
+    "courseId": "course-fullstack",
+    "level": 1,
+    "questionNumber": 1,
+    "title": "Contact Form with Validation",
+    "description": "Build a complete contact form with client-side validation and styled error messages.",
+    "instructions": "Create a contact form with:\n- Name, email, and message fields\n- Submit button\n- Validate: name (not empty), email (valid format), message (min 10 chars)\n- Show error messages in red below fields\n- Success message on valid submission\n- Use provided form icon",
+    "assets": {
+      "images": [
+        {
+          "name": "form-icon.png",
+          "path": "/assets/images/form-icon.png",
+          "description": "Form header icon"
+        }
+      ],
+      "reference": "/assets/references/fullstack-l1-q1-ref.png"
+    },
+    "hints": [
+      "Use form.addEventListener('submit', ...)",
+      "Use event.preventDefault() to stop form submission",
+      "Check email with regex or includes('@')",
+      "Display errors dynamically with JavaScript"
+    ],
+    "tags": ["Full Stack", "Forms", "Validation", "JavaScript"],
+    "timeLimit": 35,
+    "points": 200,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 78
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Contact Form</title>\n</head>\n<body>\n  <div class=\"form-container\">\n    <img src=\"/assets/images/form-icon.png\" alt=\"Form\" class=\"form-icon\">\n    <h2>Contact Us</h2>\n    <form id=\"contactForm\">\n      <div class=\"field\">\n        <input type=\"text\" id=\"name\" placeholder=\"Your Name\">\n        <span class=\"error\" id=\"nameError\"></span>\n      </div>\n      <div class=\"field\">\n        <input type=\"email\" id=\"email\" placeholder=\"Your Email\">\n        <span class=\"error\" id=\"emailError\"></span>\n      </div>\n      <div class=\"field\">\n        <textarea id=\"message\" placeholder=\"Your Message\" rows=\"5\"></textarea>\n        <span class=\"error\" id=\"messageError\"></span>\n      </div>\n      <button type=\"submit\">Send Message</button>\n      <div class=\"success\" id=\"successMsg\"></div>\n    </form>\n  </div>\n</body>\n</html>",
+      "css": "body {\n  margin: 0;\n  padding: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: #f8f9fa;\n  font-family: Arial, sans-serif;\n}\n\n.form-container {\n  background: white;\n  padding: 40px;\n  border-radius: 10px;\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\n  width: 400px;\n  text-align: center;\n}\n\n.form-icon {\n  width: 60px;\n  margin-bottom: 10px;\n}\n\nh2 {\n  margin: 0 0 25px;\n  color: #333;\n}\n\n.field {\n  margin-bottom: 20px;\n  text-align: left;\n}\n\ninput, textarea {\n  width: 100%;\n  padding: 12px;\n  border: 1px solid #ddd;\n  border-radius: 6px;\n  font-size: 14px;\n  font-family: Arial, sans-serif;\n}\n\ninput:focus, textarea:focus {\n  outline: none;\n  border-color: #4CAF50;\n}\n\n.error {\n  display: block;\n  color: #e74c3c;\n  font-size: 12px;\n  margin-top: 5px;\n  min-height: 16px;\n}\n\nbutton {\n  width: 100%;\n  padding: 14px;\n  background: #4CAF50;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  font-size: 16px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: background 0.3s;\n}\n\nbutton:hover {\n  background: #45a049;\n}\n\n.success {\n  color: #4CAF50;\n  margin-top: 15px;\n  font-weight: 600;\n  min-height: 20px;\n}",
+      "js": "const form = document.getElementById('contactForm');\nconst nameInput = document.getElementById('name');\nconst emailInput = document.getElementById('email');\nconst messageInput = document.getElementById('message');\n\nform.addEventListener('submit', function(e) {\n  e.preventDefault();\n  \n  // Clear errors\n  document.getElementById('nameError').innerText = '';\n  document.getElementById('emailError').innerText = '';\n  document.getElementById('messageError').innerText = '';\n  document.getElementById('successMsg').innerText = '';\n  \n  let isValid = true;\n  \n  // Validate name\n  if (nameInput.value.trim() === '') {\n    document.getElementById('nameError').innerText = 'Name is required';\n    isValid = false;\n  }\n  \n  // Validate email\n  if (!emailInput.value.includes('@')) {\n    document.getElementById('emailError').innerText = 'Valid email is required';\n    isValid = false;\n  }\n  \n  // Validate message\n  if (messageInput.value.trim().length < 10) {\n    document.getElementById('messageError').innerText = 'Message must be at least 10 characters';\n    isValid = false;\n  }\n  \n  if (isValid) {\n    document.getElementById('successMsg').innerText = 'Form submitted successfully!';\n    form.reset();\n  }\n});"
+    },
+    "createdAt": "2025-01-18T10:00:00.000Z",
+    "updatedAt": "2025-01-18T10:00:00.000Z"
+  }
+]

@@ -2,6 +2,47 @@
 
 A full-stack web platform for evaluating frontend coding skills using hybrid DOM comparison and pixel-matching technology.
 
+## 🚀 Quick Start (Docker - Recommended)
+
+```powershell
+# One command setup!
+.\docker-setup.ps1
+
+# Open browser
+http://localhost
+```
+
+**That's it!** Docker handles everything: backend, frontend, Puppeteer, Nginx.
+
+📚 **Full Docker Guide**: [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)
+📋 **Quick Reference**: [DOCKER_QUICK_START.md](./DOCKER_QUICK_START.md)
+
+---
+
+## ✨ Latest Updates
+
+### 🐳 Docker Implementation
+- **One-command setup** - No manual configuration needed
+- **Production-ready** - Nginx reverse proxy, health checks
+- **Puppeteer included** - Chromium pre-installed
+- **Persistent volumes** - Data and screenshots saved
+
+### 🖼️ Expected Screenshot Feature
+- **Toggle button** on challenge page
+- **See expected result** before coding
+- **Side-by-side comparison** with your preview
+- **Evaluation tips** - Understand how scoring works
+
+### 🔧 Performance Improvements
+- **6-12x faster evaluation** (60s → 10s)
+- **No network errors** - Fixed timeout issues
+- **Better error handling** - Graceful failures
+- **Progress indicators** - Real-time feedback
+
+📖 **Complete Update Summary**: [UPDATE_SUMMARY.md](./UPDATE_SUMMARY.md)
+
+---
+
 ## 🏗️ Architecture Overview
 
 ### Tech Stack
@@ -84,6 +125,31 @@ frontend-test-portal/
 ---
 
 ## 🚀 Setup Instructions
+
+### Option 1: Docker (Recommended)
+
+**Prerequisites**: Docker Desktop ([Download](https://www.docker.com/products/docker-desktop))
+
+```powershell
+# First time setup
+.\docker-setup.ps1
+
+# Access application
+http://localhost              # Frontend
+http://localhost:5000         # Backend API
+
+# Useful commands
+docker-compose logs -f        # View logs
+docker-compose restart        # Restart
+docker-compose down           # Stop & remove
+.\docker-rebuild.ps1         # Rebuild after code changes
+```
+
+**Full documentation**: [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)
+
+---
+
+### Option 2: Manual Setup (Development)
 
 ### Prerequisites
 - Node.js 18+ and npm

@@ -1,0 +1,19 @@
+[
+  {
+    "userId": "user-001",
+    "username": "testuser",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "enrolledAt": "2025-01-15T10:00:00.000Z",
+        "currentLevel": 1,
+        "completedQuestions": [],
+        "totalPoints": 0,
+        "progress": 0
+      }
+    ],
+    "totalPoints": 0,
+    "achievements": [],
+    "createdAt": "2025-01-15T10:00:00.000Z"
+  }
+]

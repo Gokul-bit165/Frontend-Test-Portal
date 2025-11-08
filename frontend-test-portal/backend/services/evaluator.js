@@ -96,15 +96,23 @@ class Evaluator {
       return result;
       
     } catch (error) {
-      console.error('Evaluation error:', error);
+      console.error('❌ Evaluation error:', error.message);
+      console.error('   Stack:', error.stack);
       
-      result.error = error.message;
-      result.feedback.push({
-        type: 'error',
-        message: `Evaluation failed: ${error.message}`
-      });
-      
-      return result;
+      // Return a failed result with error info instead of throwing
+      return {
+        submissionId,
+        timestamp: new Date().toISOString(),
+        structureScore: 0,
+        visualScore: 0,
+        finalScore: 0,
+        passed: false,
+        error: error.message,
+        feedback: [{
+          type: 'error',
+          message: `Evaluation failed: ${error.message}. Please contact administrator.`
+        }]
+      };
     }
   }
   

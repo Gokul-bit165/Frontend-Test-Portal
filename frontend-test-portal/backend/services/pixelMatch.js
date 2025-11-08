@@ -21,9 +21,21 @@ class PixelMatcher {
    */
   async initBrowser() {
     if (!this.browser) {
+      const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || undefined;
+      
       this.browser = await puppeteer.launch({
         headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        executablePath,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage', // Overcome limited resource problems in Docker
+          '--disable-accelerated-2d-canvas',
+          '--disable-gpu',
+          '--disable-software-rasterizer',
+          '--disable-extensions'
+        ],
+        timeout: 30000 // 30 second launch timeout
       });
     }
     return this.browser;
@@ -159,7 +171,8 @@ class PixelMatcher {
       
       // Set content and wait for rendering
       await page.setContent(htmlContent, {
-        waitUntil: ['load', 'networkidle0']
+        waitUntil: 'domcontentloaded', // Faster than 'load'
+        timeout: 30000 // 30 second timeout (increased for Docker)
       });
       
       // Wait a bit for any animations or dynamic content

@@ -5,14 +5,16 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Use environment variable for API URL, fallback to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 120000 // 120 seconds for evaluation requests (Puppeteer in Docker needs time)
 });
 
 // Add auth token to requests if available
@@ -24,9 +26,27 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-// Challenges
+// Challenges (Legacy - still used for old system)
 export const getChallenges = () => api.get('/challenges');
 export const getChallenge = (id) => api.get(`/challenges/${id}`);
+
+// Courses (New course-based system)
+export const getCourses = () => api.get('/courses');
+export const getCourse = (courseId) => api.get(`/courses/${courseId}`);
+export const getCourseLevels = (courseId) => api.get(`/courses/${courseId}/levels`);
+export const getLevelQuestions = (courseId, level) => api.get(`/courses/${courseId}/levels/${level}/questions`);
+export const completeQuestion = (userId, questionId) => api.post(`/courses/progress/${userId}/complete`, { questionId });
+
+// Course Management (Admin)
+export const updateCourse = (courseId, course) => api.put(`/courses/${courseId}`, course);
+export const createCourse = (course) => api.post('/courses', course);
+export const deleteCourse = (courseId) => api.delete(`/courses/${courseId}`);
+export const getCourseQuestions = (courseId) => api.get(`/courses/${courseId}/questions`);
+export const updateQuestion = (questionId, question) => api.put(`/courses/questions/${questionId}`, question);
+export const createQuestion = (courseId, question) => api.post(`/courses/${courseId}/questions`, question);
+export const deleteQuestion = (questionId) => api.delete(`/courses/questions/${questionId}`);
+export const bulkUploadQuestions = (courseId, questions) => api.post(`/courses/${courseId}/questions/bulk`, { questions });
+export const getRandomQuestions = (courseId, level, count = 2) => api.get(`/courses/${courseId}/levels/${level}/randomize?count=${count}`);
 
 // Submissions
 export const submitSolution = (data) => api.post('/submissions', data);
@@ -61,5 +81,8 @@ export const getAllSubmissions = () =>
 
 export const reEvaluateSubmission = (id) =>
   api.post(`/admin/evaluate/${id}`);
+
+export const deleteSubmission = (id) =>
+  api.delete(`/admin/submissions/${id}`);
 
 export default api;

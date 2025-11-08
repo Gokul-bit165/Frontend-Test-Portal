@@ -1,0 +1,45 @@
+# Node modules
+node_modules
+**/node_modules
+npm-debug.log
+
+# Build artifacts
+dist
+build
+.vite
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+!README.md
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp
+temp
+.cache
+
+# Screenshots (will be volume-mounted)
+screenshots/*
+!screenshots/.gitkeep

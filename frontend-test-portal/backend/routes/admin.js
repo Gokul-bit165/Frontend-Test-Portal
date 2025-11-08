@@ -220,4 +220,46 @@ router.post('/evaluate/:submissionId', async (req, res) => {
   }
 });
 
+/**
+ * DELETE /api/admin/submissions/:id
+ * Delete a submission
+ */
+router.delete('/submissions/:id', (req, res) => {
+  try {
+    const submissions = getSubmissions();
+    const filtered = submissions.filter(s => s.id !== req.params.id);
+    
+    if (filtered.length === submissions.length) {
+      return res.status(404).json({ error: 'Submission not found' });
+    }
+    
+    // Save updated submissions
+    fs.writeFileSync(submissionsPath, JSON.stringify(filtered, null, 2));
+    
+    // Optional: Delete associated screenshot files
+    const screenshotDir = path.join(__dirname, '../screenshots');
+    try {
+      const screenshotFiles = [
+        `${req.params.id}-candidate.png`,
+        `${req.params.id}-expected.png`,
+        `${req.params.id}-diff.png`
+      ];
+      
+      screenshotFiles.forEach(file => {
+        const filePath = path.join(screenshotDir, file);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      });
+    } catch (screenshotError) {
+      console.warn('Failed to delete screenshots:', screenshotError.message);
+      // Don't fail the request if screenshot deletion fails
+    }
+    
+    res.json({ message: 'Submission deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete submission' });
+  }
+});
+
 module.exports = router;

@@ -1,22 +1,401 @@
 [
   {
-    "id": "10456551-6d65-4c18-bdb7-da5abd8fcc4a",
-    "challengeId": "ch-001",
-    "candidateName": "gokul",
+    "id": "a591129b-840d-4677-b383-e764126ff817",
+    "challengeId": "ch-003",
+    "candidateName": "gokul8",
     "code": {
-      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you want.\r\n  </p>\r\n</div>\r\n",
-      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh; /* Full viewport height */\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n  background-color: #f0f0f0;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
-      "js": "// No JS required for static card, but you could add interactions here if needed\r\nconsole.log(\"Card component loaded!\");\r\n"
+      "html": "<nav class=\"navbar\">\r\n  <ul class=\"nav-list\">\r\n    <li class=\"nav-item\"><a href=\"#\">Home</a></li>\r\n    <li class=\"nav-item\"><a href=\"#\">About</a></li>\r\n    <li class=\"nav-item\"><a href=\"#\">Services</a></li>\r\n    <li class=\"nav-item\"><a href=\"#\">Contact</a></li>\r\n  </ul>\r\n</nav>\r\n\r\n<div class=\"content\">\r\n  <h1>Welcome!</h1>\r\n  <p>Scroll down to see the fixed navbar in action.</p>\r\n  <p style=\"margin-top: 1000px;\">End of page content.</p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.navbar {\r\n  position: fixed;\r\n  top: 0;\r\n  width: 100%;\r\n  background-color: #1f2937;\r\n  padding: 20px 0;\r\n  z-index: 1000;\r\n}\r\n\r\n.nav-list {\r\n  list-style: none;\r\n  display: flex;\r\n  justify-content: center;\r\n  margin: 0;\r\n  padding: 0;\r\n  gap: 50px; /* spacing between links */\r\n}\r\n\r\n.nav-item a {\r\n  color: white;\r\n  text-decoration: none;\r\n  font-size: 16px;\r\n  font-weight: bold;\r\n  transition: color 0.3s;\r\n}\r\n\r\n.nav-item a:hover {\r\n  color: #60a5fa;\r\n}\r\n\r\n.content {\r\n  padding-top: 100px; /* to avoid content being hidden behind fixed navbar */\r\n  text-align: center;\r\n}\r\n",
+      "js": "// Optional: highlight active link or add scroll behavior\r\nconsole.log(\"Navbar loaded successfully\");\r\n"
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-08T04:50:15.554Z",
+    "evaluatedAt": "2025-11-08T04:52:12.023Z",
+    "result": {
+      "submissionId": "a591129b-840d-4677-b383-e764126ff817",
+      "timestamp": "2025-11-08T04:52:06.742Z",
+      "structureScore": 60,
+      "visualScore": 100,
+      "finalScore": 84,
+      "passed": false,
+      "thresholds": {
+        "structure": 80,
+        "visual": 85,
+        "overall": 82
+      },
+      "dom": {
+        "score": 60,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > nav[0]: <nav>",
+            "root > div[1]: <div>",
+            "root > div[1] > h1[0]: <h1>"
+          ],
+          "tagMismatches": [
+            "root > nav[0] > a[0]: Expected <a>, got <ul>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [
+            "root > nav[0] > a[0]: Expected href=\"#\", got \"none\""
+          ],
+          "classMatches": [
+            "root > nav[0]: class=\"navbar\"",
+            "root > div[1]: class=\"content\""
+          ],
+          "classMismatches": [],
+          "structureMatches": [
+            "root: Correct number of children (2)",
+            "root > div[1] > h1[0]: Correct number of children (0)"
+          ],
+          "structureMismatches": [
+            "root > nav[0]: Expected 4 children, got 1",
+            "root > nav[0] > a[0]: Expected 0 children, got 4",
+            "root > div[1]: Expected 1 children, got 3"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 100,
+        "passed": true,
+        "diffPixels": 4445,
+        "totalPixels": 921600,
+        "diffPercentage": "0.48",
+        "screenshots": {
+          "candidate": "/screenshots/a591129b-840d-4677-b383-e764126ff817-candidate.png",
+          "expected": "/screenshots/a591129b-840d-4677-b383-e764126ff817-expected.png",
+          "diff": "/screenshots/a591129b-840d-4677-b383-e764126ff817-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 84% (required: 82%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (60%, required: 80%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > nav[0] > a[0]: Expected <a>, got <ul>"
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (100%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
+  },
+  {
+    "id": "3563e190-b6d6-49fe-83f7-d02ddbd0472d",
+    "challengeId": "ch-001",
+    "candidateName": "gokul12",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\" />\r\n  <title>Button Example</title>\r\n</head>\r\n<body>\r\n  <script>\r\n    // Create button element\r\n    const button = document.createElement('button');\r\n    button.textContent = 'Click Me';\r\n\r\n    // Apply styles directly via JS\r\n    Object.assign(button.style, {\r\n      backgroundColor: '#3b82f6',\r\n      color: 'white',\r\n      padding: '12px 24px',\r\n      border: 'none',\r\n      borderRadius: '6px',\r\n      cursor: 'pointer',\r\n      fontSize: '16px',\r\n      transition: 'background-color 0.3s ease',\r\n    });\r\n\r\n    // Add hover effect using JS\r\n    button.addEventListener('mouseenter', () => {\r\n      button.style.backgroundColor = '#2563eb';\r\n    });\r\n    button.addEventListener('mouseleave', () => {\r\n      button.style.backgroundColor = '#3b82f6';\r\n    });\r\n\r\n    // Add click event to show alert\r\n    button.addEventListener('click', () => {\r\n      alert('Button clicked!');\r\n    });\r\n\r\n    // Add the button to the body\r\n    document.body.appendChild(button);\r\n  </script>\r\n</body>\r\n</html>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-08T05:43:00.408Z",
+    "evaluatedAt": "2025-11-08T05:43:29.621Z",
+    "result": {
+      "submissionId": "3563e190-b6d6-49fe-83f7-d02ddbd0472d",
+      "timestamp": "2025-11-08T05:43:24.995Z",
+      "structureScore": 40,
+      "visualScore": 99,
+      "finalScore": 75,
+      "passed": false,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 40,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>"
+          ],
+          "tagMismatches": [
+            "root > div[0]: Expected <div>, got <script>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [],
+          "classMatches": [],
+          "classMismatches": [
+            "root > div[0]: Missing class=\"card\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)"
+          ],
+          "structureMismatches": [
+            "root > div[0]: Expected 2 children, got 0"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 7659,
+        "totalPixels": 921600,
+        "diffPercentage": "0.83",
+        "screenshots": {
+          "candidate": "/screenshots/3563e190-b6d6-49fe-83f7-d02ddbd0472d-candidate.png",
+          "expected": "/screenshots/3563e190-b6d6-49fe-83f7-d02ddbd0472d-expected.png",
+          "diff": "/screenshots/3563e190-b6d6-49fe-83f7-d02ddbd0472d-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 75% (required: 75%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (40%, required: 70%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > div[0]: Expected <div>, got <script>"
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing CSS classes: root > div[0]: Missing class=\"card\""
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
+  },
+  {
+    "id": "6ead978b-9d0d-4ba1-a83d-ed7709052b16",
+    "challengeId": "ch-003",
+    "candidateName": "a2",
+    "code": {
+      "html": "<nav class=\"navbar\">\r\n  <ul class=\"nav-list\">\r\n    <li class=\"nav-item\"><a href=\"#\">Home</a></li>\r\n    <li class=\"nav-item\"><a href=\"#\">About</a></li>\r\n    <li class=\"nav-item\"><a href=\"#\">Services</a></li>\r\n    <li class=\"nav-item\"><a href=\"#\">Contact</a></li>\r\n  </ul>\r\n</nav>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n/* Navbar fixed at top with background color */\r\n.navbar {\r\n  position: fixed;\r\n  top: 0;\r\n  width: 100%;\r\n  background-color: #1f2937;\r\n  padding: 20px 0;\r\n  z-index: 1000;\r\n}\r\n\r\n/* Flexbox layout for nav links */\r\n.nav-list {\r\n  display: flex;\r\n  justify-content: center; /* evenly space horizontally */\r\n  list-style: none;\r\n  margin: 0;\r\n  padding: 0;\r\n  gap: 50px; /* space between links */\r\n}\r\n\r\n/* Nav links styling */\r\n.nav-item a {\r\n  color: white;\r\n  text-decoration: none;\r\n  font-weight: bold;\r\n  transition: color 0.3s;\r\n}\r\n\r\n/* Hover effect */\r\n.nav-item a:hover {\r\n  color: #60a5fa;\r\n}\r\n\r\n/* Add spacing for content so it’s not hidden behind navbar */\r\nbody::before {\r\n  content: '';\r\n  display: block;\r\n  height: 80px; /* adjust to match navbar height */\r\n}\r\n",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-08T08:05:26.096Z",
+    "evaluatedAt": "2025-11-08T08:05:30.006Z",
+    "result": {
+      "submissionId": "6ead978b-9d0d-4ba1-a83d-ed7709052b16",
+      "timestamp": "2025-11-08T08:05:26.287Z",
+      "structureScore": 44,
+      "visualScore": 100,
+      "finalScore": 78,
+      "passed": false,
+      "thresholds": {
+        "structure": 80,
+        "visual": 85,
+        "overall": 82
+      },
+      "dom": {
+        "score": 44,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > nav[0]: <nav>"
+          ],
+          "tagMismatches": [
+            "root > nav[0] > a[0]: Expected <a>, got <ul>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [
+            "root > nav[0] > a[0]: Expected href=\"#\", got \"none\""
+          ],
+          "classMatches": [
+            "root > nav[0]: class=\"navbar\""
+          ],
+          "classMismatches": [],
+          "structureMatches": [],
+          "structureMismatches": [
+            "root: Expected 2 children, got 1",
+            "root > nav[0]: Expected 4 children, got 1",
+            "root > nav[0] > a[0]: Expected 0 children, got 4"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 100,
+        "passed": true,
+        "diffPixels": 3407,
+        "totalPixels": 921600,
+        "diffPercentage": "0.37",
+        "screenshots": {
+          "candidate": "/screenshots/6ead978b-9d0d-4ba1-a83d-ed7709052b16-candidate.png",
+          "expected": "/screenshots/6ead978b-9d0d-4ba1-a83d-ed7709052b16-expected.png",
+          "diff": "/screenshots/6ead978b-9d0d-4ba1-a83d-ed7709052b16-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 78% (required: 82%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (44%, required: 80%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > nav[0] > a[0]: Expected <a>, got <ul>"
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (100%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bcfd808a-c854-478c-8025-635a4edce11f",
+    "challengeId": "ch-003",
+    "candidateName": "a2",
+    "code": {
+      "html": "<nav class=\"navbar\">\r\n  <a href=\"#\">Home</a>\r\n  <a href=\"#\">About</a>\r\n  <a href=\"#\">Services</a>\r\n  <a href=\"#\">Contact</a>\r\n</nav>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n/* Navbar fixed at top with background color */\r\n.navbar {\r\n  position: fixed;\r\n  top: 0;\r\n  width: 100%;\r\n  background-color: #1f2937;\r\n  padding: 20px;\r\n  display: flex;\r\n  justify-content: center; /* evenly space links */\r\n  gap: 50px; /* spacing between links */\r\n  z-index: 1000;\r\n}\r\n\r\n/* Nav links styling */\r\n.navbar a {\r\n  color: white;\r\n  text-decoration: none;\r\n  font-weight: bold;\r\n  transition: color 0.3s;\r\n}\r\n\r\n/* Hover effect */\r\n.navbar a:hover {\r\n  color: #60a5fa;\r\n}\r\n\r\n/* Add spacing so content isn’t hidden behind navbar */\r\nbody::before {\r\n  content: '';\r\n  display: block;\r\n  height: 80px; /* adjust to navbar height */\r\n}\r\n",
+      "js": ""
     },
     "status": "passed",
-    "submittedAt": "2025-11-08T03:54:27.436Z",
-    "evaluatedAt": "2025-11-08T04:28:54.762Z",
+    "submittedAt": "2025-11-08T08:07:26.095Z",
+    "evaluatedAt": "2025-11-08T08:07:28.311Z",
     "result": {
-      "submissionId": "10456551-6d65-4c18-bdb7-da5abd8fcc4a",
-      "timestamp": "2025-11-08T04:28:49.560Z",
-      "structureScore": 82,
+      "submissionId": "bcfd808a-c854-478c-8025-635a4edce11f",
+      "timestamp": "2025-11-08T08:07:26.184Z",
+      "structureScore": 95,
       "visualScore": 100,
-      "finalScore": 93,
+      "finalScore": 98,
+      "passed": true,
+      "thresholds": {
+        "structure": 80,
+        "visual": 85,
+        "overall": 82
+      },
+      "dom": {
+        "score": 95,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > nav[0]: <nav>",
+            "root > nav[0] > a[0]: <a>",
+            "root > nav[0] > a[1]: <a>",
+            "root > nav[0] > a[2]: <a>",
+            "root > nav[0] > a[3]: <a>"
+          ],
+          "tagMismatches": [],
+          "attributeMatches": [
+            "root > nav[0] > a[0]: href=\"#\"",
+            "root > nav[0] > a[1]: href=\"#\"",
+            "root > nav[0] > a[2]: href=\"#\"",
+            "root > nav[0] > a[3]: href=\"#\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > nav[0]: class=\"navbar\""
+          ],
+          "classMismatches": [],
+          "structureMatches": [
+            "root > nav[0]: Correct number of children (4)",
+            "root > nav[0] > a[0]: Correct number of children (0)",
+            "root > nav[0] > a[1]: Correct number of children (0)",
+            "root > nav[0] > a[2]: Correct number of children (0)",
+            "root > nav[0] > a[3]: Correct number of children (0)"
+          ],
+          "structureMismatches": [
+            "root: Expected 2 children, got 1"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 100,
+        "passed": true,
+        "diffPixels": 3407,
+        "totalPixels": 921600,
+        "diffPercentage": "0.37",
+        "screenshots": {
+          "candidate": "/screenshots/bcfd808a-c854-478c-8025-635a4edce11f-candidate.png",
+          "expected": "/screenshots/bcfd808a-c854-478c-8025-635a4edce11f-expected.png",
+          "diff": "/screenshots/bcfd808a-c854-478c-8025-635a4edce11f-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 98%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (95%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (100%). Your styling matches the expected design."
+        }
+      ]
+    }
+  },
+  {
+    "id": "80b132db-084c-4a10-8987-ed6330bf4639",
+    "challengeId": "ch-001",
+    "candidateName": "a3",
+    "code": {
+      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a centered card component with beautiful styling.\r\n  </p>\r\n</div>\r\n",
+      "css": "/* Reset default margins */\r\nbody {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center; /* Center horizontally */\r\n  align-items: center;     /* Center vertically */\r\n  background-color: #f3f4f6; /* Light gray background for contrast */\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n  color: #111827;\r\n}\r\n\r\n.card p {\r\n  color: #4b5563;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-08T08:14:42.476Z",
+    "evaluatedAt": "2025-11-08T08:14:45.648Z",
+    "result": {
+      "submissionId": "80b132db-084c-4a10-8987-ed6330bf4639",
+      "timestamp": "2025-11-08T08:14:42.676Z",
+      "structureScore": 91,
+      "visualScore": 99,
+      "finalScore": 96,
       "passed": true,
       "thresholds": {
         "structure": 70,
@@ -24,7 +403,7 @@
         "overall": 75
       },
       "dom": {
-        "score": 82,
+        "score": 91,
         "passed": true,
         "details": {
           "tagMatches": [
@@ -52,54 +431,184 @@
         "checks": {}
       },
       "pixel": {
-        "score": 100,
+        "score": 99,
         "passed": true,
-        "diffPixels": 4072,
+        "diffPixels": 5958,
         "totalPixels": 921600,
-        "diffPercentage": "0.44",
+        "diffPercentage": "0.65",
         "screenshots": {
-          "candidate": "/screenshots/10456551-6d65-4c18-bdb7-da5abd8fcc4a-candidate.png",
-          "expected": "/screenshots/10456551-6d65-4c18-bdb7-da5abd8fcc4a-expected.png",
-          "diff": "/screenshots/10456551-6d65-4c18-bdb7-da5abd8fcc4a-diff.png"
+          "candidate": "/screenshots/80b132db-084c-4a10-8987-ed6330bf4639-candidate.png",
+          "expected": "/screenshots/80b132db-084c-4a10-8987-ed6330bf4639-expected.png",
+          "diff": "/screenshots/80b132db-084c-4a10-8987-ed6330bf4639-diff.png"
         }
       },
       "feedback": [
         {
           "type": "success",
           "category": "overall",
-          "message": "Excellent work! You passed all requirements with a final score of 93%."
+          "message": "Excellent work! You passed all requirements with a final score of 96%."
         },
         {
           "type": "success",
           "category": "structure",
-          "message": "✓ DOM structure is correct (82%). Your HTML hierarchy matches the requirements."
+          "message": "✓ DOM structure is correct (91%). Your HTML hierarchy matches the requirements."
         },
         {
           "type": "success",
           "category": "visual",
-          "message": "✓ Visual appearance is accurate (100%). Your styling matches the expected design."
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
         }
       ]
     }
   },
   {
-    "id": "84162348-0bc5-4bbf-a213-4290566af5ea",
-    "challengeId": "ch-001",
-    "candidateName": "gokul",
+    "id": "cb08f6f1-e3f9-4f70-89c3-d3e26c56fdbc",
+    "challengeId": "ch-ff862245",
+    "candidateName": "a4",
     "code": {
-      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you want.\r\n  </p>\r\n</div>\r\n",
-      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh; /* Full viewport height */\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n  background-color: #f0f0f0;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
-      "js": "// No JS required for static card, but you could add interactions here if needed\r\nconsole.log(\"Card component loaded!\");\r\n"
+      "html": "<nav class=\"navbar\">\r\n  <a href=\"#\">Home</a>\r\n  <a href=\"#\">About</a>\r\n  <a href=\"#\">Services</a>\r\n  <a href=\"#\">Contact</a>\r\n</nav>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n/* Fixed navbar at top */\r\n.navbar {\r\n  position: fixed;\r\n  top: 0;\r\n  width: 100%;\r\n  background-color: #1f2937; /* dark background */\r\n  padding: 20px;\r\n  display: flex;\r\n  justify-content: center; /* evenly spaced links */\r\n  gap: 50px; /* space between links */\r\n  z-index: 1000;\r\n}\r\n\r\n/* Link styling */\r\n.navbar a {\r\n  color: white;\r\n  text-decoration: none;\r\n  font-weight: bold;\r\n  transition: color 0.3s;\r\n}\r\n\r\n/* Hover color */\r\n.navbar a:hover {\r\n  color: #60a5fa;\r\n}\r\n\r\n/* Add top margin so content doesn’t hide under navbar */\r\nbody::before {\r\n  content: '';\r\n  display: block;\r\n  height: 70px; /* same as navbar height */\r\n}\r\n",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-08T08:18:57.229Z",
+    "evaluatedAt": "2025-11-08T08:18:59.091Z",
+    "result": {
+      "submissionId": "cb08f6f1-e3f9-4f70-89c3-d3e26c56fdbc",
+      "timestamp": "2025-11-08T08:18:57.362Z",
+      "structureScore": 42,
+      "visualScore": 98,
+      "finalScore": 76,
+      "passed": false,
+      "thresholds": {
+        "structure": 90,
+        "visual": 90,
+        "overall": 75
+      },
+      "dom": {
+        "score": 42,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > nav[0]: <nav>"
+          ],
+          "tagMismatches": [
+            "root > nav[0] > ul[0]: Expected <ul>, got <a>",
+            "root > nav[0] > button[1]: Expected <button>, got <a>"
+          ],
+          "attributeMatches": [],
+          "attributeMismatches": [],
+          "classMatches": [
+            "root > nav[0]: class=\"navbar\""
+          ],
+          "classMismatches": [
+            "root > nav[0] > ul[0]: Missing class=\"nav-list\"",
+            "root > nav[0] > button[1]: Missing class=\"hamburger\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > nav[0] > button[1]: Correct number of children (0)"
+          ],
+          "structureMismatches": [
+            "root > nav[0]: Expected 2 children, got 4",
+            "root > nav[0] > ul[0]: Expected 4 children, got 0"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 98,
+        "passed": true,
+        "diffPixels": 14174,
+        "totalPixels": 921600,
+        "diffPercentage": "1.54",
+        "screenshots": {
+          "candidate": "/screenshots/cb08f6f1-e3f9-4f70-89c3-d3e26c56fdbc-candidate.png",
+          "expected": "/screenshots/cb08f6f1-e3f9-4f70-89c3-d3e26c56fdbc-expected.png",
+          "diff": "/screenshots/cb08f6f1-e3f9-4f70-89c3-d3e26c56fdbc-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 76% (required: 75%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (42%, required: 90%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > nav[0] > ul[0]: Expected <ul>, got <a>; root > nav[0] > button[1]: Expected <button>, got <a>"
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing CSS classes: root > nav[0] > ul[0]: Missing class=\"nav-list\"; root > nav[0] > button[1]: Missing class=\"hamburger\""
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (98%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
+  },
+  {
+    "id": "8c3d92f4-1a3a-4d9e-ac0b-4f1fe0367423",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "gokul-test",
+    "code": {
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\r\n  <h2>John Doe</h2>\r\n  <h4>Web Developer</h4>\r\n  <p>\r\n    Passionate about creating responsive and user-friendly web applications.\r\n    Always eager to learn new technologies and improve coding skills.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;  /* Center horizontally */\r\n  align-items: center;      /* Center vertically */\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\n.profile-img {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.profile-card h2 {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.profile-card h4 {\r\n  margin: 0 0 15px;\r\n  color: #374151;\r\n  font-weight: normal;\r\n}\r\n\r\n.profile-card p {\r\n  color: #4b5563;\r\n  font-size: 14px;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T09:34:05.701Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "c6592f44-4b21-4e87-bd06-3421f75253cd",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test1",
+    "code": {
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\r\n  <h2>John Doe</h2>\r\n  <h4>Web Developer</h4>\r\n  <p>\r\n   Passionate about creating beautiful and functional websites.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;  /* Center horizontally */\r\n  align-items: center;      /* Center vertically */\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\n.profile-img {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.profile-card h2 {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.profile-card h4 {\r\n  margin: 0 0 15px;\r\n  color: #374151;\r\n  font-weight: normal;\r\n}\r\n\r\n.profile-card p {\r\n  color: #4b5563;\r\n  font-size: 14px;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "pending",
+    "submittedAt": "2025-11-08T09:37:32.602Z",
+    "evaluatedAt": null,
+    "result": null
+  },
+  {
+    "id": "ddba2a5e-9fe3-4315-82ee-aa1f9ef82364",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test1",
+    "code": {
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\r\n  <h2>John Doe</h2>\r\n  <h4>Web Developer</h4>\r\n  <p>\r\n   Passionate about creating beautiful and functional websites.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;  /* Center horizontally */\r\n  align-items: center;      /* Center vertically */\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\n.profile-img {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.profile-card h2 {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.profile-card h4 {\r\n  margin: 0 0 15px;\r\n  color: #374151;\r\n  font-weight: normal;\r\n}\r\n\r\n.profile-card p {\r\n  color: #4b5563;\r\n  font-size: 14px;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": ""
     },
     "status": "passed",
-    "submittedAt": "2025-11-08T03:54:36.693Z",
-    "evaluatedAt": "2025-11-08T03:57:49.465Z",
+    "submittedAt": "2025-11-08T09:38:35.754Z",
+    "evaluatedAt": "2025-11-08T09:38:40.171Z",
     "result": {
-      "submissionId": "84162348-0bc5-4bbf-a213-4290566af5ea",
-      "timestamp": "2025-11-08T03:57:44.524Z",
-      "structureScore": 82,
+      "submissionId": "ddba2a5e-9fe3-4315-82ee-aa1f9ef82364",
+      "timestamp": "2025-11-08T09:38:35.868Z",
+      "structureScore": 75,
       "visualScore": 100,
-      "finalScore": 93,
+      "finalScore": 90,
       "passed": true,
       "thresholds": {
         "structure": 70,
@@ -107,28 +616,37 @@
         "overall": 75
       },
       "dom": {
-        "score": 82,
+        "score": 75,
         "passed": true,
         "details": {
           "tagMatches": [
             "root: <body>",
             "root > div[0]: <div>",
-            "root > div[0] > p[1]: <p>"
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > h2[1]: <h2>",
+            "root > div[0] > p[3]: <p>"
           ],
           "tagMismatches": [
-            "root > div[0] > h1[0]: Expected <h1>, got <h2>"
+            "root > div[0] > p[2]: Expected <p>, got <h4>"
           ],
-          "attributeMatches": [],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/avatar-1.png\""
+          ],
           "attributeMismatches": [],
-          "classMatches": [
-            "root > div[0]: class=\"card\""
+          "classMatches": [],
+          "classMismatches": [
+            "root > div[0]: Missing class=\"card\"",
+            "root > div[0] > img[0]: Missing class=\"avatar\"",
+            "root > div[0] > p[2]: Missing class=\"role\"",
+            "root > div[0] > p[3]: Missing class=\"bio\""
           ],
-          "classMismatches": [],
           "structureMatches": [
             "root: Correct number of children (1)",
-            "root > div[0]: Correct number of children (2)",
-            "root > div[0] > h1[0]: Correct number of children (0)",
-            "root > div[0] > p[1]: Correct number of children (0)"
+            "root > div[0]: Correct number of children (4)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > h2[1]: Correct number of children (0)",
+            "root > div[0] > p[2]: Correct number of children (0)",
+            "root > div[0] > p[3]: Correct number of children (0)"
           ],
           "structureMismatches": []
         },
@@ -137,25 +655,25 @@
       "pixel": {
         "score": 100,
         "passed": true,
-        "diffPixels": 4072,
+        "diffPixels": 3409,
         "totalPixels": 921600,
-        "diffPercentage": "0.44",
+        "diffPercentage": "0.37",
         "screenshots": {
-          "candidate": "/screenshots/84162348-0bc5-4bbf-a213-4290566af5ea-candidate.png",
-          "expected": "/screenshots/84162348-0bc5-4bbf-a213-4290566af5ea-expected.png",
-          "diff": "/screenshots/84162348-0bc5-4bbf-a213-4290566af5ea-diff.png"
+          "candidate": "/screenshots/ddba2a5e-9fe3-4315-82ee-aa1f9ef82364-candidate.png",
+          "expected": "/screenshots/ddba2a5e-9fe3-4315-82ee-aa1f9ef82364-expected.png",
+          "diff": "/screenshots/ddba2a5e-9fe3-4315-82ee-aa1f9ef82364-diff.png"
         }
       },
       "feedback": [
         {
           "type": "success",
           "category": "overall",
-          "message": "Excellent work! You passed all requirements with a final score of 93%."
+          "message": "Excellent work! You passed all requirements with a final score of 90%."
         },
         {
           "type": "success",
           "category": "structure",
-          "message": "✓ DOM structure is correct (82%). Your HTML hierarchy matches the requirements."
+          "message": "✓ DOM structure is correct (75%). Your HTML hierarchy matches the requirements."
         },
         {
           "type": "success",
@@ -166,101 +684,353 @@
     }
   },
   {
-    "id": "f436ce45-a963-456e-a199-d06440eb8a96",
-    "challengeId": "ch-002",
-    "candidateName": "GOKUL",
+    "id": "7dd3b4ed-614c-49dd-9ba7-4846db40a5ec",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "test2",
     "code": {
-      "html": "<button id=\"click-btn\">Click Me</button>\r\n",
-      "css": "#click-btn {\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  padding: 12px 24px;\r\n  border: none;\r\n  border-radius: 6px;\r\n  cursor: pointer;\r\n  font-size: 16px;\r\n  transition: background-color 0.3s;\r\n}\r\n\r\n#click-btn:hover {\r\n  background-color: #2563eb; /* darker blue on hover */\r\n}\r\n",
-      "js": "const button = document.getElementById('click-btn');\r\n\r\nbutton.addEventListener('click', () => {\r\n  alert('Button clicked!');\r\n});\r\n"
+      "html": "<div class=\"profile-card\">\r\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\r\n  <h2>John Doe</h2>\r\n  <h4>Web Developer</h4>\r\n  <p>\r\n    Passionate about creating responsive and user-friendly web applications.\r\n    Always eager to learn new technologies and improve coding skills.\r\n  </p>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;  /* Center horizontally */\r\n  align-items: center;      /* Center vertically */\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.profile-card {\r\n  width: 300px;\r\n  background-color: white;\r\n  border-radius: 15px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\n.profile-img {\r\n  width: 100px;\r\n  height: 100px;\r\n  border-radius: 50%;\r\n  object-fit: cover;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.profile-card h2 {\r\n  margin: 10px 0 5px;\r\n  color: #111827;\r\n}\r\n\r\n.profile-card h4 {\r\n  margin: 0 0 15px;\r\n  color: #374151;\r\n  font-weight: normal;\r\n}\r\n\r\n.profile-card p {\r\n  color: #4b5563;\r\n  font-size: 14px;\r\n  line-height: 1.5;\r\n}\r\n",
+      "js": ""
     },
-    "status": "pending",
-    "submittedAt": "2025-11-08T04:02:30.567Z",
-    "evaluatedAt": null,
-    "result": null
+    "status": "passed",
+    "submittedAt": "2025-11-08T09:39:54.344Z",
+    "evaluatedAt": "2025-11-08T09:39:56.185Z",
+    "result": {
+      "submissionId": "7dd3b4ed-614c-49dd-9ba7-4846db40a5ec",
+      "timestamp": "2025-11-08T09:39:54.475Z",
+      "structureScore": 70,
+      "visualScore": 99,
+      "finalScore": 87,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "dom": {
+        "score": 70,
+        "passed": true,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > h2[1]: <h2>",
+            "root > div[0] > p[3]: <p>"
+          ],
+          "tagMismatches": [
+            "root > div[0] > p[2]: Expected <p>, got <h4>"
+          ],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/avatar-1.png\""
+          ],
+          "attributeMismatches": [],
+          "classMatches": [],
+          "classMismatches": [
+            "root > div[0]: Missing class=\"card\"",
+            "root > div[0] > img[0]: Missing class=\"avatar\"",
+            "root > div[0] > p[2]: Missing class=\"role\"",
+            "root > div[0] > p[3]: Missing class=\"bio\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (4)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > h2[1]: Correct number of children (0)",
+            "root > div[0] > p[2]: Correct number of children (0)",
+            "root > div[0] > p[3]: Correct number of children (0)"
+          ],
+          "structureMismatches": []
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 5635,
+        "totalPixels": 921600,
+        "diffPercentage": "0.61",
+        "screenshots": {
+          "candidate": "/screenshots/7dd3b4ed-614c-49dd-9ba7-4846db40a5ec-candidate.png",
+          "expected": "/screenshots/7dd3b4ed-614c-49dd-9ba7-4846db40a5ec-expected.png",
+          "diff": "/screenshots/7dd3b4ed-614c-49dd-9ba7-4846db40a5ec-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "success",
+          "category": "overall",
+          "message": "Excellent work! You passed all requirements with a final score of 87%."
+        },
+        {
+          "type": "success",
+          "category": "structure",
+          "message": "✓ DOM structure is correct (70%). Your HTML hierarchy matches the requirements."
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (99%). Your styling matches the expected design."
+        }
+      ]
+    }
   },
   {
-    "id": "472af053-2dce-43d8-a82f-a287af3821a0",
-    "challengeId": "ch-002",
-    "candidateName": "GOKUL",
+    "id": "88a60871-0158-4ba7-b66e-b16b9db9051c",
+    "challengeId": "javascript-l1-q1",
+    "candidateName": "test-js",
     "code": {
-      "html": "<button id=\"click-btn\">Click Me</button>\r\n",
-      "css": "#click-btn {\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  padding: 12px 24px;\r\n  border: none;\r\n  border-radius: 6px;\r\n  cursor: pointer;\r\n  font-size: 16px;\r\n  transition: background-color 0.3s;\r\n}\r\n\r\n#click-btn:hover {\r\n  background-color: #2563eb; /* darker blue on hover */\r\n}\r\n",
-      "js": "const button = document.getElementById('click-btn');\r\n\r\nbutton.addEventListener('click', () => {\r\n  alert('Button clicked!');\r\n});\r\n"
+      "html": "<div class=\"counter-container\">\r\n  <button id=\"decrement\">\r\n    <img src=\"/assets/images/minus-icon.png\" alt=\"Decrement\" />\r\n  </button>\r\n\r\n  <span id=\"count\">0</span>\r\n\r\n  <button id=\"increment\">\r\n    <img src=\"/assets/images/plus-icon.png\" alt=\"Increment\" />\r\n  </button>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;   /* center horizontally */\r\n  align-items: center;       /* center vertically */\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.counter-container {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 20px;\r\n  background-color: white;\r\n  padding: 20px 40px;\r\n  border-radius: 12px;\r\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n#count {\r\n  font-size: 32px;\r\n  font-weight: bold;\r\n  color: #1f2937;\r\n  min-width: 40px;\r\n  text-align: center;\r\n}\r\n\r\nbutton {\r\n  background: none;\r\n  border: none;\r\n  cursor: pointer;\r\n  padding: 10px;\r\n  transition: transform 0.2s;\r\n}\r\n\r\nbutton:hover {\r\n  transform: scale(1.1);\r\n}\r\n\r\nbutton img {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n",
+      "js": "const countDisplay = document.getElementById('count');\r\nconst incrementBtn = document.getElementById('increment');\r\nconst decrementBtn = document.getElementById('decrement');\r\n\r\nlet count = 0;\r\n\r\nincrementBtn.addEventListener('click', () => {\r\n  count++;\r\n  countDisplay.textContent = count;\r\n});\r\n\r\ndecrementBtn.addEventListener('click', () => {\r\n  if (count > 0) {\r\n    count--;\r\n    countDisplay.textContent = count;\r\n  }\r\n});\r\n"
     },
-    "status": "pending",
-    "submittedAt": "2025-11-08T04:04:02.952Z",
-    "evaluatedAt": null,
-    "result": null
+    "status": "failed",
+    "submittedAt": "2025-11-08T09:44:22.427Z",
+    "evaluatedAt": "2025-11-08T09:44:27.814Z",
+    "result": {
+      "submissionId": "88a60871-0158-4ba7-b66e-b16b9db9051c",
+      "timestamp": "2025-11-08T09:44:22.592Z",
+      "structureScore": 65,
+      "visualScore": 14,
+      "finalScore": 34,
+      "passed": false,
+      "thresholds": {
+        "structure": 70,
+        "visual": 75,
+        "overall": 72
+      },
+      "dom": {
+        "score": 65,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > button[0]: <button>",
+            "root > div[0] > span[1]: <span>",
+            "root > div[0] > button[2]: <button>"
+          ],
+          "tagMismatches": [],
+          "attributeMatches": [
+            "root > div[0] > span[1]: id=\"count\""
+          ],
+          "attributeMismatches": [
+            "root > div[0] > button[0]: Expected id=\"decrease\", got id=\"decrement\"",
+            "root > div[0] > button[2]: Expected id=\"increase\", got id=\"increment\""
+          ],
+          "classMatches": [
+            "root > div[0]: class=\"counter-container\""
+          ],
+          "classMismatches": [
+            "root > div[0] > button[0]: Missing class=\"btn\"",
+            "root > div[0] > span[1]: Missing class=\"count\"",
+            "root > div[0] > button[2]: Missing class=\"btn\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (3)",
+            "root > div[0] > span[1]: Correct number of children (0)"
+          ],
+          "structureMismatches": [
+            "root > div[0] > button[0]: Expected 0 children, got 1",
+            "root > div[0] > button[2]: Expected 0 children, got 1"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 14,
+        "passed": false,
+        "diffPixels": 789063,
+        "totalPixels": 921600,
+        "diffPercentage": "85.62",
+        "screenshots": {
+          "candidate": "/screenshots/88a60871-0158-4ba7-b66e-b16b9db9051c-candidate.png",
+          "expected": "/screenshots/88a60871-0158-4ba7-b66e-b16b9db9051c-expected.png",
+          "diff": "/screenshots/88a60871-0158-4ba7-b66e-b16b9db9051c-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 34% (required: 72%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (65%, required: 70%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing CSS classes: root > div[0] > button[0]: Missing class=\"btn\"; root > div[0] > span[1]: Missing class=\"count\"; root > div[0] > button[2]: Missing class=\"btn\""
+        },
+        {
+          "type": "warning",
+          "category": "visual",
+          "message": "⚠ Visual appearance differs from expected (14%, required: 75%). Review your CSS styling, colors, spacing, and layout."
+        },
+        {
+          "type": "info",
+          "category": "visual",
+          "message": "Significant visual differences detected (85.62% of pixels differ). Check layout, colors, fonts, and positioning."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
   },
   {
-    "id": "8acb86f6-d208-4d4a-b5b8-14070273d3ff",
-    "challengeId": "ch-004",
-    "candidateName": "gokul2",
+    "id": "18118e23-7106-436c-9364-64a2d93f17a0",
+    "challengeId": "fullstack-l1-q1",
+    "candidateName": "test-fullstack",
     "code": {
-      "html": "<form id=\"email-form\">\r\n  <label for=\"email\">Email:</label>\r\n  <input type=\"email\" id=\"email\" placeholder=\"Enter your email\">\r\n  <button type=\"submit\">Submit</button>\r\n  <div id=\"message\"></div>\r\n</form>\r\n",
-      "css": "body {\r\n  font-family: Arial, sans-serif;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  background-color: #f0f0f0;\r\n  margin: 0;\r\n}\r\n\r\nform {\r\n  background-color: white;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  width: 300px;\r\n  text-align: center;\r\n}\r\n\r\ninput[type=\"email\"] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  margin: 15px 0;\r\n  border-radius: 5px;\r\n  border: 1px solid #ccc;\r\n}\r\n\r\nbutton {\r\n  padding: 10px 20px;\r\n  border-radius: 5px;\r\n  border: none;\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background-color: #2563eb;\r\n}\r\n\r\n#message {\r\n  margin-top: 15px;\r\n  font-weight: bold;\r\n}\r\n",
-      "js": "const form = document.getElementById('email-form');\r\nconst emailInput = document.getElementById('email');\r\nconst messageDiv = document.getElementById('message');\r\n\r\nform.addEventListener('submit', function(e) {\r\n  e.preventDefault(); // Prevent default form submission\r\n  \r\n  const email = emailInput.value.trim();\r\n  \r\n  if (email === '') {\r\n    messageDiv.textContent = 'Please enter an email';\r\n    messageDiv.style.color = 'red';\r\n  } else {\r\n    messageDiv.textContent = 'Form submitted!';\r\n    messageDiv.style.color = 'green';\r\n  }\r\n});\r\n"
+      "html": "<div class=\"form-container\">\r\n  <img src=\"/assets/images/form-icon.png\" alt=\"Form Icon\" class=\"form-icon\" />\r\n\r\n  <h2>Contact Us</h2>\r\n  <form id=\"contact-form\">\r\n    <div class=\"form-group\">\r\n      <label for=\"name\">Name</label>\r\n      <input type=\"text\" id=\"name\" />\r\n      <small class=\"error\" id=\"name-error\"></small>\r\n    </div>\r\n\r\n    <div class=\"form-group\">\r\n      <label for=\"email\">Email</label>\r\n      <input type=\"email\" id=\"email\" />\r\n      <small class=\"error\" id=\"email-error\"></small>\r\n    </div>\r\n\r\n    <div class=\"form-group\">\r\n      <label for=\"message\">Message</label>\r\n      <textarea id=\"message\" rows=\"4\"></textarea>\r\n      <small class=\"error\" id=\"message-error\"></small>\r\n    </div>\r\n\r\n    <button type=\"submit\">Send Message</button>\r\n    <p class=\"success\" id=\"success-message\"></p>\r\n  </form>\r\n</div>\r\n",
+      "css": "body {\r\n  margin: 0;\r\n  height: 100vh;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  background-color: #f3f4f6;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.form-container {\r\n  background-color: white;\r\n  padding: 30px;\r\n  border-radius: 12px;\r\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\r\n  width: 350px;\r\n  text-align: center;\r\n}\r\n\r\n.form-icon {\r\n  width: 60px;\r\n  margin-bottom: 10px;\r\n}\r\n\r\nh2 {\r\n  margin-bottom: 20px;\r\n  color: #111827;\r\n}\r\n\r\n.form-group {\r\n  margin-bottom: 15px;\r\n  text-align: left;\r\n}\r\n\r\nlabel {\r\n  font-weight: bold;\r\n  color: #374151;\r\n}\r\n\r\ninput,\r\ntextarea {\r\n  width: 100%;\r\n  padding: 8px;\r\n  border: 1px solid #d1d5db;\r\n  border-radius: 6px;\r\n  margin-top: 5px;\r\n  box-sizing: border-box;\r\n}\r\n\r\nbutton {\r\n  width: 100%;\r\n  padding: 10px;\r\n  background-color: #16ab22;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 6px;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n  transition: background-color 0.3s;\r\n}\r\n\r\nbutton:hover {\r\n  background-color: #1e40af;\r\n}\r\n\r\n.error {\r\n  color: red;\r\n  font-size: 13px;\r\n  height: 16px;\r\n}\r\n\r\n.success {\r\n  color: green;\r\n  margin-top: 15px;\r\n  font-weight: bold;\r\n}\r\n",
+      "js": "const form = document.getElementById('contact-form');\r\nconst nameInput = document.getElementById('name');\r\nconst emailInput = document.getElementById('email');\r\nconst messageInput = document.getElementById('message');\r\n\r\nconst nameError = document.getElementById('name-error');\r\nconst emailError = document.getElementById('email-error');\r\nconst messageError = document.getElementById('message-error');\r\nconst successMessage = document.getElementById('success-message');\r\n\r\nform.addEventListener('submit', (e) => {\r\n  e.preventDefault();\r\n\r\n  // Reset messages\r\n  nameError.textContent = '';\r\n  emailError.textContent = '';\r\n  messageError.textContent = '';\r\n  successMessage.textContent = '';\r\n\r\n  let isValid = true;\r\n\r\n  // Validate name\r\n  if (nameInput.value.trim() === '') {\r\n    nameError.textContent = 'Name is required';\r\n    isValid = false;\r\n  }\r\n\r\n  // Validate email\r\n  const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\r\n  if (!emailPattern.test(emailInput.value.trim())) {\r\n    emailError.textContent = 'Enter a valid email address';\r\n    isValid = false;\r\n  }\r\n\r\n  // Validate message\r\n  if (messageInput.value.trim().length < 10) {\r\n    messageError.textContent = 'Message must be at least 10 characters';\r\n    isValid = false;\r\n  }\r\n\r\n  // Show success message\r\n  if (isValid) {\r\n    successMessage.textContent = 'Form submitted successfully!';\r\n    form.reset();\r\n  }\r\n});\r\n"
     },
-    "status": "pending",
-    "submittedAt": "2025-11-08T04:06:41.146Z",
-    "evaluatedAt": null,
-    "result": null
-  },
-  {
-    "id": "a3a37ca2-3d46-4502-b5c5-b1b2754ecd88",
-    "challengeId": "ch-004",
-    "candidateName": "gokul2",
-    "code": {
-      "html": "<form id=\"email-form\">\r\n  <label for=\"email\">Email:</label>\r\n  <input type=\"email\" id=\"email\" placeholder=\"Enter your email\">\r\n  <button type=\"submit\">Submit</button>\r\n  <div id=\"message\"></div>\r\n</form>\r\n",
-      "css": "body {\r\n  font-family: Arial, sans-serif;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  background-color: #f0f0f0;\r\n  margin: 0;\r\n}\r\n\r\nform {\r\n  background-color: white;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  width: 300px;\r\n  text-align: center;\r\n}\r\n\r\ninput[type=\"email\"] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  margin: 15px 0;\r\n  border-radius: 5px;\r\n  border: 1px solid #ccc;\r\n}\r\n\r\nbutton {\r\n  padding: 10px 20px;\r\n  border-radius: 5px;\r\n  border: none;\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background-color: #2563eb;\r\n}\r\n\r\n#message {\r\n  margin-top: 15px;\r\n  font-weight: bold;\r\n}\r\n",
-      "js": "const form = document.getElementById('email-form');\r\nconst emailInput = document.getElementById('email');\r\nconst messageDiv = document.getElementById('message');\r\n\r\nform.addEventListener('submit', function(e) {\r\n  e.preventDefault(); // Prevent default form submission\r\n  \r\n  const email = emailInput.value.trim();\r\n  \r\n  if (email === '') {\r\n    messageDiv.textContent = 'Please enter an email';\r\n    messageDiv.style.color = 'red';\r\n  } else {\r\n    messageDiv.textContent = 'Form submitted!';\r\n    messageDiv.style.color = 'green';\r\n  }\r\n});\r\n"
-    },
-    "status": "pending",
-    "submittedAt": "2025-11-08T04:08:20.759Z",
-    "evaluatedAt": null,
-    "result": null
-  },
-  {
-    "id": "2614c9bf-1db5-4351-b5c3-b9ce2ae9b3f3",
-    "challengeId": "ch-004",
-    "candidateName": "gokul3",
-    "code": {
-      "html": "<form id=\"email-form\">\r\n  <label for=\"email\">Email:</label>\r\n  <input type=\"email\" id=\"email\" placeholder=\"Enter your email\">\r\n  <button type=\"submit\">Submit</button>\r\n  <div id=\"message\"></div>\r\n</form>\r\n",
-      "css": "body {\r\n  font-family: Arial, sans-serif;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  background-color: #f0f0f0;\r\n  margin: 0;\r\n}\r\n\r\nform {\r\n  background-color: white;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  width: 300px;\r\n  text-align: center;\r\n}\r\n\r\ninput[type=\"email\"] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  margin: 15px 0;\r\n  border-radius: 5px;\r\n  border: 1px solid #ccc;\r\n}\r\n\r\nbutton {\r\n  padding: 10px 20px;\r\n  border-radius: 5px;\r\n  border: none;\r\n  background-color: #3b82f6;\r\n  color: white;\r\n  font-size: 16px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background-color: #2563eb;\r\n}\r\n\r\n#message {\r\n  margin-top: 15px;\r\n  font-weight: bold;\r\n}\r\n",
-      "js": "const form = document.getElementById('email-form');\r\nconst emailInput = document.getElementById('email');\r\nconst messageDiv = document.getElementById('message');\r\n\r\nform.addEventListener('submit', function(e) {\r\n  e.preventDefault(); // Prevent default form submission\r\n  \r\n  const email = emailInput.value.trim();\r\n  \r\n  if (email === '') {\r\n    messageDiv.textContent = 'Please enter an email';\r\n    messageDiv.style.color = 'red';\r\n  } else {\r\n    messageDiv.textContent = 'Form submitted!';\r\n    messageDiv.style.color = 'green';\r\n  }\r\n});\r\n"
-    },
-    "status": "pending",
-    "submittedAt": "2025-11-08T04:13:44.567Z",
-    "evaluatedAt": null,
-    "result": null
-  },
-  {
-    "id": "48a47f71-a7e5-47e1-b61b-52ad667b8b47",
-    "challengeId": "ch-001",
-    "candidateName": "gokul4",
-    "code": {
-      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you like.\r\n  </p>\r\n</div>\r\n",
-      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  margin: 0;\r\n  background-color: #f0f0f0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
-      "js": "// Optional: add interactions if needed\r\nconsole.log(\"Card loaded successfully\");\r\n"
-    },
-    "status": "pending",
-    "submittedAt": "2025-11-08T04:23:55.617Z",
-    "evaluatedAt": null,
-    "result": null
-  },
-  {
-    "id": "fd1d96dd-8bf4-4760-8ef3-0d3314d4d807",
-    "challengeId": "ch-001",
-    "candidateName": "gokul5",
-    "code": {
-      "html": "<div class=\"card\">\r\n  <h2>Welcome</h2>\r\n  <p>\r\n    This is a simple card component. You can use it to display information, messages, or any content you like.\r\n  </p>\r\n</div>\r\n",
-      "css": "/* Center the card horizontally and vertically */\r\nbody {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  margin: 0;\r\n  background-color: #f0f0f0;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.card {\r\n  width: 400px;\r\n  padding: 30px;\r\n  border-radius: 10px;\r\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);\r\n  background-color: white;\r\n  text-align: center;\r\n}\r\n\r\n.card h2 {\r\n  margin-top: 0;\r\n}\r\n\r\n.card p {\r\n  color: #555;\r\n  line-height: 1.5;\r\n}\r\n",
-      "js": "// Optional: add interactions if needed\r\nconsole.log(\"Card loaded successfully\");\r\n"
-    },
-    "status": "pending",
-    "submittedAt": "2025-11-08T04:30:49.049Z",
-    "evaluatedAt": null,
-    "result": null
+    "status": "failed",
+    "submittedAt": "2025-11-08T09:49:19.219Z",
+    "evaluatedAt": "2025-11-08T09:49:23.673Z",
+    "result": {
+      "submissionId": "18118e23-7106-436c-9364-64a2d93f17a0",
+      "timestamp": "2025-11-08T09:49:18.506Z",
+      "structureScore": 50,
+      "visualScore": 97,
+      "finalScore": 78,
+      "passed": false,
+      "thresholds": {
+        "structure": 75,
+        "visual": 80,
+        "overall": 78
+      },
+      "dom": {
+        "score": 50,
+        "passed": false,
+        "details": {
+          "tagMatches": [
+            "root: <body>",
+            "root > div[0]: <div>",
+            "root > div[0] > img[0]: <img>",
+            "root > div[0] > h2[1]: <h2>",
+            "root > div[0] > form[2]: <form>",
+            "root > div[0] > form[2] > div[0]: <div>",
+            "root > div[0] > form[2] > div[1]: <div>",
+            "root > div[0] > form[2] > div[2]: <div>",
+            "root > div[0] > form[2] > button[3]: <button>"
+          ],
+          "tagMismatches": [
+            "root > div[0] > form[2] > div[0] > input[0]: Expected <input>, got <label>",
+            "root > div[0] > form[2] > div[0] > span[1]: Expected <span>, got <input>",
+            "root > div[0] > form[2] > div[1] > input[0]: Expected <input>, got <label>",
+            "root > div[0] > form[2] > div[1] > span[1]: Expected <span>, got <input>",
+            "root > div[0] > form[2] > div[2] > textarea[0]: Expected <textarea>, got <label>",
+            "root > div[0] > form[2] > div[2] > span[1]: Expected <span>, got <textarea>",
+            "root > div[0] > form[2] > div[4]: Expected <div>, got <p>"
+          ],
+          "attributeMatches": [
+            "root > div[0] > img[0]: src=\"/assets/images/form-icon.png\"",
+            "root > div[0] > form[2] > button[3]: type=\"submit\""
+          ],
+          "attributeMismatches": [
+            "root > div[0] > form[2]: Expected id=\"contactForm\", got id=\"contact-form\"",
+            "root > div[0] > form[2] > div[0] > input[0]: Expected id=\"name\", got id=\"none\"",
+            "root > div[0] > form[2] > div[0] > input[0]: Expected type=\"text\", got \"none\"",
+            "root > div[0] > form[2] > div[0] > input[0]: Expected placeholder=\"Your Name\", got \"none\"",
+            "root > div[0] > form[2] > div[0] > span[1]: Expected id=\"nameError\", got id=\"name\"",
+            "root > div[0] > form[2] > div[1] > input[0]: Expected id=\"email\", got id=\"none\"",
+            "root > div[0] > form[2] > div[1] > input[0]: Expected type=\"email\", got \"none\"",
+            "root > div[0] > form[2] > div[1] > input[0]: Expected placeholder=\"Your Email\", got \"none\"",
+            "root > div[0] > form[2] > div[1] > span[1]: Expected id=\"emailError\", got id=\"email\"",
+            "root > div[0] > form[2] > div[2] > textarea[0]: Expected id=\"message\", got id=\"none\"",
+            "root > div[0] > form[2] > div[2] > textarea[0]: Expected placeholder=\"Your Message\", got \"none\"",
+            "root > div[0] > form[2] > div[2] > span[1]: Expected id=\"messageError\", got id=\"message\"",
+            "root > div[0] > form[2] > div[4]: Expected id=\"successMsg\", got id=\"success-message\""
+          ],
+          "classMatches": [
+            "root > div[0]: class=\"form-container\"",
+            "root > div[0] > img[0]: class=\"form-icon\"",
+            "root > div[0] > form[2] > div[4]: class=\"success\""
+          ],
+          "classMismatches": [
+            "root > div[0] > form[2] > div[0]: Missing class=\"field\"",
+            "root > div[0] > form[2] > div[0] > span[1]: Missing class=\"error\"",
+            "root > div[0] > form[2] > div[1]: Missing class=\"field\"",
+            "root > div[0] > form[2] > div[1] > span[1]: Missing class=\"error\"",
+            "root > div[0] > form[2] > div[2]: Missing class=\"field\"",
+            "root > div[0] > form[2] > div[2] > span[1]: Missing class=\"error\""
+          ],
+          "structureMatches": [
+            "root: Correct number of children (1)",
+            "root > div[0]: Correct number of children (3)",
+            "root > div[0] > img[0]: Correct number of children (0)",
+            "root > div[0] > h2[1]: Correct number of children (0)",
+            "root > div[0] > form[2]: Correct number of children (5)",
+            "root > div[0] > form[2] > div[0] > input[0]: Correct number of children (0)",
+            "root > div[0] > form[2] > div[0] > span[1]: Correct number of children (0)",
+            "root > div[0] > form[2] > div[1] > input[0]: Correct number of children (0)",
+            "root > div[0] > form[2] > div[1] > span[1]: Correct number of children (0)",
+            "root > div[0] > form[2] > div[2] > textarea[0]: Correct number of children (0)",
+            "root > div[0] > form[2] > div[2] > span[1]: Correct number of children (0)",
+            "root > div[0] > form[2] > button[3]: Correct number of children (0)",
+            "root > div[0] > form[2] > div[4]: Correct number of children (0)"
+          ],
+          "structureMismatches": [
+            "root > div[0] > form[2] > div[0]: Expected 2 children, got 3",
+            "root > div[0] > form[2] > div[1]: Expected 2 children, got 3",
+            "root > div[0] > form[2] > div[2]: Expected 2 children, got 3"
+          ]
+        },
+        "checks": {}
+      },
+      "pixel": {
+        "score": 97,
+        "passed": true,
+        "diffPixels": 26662,
+        "totalPixels": 921600,
+        "diffPercentage": "2.89",
+        "screenshots": {
+          "candidate": "/screenshots/18118e23-7106-436c-9364-64a2d93f17a0-candidate.png",
+          "expected": "/screenshots/18118e23-7106-436c-9364-64a2d93f17a0-expected.png",
+          "diff": "/screenshots/18118e23-7106-436c-9364-64a2d93f17a0-diff.png"
+        }
+      },
+      "feedback": [
+        {
+          "type": "error",
+          "category": "overall",
+          "message": "Your solution did not meet the passing criteria. Final score: 78% (required: 78%)."
+        },
+        {
+          "type": "warning",
+          "category": "structure",
+          "message": "⚠ DOM structure needs improvement (50%, required: 75%). Check your HTML tags, attributes, and nesting."
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing or incorrect tags: root > div[0] > form[2] > div[0] > input[0]: Expected <input>, got <label>; root > div[0] > form[2] > div[0] > span[1]: Expected <span>, got <input>; root > div[0] > form[2] > div[1] > input[0]: Expected <input>, got <label>"
+        },
+        {
+          "type": "info",
+          "category": "structure",
+          "message": "Missing CSS classes: root > div[0] > form[2] > div[0]: Missing class=\"field\"; root > div[0] > form[2] > div[0] > span[1]: Missing class=\"error\"; root > div[0] > form[2] > div[1]: Missing class=\"field\""
+        },
+        {
+          "type": "success",
+          "category": "visual",
+          "message": "✓ Visual appearance is accurate (97%). Your styling matches the expected design."
+        },
+        {
+          "type": "info",
+          "category": "suggestion",
+          "message": "Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties."
+        }
+      ]
+    }
   }
 ]
