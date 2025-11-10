@@ -175,7 +175,7 @@ export default function CourseDetail() {
             return (
               <div
                 key={level.level}
-                onClick={() => !isLocked && navigate(`/course/${courseId}/level/${level.level}`)}
+                onClick={() => !isLocked && navigate(`/level/${courseId}/${level.level}`)}
                 className={`bg-white rounded-xl shadow-lg p-6 ${
                   isLocked 
                     ? 'opacity-50 cursor-not-allowed' 

@@ -1,10 +1,12 @@
 /**
  * Main Evaluator Service
- * Orchestrates hybrid evaluation: DOM Comparison + Pixel Matching
- * Combines both scores into final result
+ * Orchestrates hybrid evaluation: Strict Content + Semantic DOM + Pixel Matching
+ * Uses content-specific validation and human-friendly feedback
+ * Scoring: Content 35%, Structure 15%, Visual 40%, Behavior 10%
  */
 
-const domCompare = require('./domCompare');
+const strictContentEvaluator = require('./strictContentEvaluator');
+const semanticEvaluator = require('./semanticEvaluator');
 const pixelMatch = require('./pixelMatch');
 
 class Evaluator {
@@ -14,47 +16,74 @@ class Evaluator {
    * @param {Object} expectedCode - { html, css, js }
    * @param {Object} thresholds - { structure, visual, overall }
    * @param {string} submissionId - Unique identifier
+   * @param {string} challengeId - Challenge identifier for content validation
    * @returns {Object} - Complete evaluation result
    */
-  async evaluate(candidateCode, expectedCode, thresholds, submissionId) {
-    console.log(`\n🔍 Starting Hybrid Evaluation`);
+  async evaluate(candidateCode, expectedCode, thresholds, submissionId, challengeId = '') {
+    console.log(`\n🔍 Starting Strict Content + Hybrid Evaluation`);
     console.log(`   Submission ID: ${submissionId}`);
+    console.log(`   Challenge ID: ${challengeId}`);
     
     const result = {
       submissionId,
       timestamp: new Date().toISOString(),
+      contentScore: 0,
       structureScore: 0,
       visualScore: 0,
+      behaviorScore: 0,
       finalScore: 0,
       passed: false,
       thresholds,
-      dom: null,
-      pixel: null,
-      feedback: []
+      content: null,
+      structure: null,
+      visual: null,
+      feedback: null
     };
     
     try {
-      // Step 1: DOM Structure Comparison
-      console.log(`   ⚙️  Running DOM structure comparison...`);
-      const domResult = domCompare.compare(
+      // Step 1: STRICT CONTENT VALIDATION (NEW!)
+      console.log(`   📝 Running strict content validation...`);
+      const contentResult = await strictContentEvaluator.evaluate(
+        candidateCode.html,
+        candidateCode.css || '',
+        expectedCode.html,
+        expectedCode.css || '',
+        challengeId
+      );
+      
+      result.contentScore = contentResult.score;
+      result.content = {
+        score: contentResult.score,
+        passed: contentResult.passed,
+        details: contentResult.details,
+        feedback: contentResult.feedback,
+        requirements: contentResult.requirements
+      };
+      
+      console.log(`   ✓ Content Score: ${contentResult.score}%`);
+      
+      // Step 2: Semantic DOM Structure Evaluation
+      console.log(`   ⚙️  Running semantic structure evaluation...`);
+      const structureResult = semanticEvaluator.evaluateStructure(
         candidateCode.html,
         expectedCode.html
       );
       
-      result.structureScore = domResult.score;
-      result.dom = {
-        score: domResult.score,
-        passed: domResult.score >= thresholds.structure,
-        details: domResult.details,
-        checks: {
-          total: domResult.totalChecks,
-          passed: domResult.passedChecks
-        }
+      result.structureScore = structureResult.score;
+      result.structure = {
+        score: structureResult.score,
+        passed: structureResult.score >= thresholds.structure,
+        rolesFound: structureResult.rolesFound,
+        rolesPartial: structureResult.rolesPartial,
+        rolesMissing: structureResult.rolesMissing,
+        totalRoles: structureResult.totalRoles,
+        foundRoles: structureResult.foundRoles
       };
       
-      console.log(`   ✓ DOM Score: ${domResult.score}%`);
+      console.log(`   ✓ Structure Score: ${structureResult.score}%`);
+      console.log(`   ✓ Roles Found: ${structureResult.rolesFound.length}/${structureResult.totalRoles}`);
       
-      // Step 2: Pixel-level Visual Comparison
+      // Step 3: Pixel-level Visual Comparison
       console.log(`   📸 Running pixel matching (screenshot comparison)...`);
       const pixelResult = await pixelMatch.compare(
         candidateCode,
@@ -63,7 +92,7 @@ class Evaluator {
       );
       
       result.visualScore = pixelResult.score;
-      result.pixel = {
+      result.visual = {
         score: pixelResult.score,
         passed: pixelResult.score >= thresholds.visual,
         diffPixels: pixelResult.diffPixels,
@@ -74,24 +103,46 @@ class Evaluator {
       
       console.log(`   ✓ Visual Score: ${pixelResult.score}%`);
       
-      // Step 3: Calculate Final Score (Weighted Average)
-      // DOM structure: 40%, Visual: 60%
+      // Step 4: Behavior Score (placeholder for future interactivity tests)
+      result.behaviorScore = 0;
+      console.log(`   ⚡ Behavior Score: ${result.behaviorScore}% (not yet implemented)`);
+      
+      // Step 5: Calculate Final Score (UPDATED WEIGHTED AVERAGE)
+      // Content: 50%, Structure: 0%, Visual: 50%, Behavior: 0%
+      // Structure disabled because semantic evaluator is not question-aware
       result.finalScore = Math.round(
-        (result.structureScore * 0.4) + (result.visualScore * 0.6)
+        (result.contentScore * 0.50) + 
+        (result.structureScore * 0.00) + 
+        (result.visualScore * 0.50) + 
+        (result.behaviorScore * 0.00)
       );
       
       console.log(`   📊 Final Score: ${result.finalScore}%`);
       
-      // Step 4: Determine Pass/Fail
-      result.passed = 
-        result.structureScore >= thresholds.structure &&
-        result.visualScore >= thresholds.visual &&
-        result.finalScore >= thresholds.overall;
+      // Step 6: Generate Human-Friendly Feedback (ENHANCED with content feedback)
+      const semanticFeedback = semanticEvaluator.generateFeedback(
+        structureResult,
+        result.visualScore,
+        result.behaviorScore
+      );
       
-      // Step 5: Generate Feedback
-      result.feedback = this.generateFeedback(result, thresholds);
+      // Combine content feedback with semantic feedback
+      result.feedback = {
+        ...semanticFeedback,
+        contentValidation: contentResult.feedback,
+        contentDetails: contentResult.details
+      };
+      
+      console.log(`   💬 Generated feedback with ${contentResult.details.length} content checks`);
+      
+      // Step 7: Determine Pass/Fail (SIMPLIFIED - Only Content + Visual)
+      result.passed = 
+        result.contentScore >= 70 && // Must pass content validation
+        result.visualScore >= 70 && // Must pass visual
+        result.finalScore >= 70; // Overall must be 70%+
       
       console.log(`   ${result.passed ? '✅ PASSED' : '❌ FAILED'}`);
+      console.log(`   Content: ${result.contentScore}% | Structure: ${result.structureScore}% | Visual: ${result.visualScore}%`);
       
       return result;
       
@@ -122,100 +173,6 @@ class Evaluator {
    * @param {Object} thresholds - Pass thresholds
    * @returns {Array} - Feedback messages
    */
-  generateFeedback(result, thresholds) {
-    const feedback = [];
-    
-    // Overall result
-    if (result.passed) {
-      feedback.push({
-        type: 'success',
-        category: 'overall',
-        message: `Excellent work! You passed all requirements with a final score of ${result.finalScore}%.`
-      });
-    } else {
-      feedback.push({
-        type: 'error',
-        category: 'overall',
-        message: `Your solution did not meet the passing criteria. Final score: ${result.finalScore}% (required: ${thresholds.overall}%).`
-      });
-    }
-    
-    // DOM Structure Feedback
-    if (result.dom) {
-      if (result.dom.passed) {
-        feedback.push({
-          type: 'success',
-          category: 'structure',
-          message: `✓ DOM structure is correct (${result.structureScore}%). Your HTML hierarchy matches the requirements.`
-        });
-      } else {
-        feedback.push({
-          type: 'warning',
-          category: 'structure',
-          message: `⚠ DOM structure needs improvement (${result.structureScore}%, required: ${thresholds.structure}%). Check your HTML tags, attributes, and nesting.`
-        });
-        
-        // Add specific DOM issues
-        if (result.dom.details.tagMismatches.length > 0) {
-          feedback.push({
-            type: 'info',
-            category: 'structure',
-            message: `Missing or incorrect tags: ${result.dom.details.tagMismatches.slice(0, 3).join('; ')}`
-          });
-        }
-        
-        if (result.dom.details.classMismatches.length > 0) {
-          feedback.push({
-            type: 'info',
-            category: 'structure',
-            message: `Missing CSS classes: ${result.dom.details.classMismatches.slice(0, 3).join('; ')}`
-          });
-        }
-      }
-    }
-    
-    // Visual/Pixel Feedback
-    if (result.pixel) {
-      if (result.pixel.passed) {
-        feedback.push({
-          type: 'success',
-          category: 'visual',
-          message: `✓ Visual appearance is accurate (${result.visualScore}%). Your styling matches the expected design.`
-        });
-      } else {
-        feedback.push({
-          type: 'warning',
-          category: 'visual',
-          message: `⚠ Visual appearance differs from expected (${result.visualScore}%, required: ${thresholds.visual}%). Review your CSS styling, colors, spacing, and layout.`
-        });
-        
-        if (result.pixel.diffPercentage > 30) {
-          feedback.push({
-            type: 'info',
-            category: 'visual',
-            message: `Significant visual differences detected (${result.pixel.diffPercentage}% of pixels differ). Check layout, colors, fonts, and positioning.`
-          });
-        } else if (result.pixel.diffPercentage > 15) {
-          feedback.push({
-            type: 'info',
-            category: 'visual',
-            message: `Minor visual differences detected (${result.pixel.diffPercentage}% of pixels differ). Fine-tune spacing, colors, or font sizes.`
-          });
-        }
-      }
-    }
-    
-    // Actionable suggestions
-    if (!result.passed) {
-      feedback.push({
-        type: 'info',
-        category: 'suggestion',
-        message: 'Suggestions: Review the challenge instructions, check console for errors, compare your output with expected behavior, and verify all CSS properties.'
-      });
-    }
-    
-    return feedback;
-  }
   
   /**
    * Clean up resources (screenshots, browser instances)

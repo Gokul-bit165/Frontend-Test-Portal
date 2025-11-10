@@ -7,58 +7,35 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const CourseModel = require('../models/Course');
+const ChallengeModel = require('../models/Challenge');
+const { query } = require('../database/connection');
 
-const coursesPath = path.join(__dirname, '../data/courses.json');
 const challengesPath = path.join(__dirname, '../data/challenges-new.json');
 const progressPath = path.join(__dirname, '../data/user-progress.json');
 const assignmentsPath = path.join(__dirname, '../data/user-assignments.json');
-
-// Helper functions
-const getCourses = () => {
-  const data = fs.readFileSync(coursesPath, 'utf8');
-  return JSON.parse(data);
-};
-
-const getChallenges = () => {
-  const data = fs.readFileSync(challengesPath, 'utf8');
-  return JSON.parse(data);
-};
-
-const getProgress = () => {
-  try {
-    const data = fs.readFileSync(progressPath, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
-};
-
-const saveProgress = (progress) => {
-  fs.writeFileSync(progressPath, JSON.stringify(progress, null, 2));
-};
-
-const getAssignments = () => {
-  try {
-    const data = fs.readFileSync(assignmentsPath, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
-};
-
-const saveAssignments = (assignments) => {
-  fs.writeFileSync(assignmentsPath, JSON.stringify(assignments, null, 2));
-};
 
 /**
  * GET /api/courses
  * Get all available courses
  */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const courses = getCourses();
-    res.json(courses);
+    const courses = await CourseModel.findAll();
+    
+    // Convert snake_case to camelCase for frontend
+    const formattedCourses = courses.map(course => ({
+      ...course,
+      imageUrl: course.image_url,
+      totalLevels: course.total_levels,
+      totalPoints: course.total_points,
+      estimatedTime: course.estimated_time,
+      createdAt: course.created_at
+    }));
+    
+    res.json(formattedCourses);
   } catch (error) {
+    console.error('Error fetching courses:', error);
     res.status(500).json({ error: 'Failed to fetch courses' });
   }
 });
@@ -67,17 +44,27 @@ router.get('/', (req, res) => {
  * GET /api/courses/:courseId
  * Get specific course details
  */
-router.get('/:courseId', (req, res) => {
+router.get('/:courseId', async (req, res) => {
   try {
-    const courses = getCourses();
-    const course = courses.find(c => c.id === req.params.courseId);
+    const course = await CourseModel.findById(req.params.courseId);
     
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
     }
     
-    res.json(course);
+    // Convert snake_case to camelCase
+    const formattedCourse = {
+      ...course,
+      imageUrl: course.image_url,
+      totalLevels: course.total_levels,
+      totalPoints: course.total_points,
+      estimatedTime: course.estimated_time,
+      createdAt: course.created_at
+    };
+    
+    res.json(formattedCourse);
   } catch (error) {
+    console.error('Error fetching course:', error);
     res.status(500).json({ error: 'Failed to fetch course' });
   }
 });
@@ -86,30 +73,48 @@ router.get('/:courseId', (req, res) => {
  * GET /api/courses/:courseId/levels
  * Get all levels for a course
  */
-router.get('/:courseId/levels', (req, res) => {
+router.get('/:courseId/levels', async (req, res) => {
   try {
-    const challenges = getChallenges();
-    const courseChallenges = challenges.filter(c => c.courseId === req.params.courseId);
+    const challenges = await query(
+      'SELECT * FROM challenges WHERE course_id = ? ORDER BY level, id',
+      [req.params.courseId]
+    );
     
     // Group by level
     const levels = {};
-    courseChallenges.forEach(challenge => {
+    challenges.forEach(challenge => {
       if (!levels[challenge.level]) {
         levels[challenge.level] = [];
       }
-      levels[challenge.level].push(challenge);
+      // Convert snake_case and parse JSON
+      levels[challenge.level].push({
+        ...challenge,
+        courseId: challenge.course_id,
+        timeLimit: challenge.time_limit,
+        passingThreshold: JSON.parse(challenge.passing_threshold || '{}'),
+        expectedSolution: {
+          html: challenge.expected_html,
+          css: challenge.expected_css,
+          js: challenge.expected_js
+        },
+        expectedScreenshotUrl: challenge.expected_screenshot_url,
+        createdAt: challenge.created_at,
+        updatedAt: challenge.updated_at,
+        tags: JSON.parse(challenge.tags || '[]')
+      });
     });
     
     // Convert to array and sort
     const levelsArray = Object.keys(levels).map(level => ({
       level: parseInt(level),
-      questions: levels[level].sort((a, b) => a.questionNumber - b.questionNumber),
+      questions: levels[level],
       totalQuestions: levels[level].length,
-      totalPoints: levels[level].reduce((sum, q) => sum + q.points, 0)
+      totalPoints: levels[level].reduce((sum, q) => sum + (q.points || 0), 0)
     })).sort((a, b) => a.level - b.level);
     
     res.json(levelsArray);
   } catch (error) {
+    console.error('Error fetching levels:', error);
     res.status(500).json({ error: 'Failed to fetch levels' });
   }
 });

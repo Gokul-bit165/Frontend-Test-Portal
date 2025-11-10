@@ -5,21 +5,9 @@
 
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-
-const submissionsPath = path.join(__dirname, '../data/submissions.json');
-
-// Helper functions
-const getSubmissions = () => {
-  const data = fs.readFileSync(submissionsPath, 'utf8');
-  return JSON.parse(data);
-};
-
-const saveSubmissions = (submissions) => {
-  fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2));
-};
+const SubmissionModel = require('../models/Submission');
+const { query } = require('../database/connection');
 
 /**
  * POST /api/submissions
@@ -124,6 +112,28 @@ router.get('/', (req, res) => {
     res.json(submissions);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch submissions' });
+  }
+});
+
+/**
+ * DELETE /api/submissions/:id
+ * Delete a submission (for admin)
+ */
+router.delete('/:id', (req, res) => {
+  try {
+    const submissions = getSubmissions();
+    const index = submissions.findIndex(s => s.id === req.params.id);
+    
+    if (index === -1) {
+      return res.status(404).json({ error: 'Submission not found' });
+    }
+    
+    submissions.splice(index, 1);
+    saveSubmissions(submissions);
+    
+    res.json({ message: 'Submission deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete submission' });
   }
 });
 

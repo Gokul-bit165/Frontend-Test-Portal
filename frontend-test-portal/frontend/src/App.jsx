@@ -3,10 +3,15 @@ import { useState, useEffect } from 'react';
 import CoursesHome from './pages/CoursesHome';
 import CourseDetail from './pages/CourseDetail';
 import LevelPage from './pages/LevelPage';
+import LevelChallenge from './pages/LevelChallenge';
+import LevelChallengeNew from './pages/LevelChallengeNew';
+import LevelChallengeOld from './pages/LevelChallengeOld';
+import LevelChallengeTest from './pages/LevelChallengeTest';
+import LevelResults from './pages/LevelResults';
 import CandidateDashboard from './pages/CandidateDashboard';
 import ChallengeView from './pages/ChallengeView';
 import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './pages/AdminDashboardNew';
 import CourseManager from './pages/CourseManager';
 import ChallengeManager from './pages/ChallengeManager';
 import UserLogin from './pages/UserLogin';
@@ -37,6 +42,8 @@ function App() {
           <Route path="/" element={<ProtectedRoute><CoursesHome /></ProtectedRoute>} />
           <Route path="/course/:courseId" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
           <Route path="/course/:courseId/level/:level" element={<ProtectedRoute><LevelPage /></ProtectedRoute>} />
+          <Route path="/level/:courseId/:level" element={<ProtectedRoute><LevelChallengeOld /></ProtectedRoute>} />
+          <Route path="/level-results/:courseId/:level" element={<ProtectedRoute><LevelResults /></ProtectedRoute>} />
           <Route path="/old-challenges" element={<ProtectedRoute><CandidateDashboard /></ProtectedRoute>} />
           <Route path="/challenge/:id" element={<ProtectedRoute><ChallengeView /></ProtectedRoute>} />
           

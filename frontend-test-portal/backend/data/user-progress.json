@@ -36,12 +36,14 @@
     "courses": [
       {
         "courseId": "course-html-css",
-        "completedLevels": [],
-        "currentLevel": 1,
-        "totalPoints": 186
+        "completedLevels": [
+          1
+        ],
+        "currentLevel": 2,
+        "totalPoints": 364
       }
     ],
-    "totalPoints": 186,
+    "totalPoints": 364,
     "achievements": []
   }
 ]

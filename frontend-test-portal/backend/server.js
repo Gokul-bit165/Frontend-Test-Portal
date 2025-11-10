@@ -3,6 +3,9 @@
  * Express server with CORS, routes, and middleware setup
  */
 
+// Load environment variables
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -16,6 +19,8 @@ const evaluationRouter = require('./routes/evaluation');
 const adminRouter = require('./routes/admin');
 const coursesRouter = require('./routes/courses');
 const usersRouter = require('./routes/users');
+const levelCompletionRouter = require('./routes/levelCompletion');
+const assetsRouter = require('./routes/assets');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -52,6 +57,8 @@ app.use('/api/evaluate', evaluationRouter);
 app.use('/api/auth', usersRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/level-completion', levelCompletionRouter);
+app.use('/api/assets', assetsRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

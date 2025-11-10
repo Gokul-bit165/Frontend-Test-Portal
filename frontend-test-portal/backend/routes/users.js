@@ -5,24 +5,11 @@ const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 const csv = require('csv-parser');
-
-const usersPath = path.join(__dirname, '../data/users.json');
+const UserModel = require('../models/User');
+const { query } = require('../database/connection');
 
 // Configure multer for CSV uploads
 const upload = multer({ dest: 'uploads/' });
-
-// Helper functions
-function getUsers() {
-  if (!fs.existsSync(usersPath)) {
-    fs.writeFileSync(usersPath, JSON.stringify([], null, 2));
-  }
-  const data = fs.readFileSync(usersPath, 'utf8');
-  return JSON.parse(data);
-}
-
-function saveUsers(users) {
-  fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
-}
 
 function hashPassword(password) {
   return crypto.createHash('sha256').update(password).digest('hex');
@@ -51,153 +38,230 @@ function verifyAdmin(req, res, next) {
 }
 
 // User Login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
 
-  const users = getUsers();
-  const user = users.find(u => u.username === username);
+  try {
+    const user = await UserModel.findByUsername(username);
 
-  if (!user) {
-    return res.status(401).json({ error: 'Invalid username or password' });
-  }
-
-  const hashedPassword = hashPassword(password);
-  if (user.password !== hashedPassword) {
-    return res.status(401).json({ error: 'Invalid username or password' });
-  }
-
-  // Generate token
-  const token = generateToken();
-  
-  // Update last login
-  user.lastLogin = new Date().toISOString();
-  saveUsers(users);
-
-  res.json({
-    token,
-    user: {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      fullName: user.fullName,
-      role: user.role
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
-  });
+
+    const hashedPassword = hashPassword(password);
+    if (user.password !== hashedPassword) {
+      return res.status(401).json({ error: 'Invalid username or password' });
+    }
+
+    // Generate token
+    const token = generateToken();
+    
+    // Update last login
+    await UserModel.update(user.id, { last_login: new Date() });
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        fullName: user.full_name,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Login failed' });
+  }
 });
 
 // Get all users (Admin only)
-router.get('/', verifyAdmin, (req, res) => {
-  const users = getUsers();
-  
-  // Don't send passwords
-  const safeUsers = users.map(({ password, ...user }) => user);
-  
-  res.json(safeUsers);
+router.get('/', verifyAdmin, async (req, res) => {
+  try {
+    const users = await UserModel.findAll();
+    
+    // Don't send passwords and convert snake_case to camelCase for frontend
+    const safeUsers = users.map(({ password, ...user }) => ({
+      ...user,
+      fullName: user.full_name,
+      createdAt: user.created_at,
+      lastLogin: user.last_login
+    }));
+    
+    res.json(safeUsers);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// Get user progress data (Admin only)
+router.get('/progress', verifyAdmin, async (req, res) => {
+  try {
+    const progressData = await query(`
+      SELECT 
+        up.user_id as userId,
+        u.username,
+        up.course_id as courseId,
+        c.title as courseTitle,
+        up.current_level as currentLevel,
+        up.completed_levels as completedLevels,
+        up.total_points as totalPoints,
+        up.last_updated as lastUpdated
+      FROM user_progress up
+      JOIN users u ON up.user_id = u.id
+      JOIN courses c ON up.course_id = c.id
+      ORDER BY u.username, c.title
+    `);
+    
+    // Parse JSON fields
+    const formattedData = progressData.map(row => ({
+      ...row,
+      completedLevels: JSON.parse(row.completedLevels || '[]')
+    }));
+    
+    res.json(formattedData);
+  } catch (error) {
+    console.error('Error fetching progress:', error);
+    res.status(500).json({ error: 'Failed to load progress data' });
+  }
 });
 
 // Get single user
-router.get('/:userId', (req, res) => {
-  const users = getUsers();
-  const user = users.find(u => u.id === req.params.userId);
-  
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
+router.get('/:userId', async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    const { password, ...safeUser } = user;
+    // Convert snake_case to camelCase
+    safeUser.fullName = safeUser.full_name;
+    safeUser.createdAt = safeUser.created_at;
+    safeUser.lastLogin = safeUser.last_login;
+    delete safeUser.full_name;
+    delete safeUser.created_at;
+    delete safeUser.last_login;
+    
+    res.json(safeUser);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Failed to fetch user' });
   }
-  
-  const { password, ...safeUser } = user;
-  res.json(safeUser);
 });
 
 // Create new user (Admin only)
-router.post('/', verifyAdmin, (req, res) => {
+router.post('/', verifyAdmin, async (req, res) => {
   const { username, password, email, fullName, role = 'student' } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
 
-  const users = getUsers();
-  
-  // Check if username exists
-  if (users.find(u => u.username === username)) {
-    return res.status(400).json({ error: 'Username already exists' });
+  try {
+    // Check if username exists
+    const existingUser = await UserModel.findByUsername(username);
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
+    const newUser = {
+      id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      username,
+      password: hashPassword(password),
+      email: email || '',
+      full_name: fullName || '',
+      role: role || 'student',
+      created_at: new Date(),
+      last_login: null
+    };
+
+    const userId = await UserModel.create(newUser);
+    const createdUser = await UserModel.findById(userId);
+
+    const { password: _, full_name, created_at, last_login, ...safeUser } = createdUser;
+    safeUser.fullName = full_name;
+    safeUser.createdAt = created_at;
+    safeUser.lastLogin = last_login;
+    
+    res.status(201).json(safeUser);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Failed to create user' });
   }
-
-  const newUser = {
-    id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-    username,
-    password: hashPassword(password),
-    email: email || '',
-    fullName: fullName || '',
-    role: role || 'student',
-    createdAt: new Date().toISOString(),
-    lastLogin: null
-  };
-
-  users.push(newUser);
-  saveUsers(users);
-
-  const { password: _, ...safeUser } = newUser;
-  res.status(201).json(safeUser);
 });
 
 // Update user (Admin only)
-router.put('/:userId', verifyAdmin, (req, res) => {
+router.put('/:userId', verifyAdmin, async (req, res) => {
   const { username, password, email, fullName, role } = req.body;
-  const users = getUsers();
-  const userIndex = users.findIndex(u => u.id === req.params.userId);
 
-  if (userIndex === -1) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  const user = users[userIndex];
-
-  // Update fields
-  if (username && username !== user.username) {
-    // Check if new username exists
-    if (users.find(u => u.username === username && u.id !== req.params.userId)) {
-      return res.status(400).json({ error: 'Username already exists' });
+  try {
+    const user = await UserModel.findById(req.params.userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
-    user.username = username;
-  }
-  
-  if (password) {
-    user.password = hashPassword(password);
-  }
-  
-  if (email !== undefined) user.email = email;
-  if (fullName !== undefined) user.fullName = fullName;
-  if (role !== undefined) user.role = role;
-  
-  user.updatedAt = new Date().toISOString();
 
-  users[userIndex] = user;
-  saveUsers(users);
+    const updates = {};
 
-  const { password: _, ...safeUser } = user;
-  res.json(safeUser);
+    // Update fields
+    if (username && username !== user.username) {
+      // Check if new username exists
+      const existingUser = await UserModel.findByUsername(username);
+      if (existingUser && existingUser.id !== req.params.userId) {
+        return res.status(400).json({ error: 'Username already exists' });
+      }
+      updates.username = username;
+    }
+    
+    if (password) {
+      updates.password = hashPassword(password);
+    }
+    
+    if (email !== undefined) updates.email = email;
+    if (fullName !== undefined) updates.full_name = fullName;
+    if (role !== undefined) updates.role = role;
+
+    await UserModel.update(req.params.userId, updates);
+    const updatedUser = await UserModel.findById(req.params.userId);
+
+    const { password: _, full_name, created_at, last_login, ...safeUser } = updatedUser;
+    safeUser.fullName = full_name;
+    safeUser.createdAt = created_at;
+    safeUser.lastLogin = last_login;
+    
+    res.json(safeUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
 });
 
 // Delete user (Admin only)
-router.delete('/:userId', verifyAdmin, (req, res) => {
-  const users = getUsers();
-  const filteredUsers = users.filter(u => u.id !== req.params.userId);
+router.delete('/:userId', verifyAdmin, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
-  if (filteredUsers.length === users.length) {
-    return res.status(404).json({ error: 'User not found' });
+    await UserModel.delete(req.params.userId);
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
   }
-
-  saveUsers(filteredUsers);
-  res.json({ message: 'User deleted successfully' });
 });
 
 // Upload CSV (Admin only)
-router.post('/upload-csv', verifyAdmin, upload.single('file'), (req, res) => {
+router.post('/upload-csv', verifyAdmin, upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -212,53 +276,60 @@ router.post('/upload-csv', verifyAdmin, upload.single('file'), (req, res) => {
     .on('data', (row) => {
       results.push(row);
     })
-    .on('end', () => {
-      const users = getUsers();
+    .on('end', async () => {
+      try {
+        for (let index = 0; index < results.length; index++) {
+          const row = results[index];
+          const lineNum = index + 2; // +2 because CSV header is line 1
 
-      results.forEach((row, index) => {
-        const lineNum = index + 2; // +2 because CSV header is line 1
+          // Validate required fields
+          if (!row.username || !row.password) {
+            errors.push(`Line ${lineNum}: Missing username or password`);
+            skipped++;
+            continue;
+          }
 
-        // Validate required fields
-        if (!row.username || !row.password) {
-          errors.push(`Line ${lineNum}: Missing username or password`);
-          skipped++;
-          return;
+          // Check if username exists
+          const existingUser = await UserModel.findByUsername(row.username);
+          if (existingUser) {
+            errors.push(`Line ${lineNum}: Username "${row.username}" already exists`);
+            skipped++;
+            continue;
+          }
+
+          // Create user
+          const newUser = {
+            id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            username: row.username,
+            password: hashPassword(row.password),
+            email: row.email || '',
+            full_name: row.fullName || '',
+            role: row.role || 'student',
+            created_at: new Date(),
+            last_login: null
+          };
+
+          await UserModel.create(newUser);
+          added++;
         }
 
-        // Check if username exists
-        if (users.find(u => u.username === row.username)) {
-          errors.push(`Line ${lineNum}: Username "${row.username}" already exists`);
-          skipped++;
-          return;
+        // Clean up uploaded file
+        fs.unlinkSync(req.file.path);
+
+        res.json({
+          added,
+          skipped,
+          total: results.length,
+          errors: errors.length > 0 ? errors : undefined
+        });
+      } catch (error) {
+        // Clean up uploaded file
+        if (fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
         }
-
-        // Create user
-        const newUser = {
-          id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          username: row.username,
-          password: hashPassword(row.password),
-          email: row.email || '',
-          fullName: row.fullName || '',
-          role: row.role || 'student',
-          createdAt: new Date().toISOString(),
-          lastLogin: null
-        };
-
-        users.push(newUser);
-        added++;
-      });
-
-      saveUsers(users);
-
-      // Clean up uploaded file
-      fs.unlinkSync(req.file.path);
-
-      res.json({
-        added,
-        skipped,
-        total: results.length,
-        errors: errors.length > 0 ? errors : undefined
-      });
+        console.error('Error processing CSV:', error);
+        res.status(500).json({ error: 'Failed to process CSV file' });
+      }
     })
     .on('error', (error) => {
       // Clean up uploaded file
@@ -279,6 +350,88 @@ admin1,adminpass,Admin User,admin@example.com,admin`;
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename=users-sample.csv');
   res.send(sampleCsv);
+});
+
+// Mark level as complete
+router.post('/complete-level', (req, res) => {
+  try {
+    const { userId, courseId, level } = req.body;
+    
+    if (!userId || !courseId || !level) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Read user progress
+    const progressPath = path.join(__dirname, '../data/user-progress.json');
+    let progressData = [];
+    try {
+      const data = fs.readFileSync(progressPath, 'utf8');
+      progressData = JSON.parse(data);
+    } catch (error) {
+      progressData = [];
+    }
+
+    // Find or create user progress
+    let userProgress = progressData.find(p => p.userId === userId);
+    if (!userProgress) {
+      userProgress = {
+        userId,
+        courses: []
+      };
+      progressData.push(userProgress);
+    }
+
+    // Find or create course progress
+    let courseProgress = userProgress.courses.find(c => c.courseId === courseId);
+    if (!courseProgress) {
+      courseProgress = {
+        courseId,
+        completedLevels: [],
+        lastAccessedLevel: level
+      };
+      userProgress.courses.push(courseProgress);
+    }
+
+    // Add completed level if not already present
+    if (!courseProgress.completedLevels.includes(level)) {
+      courseProgress.completedLevels.push(level);
+      courseProgress.completedLevels.sort((a, b) => a - b);
+    }
+
+    // Update last accessed level
+    courseProgress.lastAccessedLevel = Math.max(courseProgress.lastAccessedLevel || 0, level);
+
+    // Save progress
+    fs.writeFileSync(progressPath, JSON.stringify(progressData, null, 2));
+
+    // Also update user assignments
+    const assignmentsPath = path.join(__dirname, '../data/user-assignments.json');
+    let assignments = [];
+    try {
+      const data = fs.readFileSync(assignmentsPath, 'utf8');
+      assignments = JSON.parse(data);
+    } catch (error) {
+      assignments = [];
+    }
+
+    const assignmentKey = `${userId}-${courseId}-${level}`;
+    const assignment = assignments.find(a => a.key === assignmentKey);
+    if (assignment) {
+      assignment.isLevelComplete = true;
+      assignment.completedAt = new Date().toISOString();
+      fs.writeFileSync(assignmentsPath, JSON.stringify(assignments, null, 2));
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Level marked as complete',
+      nextLevel: level + 1
+    });
+
+  } catch (error) {
+    console.error('Error completing level:', error);
+    res.status(500).json({ error: 'Failed to mark level as complete' });
+  }
 });
 
 module.exports = router;

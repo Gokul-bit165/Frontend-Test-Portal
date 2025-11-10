@@ -91,12 +91,13 @@ router.post('/', async (req, res) => {
     console.log(`\n🔄 Starting evaluation for submission: ${submissionId}`);
     console.log(`📝 Challenge: ${challenge.title}`);
     
-    // Run hybrid evaluation
+    // Run hybrid evaluation with content validation
     const evaluationResult = await evaluator.evaluate(
       submission.code,
       challenge.expectedSolution,
       challenge.passingThreshold,
-      submissionId
+      submissionId,
+      submission.challengeId // Pass challengeId for content-specific validation
     );
     
     // Update submission with result
@@ -110,6 +111,7 @@ router.post('/', async (req, res) => {
     saveSubmissions(submissions);
     
     console.log(`✅ Evaluation complete: ${evaluationResult.passed ? 'PASSED' : 'FAILED'}`);
+    console.log(`   Content: ${evaluationResult.contentScore}%`);
     console.log(`   Structure: ${evaluationResult.structureScore}%`);
     console.log(`   Visual: ${evaluationResult.visualScore}%`);
     console.log(`   Final: ${evaluationResult.finalScore}%\n`);
