@@ -125,7 +125,8 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
   const handleDownloadTemplate = async (level) => {
     try {
       const response = await downloadLevelTemplate(courseId, level);
-      const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: 'application/json' });
+      // response.data is already a Blob from the backend
+      const blob = response.data;
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -163,10 +164,12 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
         throw new Error('Data must be an array of questions');
       }
 
-      const response = await uploadLevelQuestionBank(courseId, selectedLevel, {
-        questions,
-        randomizeCount: currentRandomizeCount
-      });
+      const response = await uploadLevelQuestionBank(
+        courseId, 
+        selectedLevel, 
+        questions, 
+        currentRandomizeCount
+      );
       
       alert(`Level ${selectedLevel} updated successfully!\n\n` +
             `Added: ${response.data.added || questions.length} questions\n` +

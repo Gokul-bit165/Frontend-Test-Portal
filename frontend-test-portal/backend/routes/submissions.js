@@ -5,9 +5,48 @@
 
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const SubmissionModel = require('../models/Submission');
 const { query } = require('../database/connection');
+
+const submissionsPath = path.join(__dirname, '../data/submissions.json');
+
+// Helper to load JSON files
+const loadJSON = (filePath) => {
+  try {
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      return JSON.parse(data);
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error loading ${filePath}:`, error.message);
+    return [];
+  }
+};
+
+// Helper to save JSON files
+const saveJSON = (filePath, data) => {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    return true;
+  } catch (error) {
+    console.error(`Error saving ${filePath}:`, error.message);
+    return false;
+  }
+};
+
+// Helper to get all submissions
+const getSubmissions = () => {
+  return loadJSON(submissionsPath);
+};
+
+// Helper to save submissions
+const saveSubmissions = (submissions) => {
+  return saveJSON(submissionsPath, submissions);
+};
 
 /**
  * POST /api/submissions

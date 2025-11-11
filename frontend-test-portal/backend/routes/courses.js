@@ -41,6 +41,46 @@ const saveJSON = (filePath, data) => {
   }
 };
 
+// Helper to get all courses
+const getCourses = () => {
+  return loadJSON(coursesPath);
+};
+
+// Helper to save courses
+const saveCourses = (courses) => {
+  return saveJSON(coursesPath, courses);
+};
+
+// Helper to get all challenges
+const getChallenges = () => {
+  return loadJSON(challengesPath);
+};
+
+// Helper to save challenges
+const saveChallenges = (challenges) => {
+  return saveJSON(challengesPath, challenges);
+};
+
+// Helper to get user progress
+const getProgress = () => {
+  return loadJSON(progressPath);
+};
+
+// Helper to save user progress
+const saveProgress = (progress) => {
+  return saveJSON(progressPath, progress);
+};
+
+// Helper to get user assignments
+const getAssignments = () => {
+  return loadJSON(assignmentsPath);
+};
+
+// Helper to save user assignments
+const saveAssignments = (assignments) => {
+  return saveJSON(assignmentsPath, assignments);
+};
+
 /**
  * GET /api/courses
  * Get all available courses
@@ -114,32 +154,47 @@ router.get('/:courseId', async (req, res) => {
  */
 router.get('/:courseId/levels', async (req, res) => {
   try {
-    const challenges = await query(
-      'SELECT * FROM challenges WHERE course_id = ? ORDER BY level, id',
-      [req.params.courseId]
-    );
+    let challenges = [];
+    
+    // Try database first
+    try {
+      challenges = await query(
+        'SELECT * FROM challenges WHERE course_id = ? ORDER BY level, id',
+        [req.params.courseId]
+      );
+    } catch (dbError) {
+      console.log('Database error, using JSON file for levels:', dbError.message);
+      // Fallback to JSON file
+      const allChallenges = getChallenges();
+      challenges = allChallenges.filter(c => c.courseId === req.params.courseId);
+    }
     
     // Group by level
     const levels = {};
     challenges.forEach(challenge => {
-      if (!levels[challenge.level]) {
-        levels[challenge.level] = [];
+      const levelNum = challenge.level;
+      if (!levels[levelNum]) {
+        levels[levelNum] = [];
       }
-      // Convert snake_case and parse JSON
-      levels[challenge.level].push({
+      // Convert snake_case and parse JSON (handle both DB and JSON formats)
+      levels[levelNum].push({
         ...challenge,
-        courseId: challenge.course_id,
-        timeLimit: challenge.time_limit,
-        passingThreshold: JSON.parse(challenge.passing_threshold || '{}'),
-        expectedSolution: {
+        courseId: challenge.course_id || challenge.courseId,
+        timeLimit: challenge.time_limit || challenge.timeLimit,
+        passingThreshold: typeof challenge.passing_threshold === 'string' 
+          ? JSON.parse(challenge.passing_threshold || '{}')
+          : (challenge.passingThreshold || {}),
+        expectedSolution: challenge.expected_html ? {
           html: challenge.expected_html,
           css: challenge.expected_css,
           js: challenge.expected_js
-        },
-        expectedScreenshotUrl: challenge.expected_screenshot_url,
-        createdAt: challenge.created_at,
-        updatedAt: challenge.updated_at,
-        tags: JSON.parse(challenge.tags || '[]')
+        } : (challenge.expectedSolution || {}),
+        expectedScreenshotUrl: challenge.expected_screenshot_url || challenge.expectedScreenshotUrl,
+        createdAt: challenge.created_at || challenge.createdAt,
+        updatedAt: challenge.updated_at || challenge.updatedAt,
+        tags: typeof challenge.tags === 'string'
+          ? JSON.parse(challenge.tags || '[]')
+          : (challenge.tags || [])
       });
     });
     
@@ -966,12 +1021,12 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
     
     // Save challenges
     if (addedCount > 0 || updatedCount > 0) {
-      fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
+      saveChallenges(challenges);
       
       // Save course with updated level settings
       const courseIndex = courses.findIndex(c => c.id === courseId);
       courses[courseIndex] = course;
-      fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
+      saveCourses(courses);
     }
     
     res.json({

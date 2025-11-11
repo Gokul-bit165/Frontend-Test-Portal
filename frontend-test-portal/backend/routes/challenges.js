@@ -11,6 +11,7 @@ const ChallengeModel = require('../models/Challenge');
 const { query } = require('../database/connection');
 
 const challengesPath = path.join(__dirname, '../data/challenges-new.json');
+const assignmentsPath = path.join(__dirname, '../data/user-assignments.json');
 
 // Helper to load JSON files
 const loadJSON = (filePath) => {
@@ -24,6 +25,32 @@ const loadJSON = (filePath) => {
     console.error(`Error loading ${filePath}:`, error.message);
     return [];
   }
+};
+
+// Helper to save JSON files
+const saveJSON = (filePath, data) => {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    return true;
+  } catch (error) {
+    console.error(`Error saving ${filePath}:`, error.message);
+    return false;
+  }
+};
+
+// Helper to get all challenges
+const getAllChallenges = () => {
+  return loadJSON(challengesPath);
+};
+
+// Helper to get assignments
+const getAssignments = () => {
+  return loadJSON(assignmentsPath);
+};
+
+// Helper to save assignments
+const saveAssignments = (assignments) => {
+  return saveJSON(assignmentsPath, assignments);
 };
 
 /**
@@ -74,14 +101,7 @@ router.get('/level-questions', (req, res) => {
     }
 
     // Read user assignments
-    const assignmentsPath = path.join(__dirname, '../data/user-assignments.json');
-    let assignments = [];
-    try {
-      const data = fs.readFileSync(assignmentsPath, 'utf8');
-      assignments = JSON.parse(data);
-    } catch (error) {
-      assignments = [];
-    }
+    let assignments = getAssignments();
 
     // Check if user already has assigned questions for this level
     const assignmentKey = `${userId}-${courseId}-${level}`;
@@ -115,7 +135,7 @@ router.get('/level-questions', (req, res) => {
       };
       
       assignments.push(userAssignment);
-      fs.writeFileSync(assignmentsPath, JSON.stringify(assignments, null, 2));
+      saveAssignments(assignments);
     }
 
     // Get the full question details for assigned questions

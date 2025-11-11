@@ -240,30 +240,25 @@
     "courseId": "course-html-css",
     "level": 1,
     "questionNumber": 1,
-    "title": "Build a Profile Card",
-    "description": "Create a centered profile card with user information and avatar image.",
-    "instructions": "Follow these steps to complete the task:\n- Create a div with class 'profile-card'.\n- Inside it, include an image with src='/assets/images/avatar-1.png' and class 'profile-img'.\n- Add a heading with the name 'John Doe'.\n- Add a paragraph with class 'role' containing 'Web Developer'.\n- Add another paragraph with a short bio.\n- Center the card horizontally and vertically.\n- Set width to 300px, white background, 15px border radius, and box shadow.",
+    "title": "Create a Personal Introduction Page",
+    "description": "Build a simple personal introduction page using HTML and CSS. Include your name, a short paragraph, and an image. (/assets/courses/fullstack-thumb.png)",
+    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create an HTML structure with a header, a main content area, and a footer.\n- Step 2: Add your name as a heading inside the header.\n- Step 3: Include a short introduction paragraph and an image (use any placeholder image).\n- Step 4: Use CSS to center the content and style text and image with basic margins and colors.\n- Step 5: Ensure the layout looks clean on desktop view.",
     "assets": {
       "images": [
-        {
-          "name": "avatar-1.png",
-          "path": "/assets/images/avatar-1.png",
-          "description": "Profile avatar image."
-        }
+        "/assets/courses/fullstack-thumb.png"
       ],
-      "reference": "/assets/references/course-html-css-l1-q1-ref.png"
+      "reference": ""
     },
     "hints": [
-      "Hint 1: Use flexbox to center the card.",
-      "Hint 2: Apply box-shadow for depth.",
-      "Hint 3: Use border-radius for rounded corners."
+      "Hint 1: Use <header>, <main>, and <footer> tags",
+      "Hint 2: Apply text-align: center",
+      "Hint 3: Add padding for clean spacing"
     ],
     "tags": [
       "HTML",
-      "CSS",
-      "Flexbox"
+      "CSS"
     ],
-    "timeLimit": 15,
+    "timeLimit": 20,
     "points": 100,
     "passingThreshold": {
       "structure": 70,
@@ -273,38 +268,38 @@
     "isLocked": false,
     "prerequisite": null,
     "expectedSolution": {
-      "html": "<div class=\"profile-card\">\n  <img src=\"/assets/images/avatar-1.png\" alt=\"Profile Image\" class=\"profile-img\" />\n  <h2>John Doe</h2>\n  <p class=\"role\">Web Developer</p>\n  <p>Passionate about creating responsive and user-friendly web applications. Always eager to learn new technologies and improve coding skills.</p>\n</div>",
-      "css": "body {\n  margin: 0;\n  height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  background-color: #f3f4f6;\n  font-family: Arial, sans-serif;\n}\n\n.profile-card {\n  width: 300px;\n  background-color: white;\n  border-radius: 15px;\n  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\n  text-align: center;\n  padding: 20px;\n}\n\n.profile-img {\n  width: 100px;\n  height: 100px;\n  border-radius: 50%;\n  object-fit: cover;\n  margin-bottom: 15px;\n}\n\n.profile-card h2 {\n  margin: 10px 0 5px;\n  color: #111827;\n}\n\n.role {\n  margin: 0 0 15px;\n  color: #374151;\n  font-weight: normal;\n}\n\n.profile-card p {\n  color: #4b5563;\n  font-size: 14px;\n  line-height: 1.5;\n}",
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Personal Intro</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <header>\n    <h1>John Doe</h1>\n  </header>\n  <main>\n    <p>Hello! I'm learning web development and this is my first webpage.</p>\n    <img src=\"https://via.placeholder.com/150\" alt=\"Profile Picture\">\n  </main>\n  <footer>\n    <p>© 2025 John Doe</p>\n  </footer>\n</body>\n</html>",
+      "css": "body {\n  font-family: Arial, sans-serif;\n  text-align: center;\n  padding: 20px;\n}\nimg {\n  border-radius: 50%;\n  margin-top: 10px;\n}\nfooter {\n  margin-top: 20px;\n  color: gray;\n  font-size: 14px;\n}",
       "js": ""
     },
-    "createdAt": "2025-11-08T10:12:31.887Z",
-    "updatedAt": "2025-11-08T10:12:31.887Z"
+    "createdAt": "2025-11-11T05:52:58.876Z",
+    "updatedAt": "2025-11-11T05:52:58.876Z"
   },
   {
     "id": "course-html-css-l1-q2",
     "courseId": "course-html-css",
     "level": 1,
     "questionNumber": 2,
-    "title": "Create a Navigation Bar",
-    "description": "Build a responsive fixed navigation bar using flexbox.",
-    "instructions": "Follow these steps:\n- Create a nav element with class 'navbar'.\n- Inside it, include 4 anchor links: Home, About, Services, and Contact.\n- Use flexbox to evenly space the links.\n- Fix the navbar to the top of the page.\n- Use background color #1f2937 and white text.\n- On hover, change the link color to #60a5fa.\n- Add padding of 20px.",
+    "title": "Build a Simple Product Card",
+    "description": "Design a single product card with a product image, name, description, and price. (/assets/courses/fullstack-thumb.png)",
+    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create a container div with class 'product-card'.\n- Step 2: Inside it, add an image, product name (h2), short description (p), and a price (span).\n- Step 3: Use CSS to add a border, shadow, and padding.\n- Step 4: Center the card and ensure it looks good visually.\n- Step 5: Keep the width around 300px for pixel match consistency.",
     "assets": {
-      "images": [],
-      "reference": "/assets/references/course-html-css-l1-q2-ref.png"
+      "images": [
+        "/assets/courses/fullstack-thumb.png"
+      ],
+      "reference": ""
     },
     "hints": [
-      "Hint 1: Use 'display: flex' and 'justify-content: space-around'.",
-      "Hint 2: Add 'position: fixed' for a top-fixed navbar.",
-      "Hint 3: Use the :hover pseudo-class for color change."
+      "Hint 1: Use box-shadow for card effect",
+      "Hint 2: Keep consistent padding",
+      "Hint 3: Use display: inline-block"
     ],
     "tags": [
       "HTML",
-      "CSS",
-      "Flexbox",
-      "Navbar"
+      "CSS"
     ],
-    "timeLimit": 20,
-    "points": 150,
+    "timeLimit": 25,
+    "points": 120,
     "passingThreshold": {
       "structure": 70,
       "visual": 80,
@@ -313,11 +308,131 @@
     "isLocked": false,
     "prerequisite": "course-html-css-l1-q1",
     "expectedSolution": {
-      "html": "<nav class=\"navbar\">\n  <a href=\"#\">Home</a>\n  <a href=\"#\">About</a>\n  <a href=\"#\">Services</a>\n  <a href=\"#\">Contact</a>\n</nav>",
-      "css": "body {\n  margin: 0;\n  font-family: Arial, sans-serif;\n}\n\n.navbar {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  background-color: #1f2937;\n  display: flex;\n  justify-content: space-around;\n  align-items: center;\n  padding: 20px;\n}\n\n.navbar a {\n  color: white;\n  text-decoration: none;\n  font-weight: bold;\n  transition: color 0.3s;\n}\n\n.navbar a:hover {\n  color: #60a5fa;\n}",
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <div class=\"product-card\">\n    <img src=\"https://via.placeholder.com/200\" alt=\"Product\">\n    <h2>Wireless Headphones</h2>\n    <p>High-quality wireless sound with long battery life.</p>\n    <span>$59.99</span>\n  </div>\n</body>\n</html>",
+      "css": "body { text-align: center; font-family: sans-serif; }\n.product-card {\n  border: 1px solid #ccc;\n  display: inline-block;\n  padding: 15px;\n  border-radius: 10px;\n  box-shadow: 0 2px 6px rgba(0,0,0,0.1);\n  width: 300px;\n}\n.product-card img {\n  width: 100%;\n  border-radius: 10px;\n}\nspan {\n  color: green;\n  font-weight: bold;\n}",
       "js": ""
     },
-    "createdAt": "2025-11-08T10:12:31.887Z",
-    "updatedAt": "2025-11-08T10:12:31.887Z"
+    "createdAt": "2025-11-11T05:52:58.876Z",
+    "updatedAt": "2025-11-11T05:52:58.876Z"
+  },
+  {
+    "id": "course-html-css-l1-q3",
+    "courseId": "course-html-css",
+    "level": 1,
+    "questionNumber": 3,
+    "title": "Design a Navigation Bar",
+    "description": "Create a horizontal navigation bar with links like Home, About, and Contact. (/assets/courses/fullstack-thumb.png)",
+    "instructions": "Detailed step-by-step instructions:\n- Step 1: Use a <nav> element with <ul> and <li> tags for menu items.\n- Step 2: Add anchor (<a>) tags inside each <li>.\n- Step 3: Style the nav with background color, horizontal layout using flex or inline-block.\n- Step 4: Add hover effect on links.\n- Step 5: Keep spacing and alignment pixel-perfect.",
+    "assets": {
+      "images": [
+        "/assets/courses/fullstack-thumb.png"
+      ],
+      "reference": ""
+    },
+    "hints": [
+      "Hint 1: Use display: flex or inline-block for list items",
+      "Hint 2: Remove list-style-type",
+      "Hint 3: Add hover color change"
+    ],
+    "tags": [
+      "HTML",
+      "CSS"
+    ],
+    "timeLimit": 20,
+    "points": 110,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": "course-html-css-l1-q2",
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <nav>\n    <ul>\n      <li><a href=\"#\">Home</a></li>\n      <li><a href=\"#\">About</a></li>\n      <li><a href=\"#\">Contact</a></li>\n    </ul>\n  </nav>\n</body>\n</html>",
+      "css": "nav {\n  background-color: #333;\n  padding: 10px 0;\n}\nul {\n  list-style-type: none;\n  margin: 0;\n  padding: 0;\n  text-align: center;\n}\nli { display: inline-block; margin: 0 15px; }\na {\n  color: white;\n  text-decoration: none;\n  font-weight: bold;\n}\na:hover { color: #ff9800; }",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T05:52:58.876Z",
+    "updatedAt": "2025-11-11T05:52:58.876Z"
+  },
+  {
+    "id": "course-html-css-l1-q4",
+    "courseId": "course-html-css",
+    "level": 1,
+    "questionNumber": 4,
+    "title": "Create a Two-Column Layout",
+    "description": "Build a responsive two-column layout using HTML and CSS. (/assets/courses/fullstack-thumb.png)",
+    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create a container div with two child divs: 'left' and 'right'.\n- Step 2: Add text or placeholders in both sections.\n- Step 3: Use CSS Flexbox to arrange them side by side.\n- Step 4: Add border and padding to each column.\n- Step 5: Ensure it becomes a single column on small screens.",
+    "assets": {
+      "images": [
+        "/assets/courses/fullstack-thumb.png"
+      ],
+      "reference": ""
+    },
+    "hints": [
+      "Hint 1: Use display: flex",
+      "Hint 2: Add @media for responsiveness",
+      "Hint 3: Apply box-sizing: border-box"
+    ],
+    "tags": [
+      "HTML",
+      "CSS"
+    ],
+    "timeLimit": 25,
+    "points": 130,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": "course-html-css-l1-q3",
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"left\">Left Column Content</div>\n    <div class=\"right\">Right Column Content</div>\n  </div>\n</body>\n</html>",
+      "css": ".container {\n  display: flex;\n  gap: 20px;\n  padding: 20px;\n}\n.left, .right {\n  flex: 1;\n  border: 1px solid #ccc;\n  padding: 20px;\n}\n@media (max-width: 600px) {\n  .container { flex-direction: column; }\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T05:52:58.876Z",
+    "updatedAt": "2025-11-11T05:52:58.876Z"
+  },
+  {
+    "id": "course-html-css-l1-q5",
+    "courseId": "course-html-css",
+    "level": 1,
+    "questionNumber": 5,
+    "title": "Build a Simple Contact Form",
+    "description": "Create a contact form with input fields for name, email, and message, and a submit button. (/assets/courses/fullstack-thumb.png)",
+    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create a <form> element with name, email, and message fields.\n- Step 2: Use <input> and <textarea> elements properly labeled.\n- Step 3: Add a submit button.\n- Step 4: Use CSS to style inputs with padding, border-radius, and spacing.\n- Step 5: Center the form on the page and limit its width to 400px.",
+    "assets": {
+      "images": [
+        "/assets/courses/fullstack-thumb.png"
+      ],
+      "reference": ""
+    },
+    "hints": [
+      "Hint 1: Wrap inputs in <label>",
+      "Hint 2: Use display: block for inputs",
+      "Hint 3: Add hover effect for button"
+    ],
+    "tags": [
+      "HTML",
+      "CSS"
+    ],
+    "timeLimit": 30,
+    "points": 150,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": "course-html-css-l1-q4",
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <form>\n    <label>Name:<br><input type=\"text\" name=\"name\"></label><br>\n    <label>Email:<br><input type=\"email\" name=\"email\"></label><br>\n    <label>Message:<br><textarea name=\"message\"></textarea></label><br>\n    <button type=\"submit\">Send</button>\n  </form>\n</body>\n</html>",
+      "css": "body { text-align: center; font-family: Arial; }\nform {\n  display: inline-block;\n  text-align: left;\n  border: 1px solid #ccc;\n  padding: 20px;\n  border-radius: 10px;\n  width: 350px;\n}\ninput, textarea {\n  width: 100%;\n  margin-bottom: 10px;\n  padding: 8px;\n  border-radius: 5px;\n  border: 1px solid #aaa;\n}\nbutton {\n  background-color: #4CAF50;\n  color: white;\n  border: none;\n  padding: 10px 15px;\n  border-radius: 5px;\n}\nbutton:hover { background-color: #45a049; }",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T05:52:58.876Z",
+    "updatedAt": "2025-11-11T05:52:58.876Z"
   }
 ]

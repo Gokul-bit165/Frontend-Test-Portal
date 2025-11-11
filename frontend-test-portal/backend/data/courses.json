@@ -9,9 +9,25 @@
     "totalLevels": 6,
     "estimatedTime": "4 hours",
     "difficulty": "Beginner",
-    "tags": ["HTML", "CSS", "Layout", "Design"],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Layout",
+      "Design"
+    ],
     "isLocked": false,
-    "createdAt": "2025-01-15T10:00:00.000Z"
+    "createdAt": "2025-01-15T10:00:00.000Z",
+    "levelSettings": {
+      "1": {
+        "randomizeCount": 2
+      }
+    },
+    "restrictions": {
+      "blockCopy": true,
+      "blockPaste": true,
+      "forceFullscreen": true,
+      "maxViolations": 3
+    }
   },
   {
     "id": "course-javascript",
@@ -23,7 +39,12 @@
     "totalLevels": 6,
     "estimatedTime": "5 hours",
     "difficulty": "Beginner",
-    "tags": ["JavaScript", "DOM", "Events", "Logic"],
+    "tags": [
+      "JavaScript",
+      "DOM",
+      "Events",
+      "Logic"
+    ],
     "isLocked": false,
     "createdAt": "2025-01-16T10:00:00.000Z"
   },
@@ -37,7 +58,12 @@
     "totalLevels": 6,
     "estimatedTime": "3 hours",
     "difficulty": "Intermediate",
-    "tags": ["Responsive", "Flexbox", "Grid", "Media Queries"],
+    "tags": [
+      "Responsive",
+      "Flexbox",
+      "Grid",
+      "Media Queries"
+    ],
     "isLocked": false,
     "createdAt": "2025-01-17T10:00:00.000Z"
   },
@@ -51,7 +77,12 @@
     "totalLevels": 6,
     "estimatedTime": "8 hours",
     "difficulty": "Advanced",
-    "tags": ["Full Stack", "API", "Forms", "Integration"],
+    "tags": [
+      "Full Stack",
+      "API",
+      "Forms",
+      "Integration"
+    ],
     "isLocked": false,
     "createdAt": "2025-01-18T10:00:00.000Z"
   }

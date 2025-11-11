@@ -8,6 +8,34 @@ const csv = require('csv-parser');
 const UserModel = require('../models/User');
 const { query } = require('../database/connection');
 
+// Path to JSON users file
+const usersPath = path.join(__dirname, '../data/users.json');
+
+// Helper to load JSON files
+const loadJSON = (filePath) => {
+  try {
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      return JSON.parse(data);
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error loading ${filePath}:`, error.message);
+    return [];
+  }
+};
+
+// Helper to save JSON files
+const saveJSON = (filePath, data) => {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    return true;
+  } catch (error) {
+    console.error(`Error saving ${filePath}:`, error.message);
+    return false;
+  }
+};
+
 // Configure multer for CSV uploads
 const upload = multer({ dest: 'uploads/' });
 
@@ -46,7 +74,17 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const user = await UserModel.findByUsername(username);
+    let user;
+    
+    // Try database first
+    try {
+      user = await UserModel.findByUsername(username);
+    } catch (dbError) {
+      console.log('Database error, using JSON file for login:', dbError.message);
+      // Fallback to JSON file
+      const users = loadJSON(usersPath);
+      user = users.find(u => u.username === username);
+    }
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid username or password' });
@@ -60,8 +98,18 @@ router.post('/login', async (req, res) => {
     // Generate token
     const token = generateToken();
     
-    // Update last login
-    await UserModel.update(user.id, { last_login: new Date() });
+    // Update last login (try database, fallback to JSON)
+    try {
+      await UserModel.update(user.id, { last_login: new Date() });
+    } catch (dbError) {
+      console.log('Database error, updating JSON file:', dbError.message);
+      const users = loadJSON(usersPath);
+      const userIndex = users.findIndex(u => u.id === user.id);
+      if (userIndex !== -1) {
+        users[userIndex].lastLogin = new Date().toISOString();
+        saveJSON(usersPath, users);
+      }
+    }
 
     res.json({
       token,
@@ -69,7 +117,7 @@ router.post('/login', async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        fullName: user.full_name,
+        fullName: user.fullName || user.full_name,
         role: user.role
       }
     });
@@ -82,14 +130,23 @@ router.post('/login', async (req, res) => {
 // Get all users (Admin only)
 router.get('/', verifyAdmin, async (req, res) => {
   try {
-    const users = await UserModel.findAll();
+    let users;
+    
+    // Try database first
+    try {
+      users = await UserModel.findAll();
+    } catch (dbError) {
+      console.log('Database error, using JSON file for users:', dbError.message);
+      // Fallback to JSON file
+      users = loadJSON(usersPath);
+    }
     
     // Don't send passwords and convert snake_case to camelCase for frontend
     const safeUsers = users.map(({ password, ...user }) => ({
       ...user,
-      fullName: user.full_name,
-      createdAt: user.created_at,
-      lastLogin: user.last_login
+      fullName: user.fullName || user.full_name,
+      createdAt: user.createdAt || user.created_at,
+      lastLogin: user.lastLogin || user.last_login
     }));
     
     res.json(safeUsers);
