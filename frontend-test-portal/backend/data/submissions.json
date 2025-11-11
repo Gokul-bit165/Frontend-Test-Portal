@@ -586,9 +586,996 @@
       "css": "",
       "js": ""
     },
-    "status": "pending",
+    "status": "passed",
     "submittedAt": "2025-11-11T17:58:23.104Z",
-    "evaluatedAt": null,
-    "result": null
+    "evaluatedAt": "2025-11-11T17:58:28.812Z",
+    "result": {
+      "submissionId": "360084b0-728d-4c32-a2a3-7c4bfbe46c49",
+      "timestamp": "2025-11-11T17:58:24.063Z",
+      "contentScore": 70,
+      "structureScore": 25,
+      "visualScore": 100,
+      "behaviorScore": 0,
+      "finalScore": 85,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 60,
+        "overall": 65
+      },
+      "content": {
+        "score": 70,
+        "passed": true,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 66.66666666666666,
+            "weight": 30,
+            "details": "Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html."
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 75,
+            "weight": 20,
+            "details": "✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)"
+          }
+        ],
+        "feedback": "Overall Score: 70%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 67%\n   Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html.\n✓ Required HTML elements: 75%\n   ✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)\n",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "my first webpage",
+              "welcome to html",
+              "hello! my name is [your name] and i'm learning html."
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "meta": 2,
+              "title": 1,
+              "h1": 1,
+              "p": 1
+            },
+            "weight": 20
+          }
+        ]
+      },
+      "structure": {
+        "score": 25,
+        "passed": false,
+        "rolesFound": [],
+        "rolesPartial": [
+          {
+            "role": "productTitle",
+            "confidence": "medium",
+            "element": {
+              "tag": "h1",
+              "classes": "",
+              "text": "Welcome to HTML"
+            },
+            "suggestion": "Consider adding a class like \"title\""
+          },
+          {
+            "role": "productPrice",
+            "confidence": "medium",
+            "element": {
+              "tag": "p",
+              "classes": "",
+              "text": "Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using H"
+            },
+            "suggestion": "Consider adding a class like \"price\""
+          }
+        ],
+        "rolesMissing": [
+          {
+            "role": "productImage",
+            "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+            "suggestion": "Add a <img> element with class \"image\""
+          },
+          {
+            "role": "productButton",
+            "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+            "suggestion": "Add a <button> element with class \"button\""
+          }
+        ],
+        "totalRoles": 4,
+        "foundRoles": 1
+      },
+      "visual": {
+        "score": 100,
+        "passed": true,
+        "diffPixels": 2418,
+        "totalPixels": 921600,
+        "diffPercentage": "0.26",
+        "screenshots": {
+          "candidate": "/screenshots/360084b0-728d-4c32-a2a3-7c4bfbe46c49-candidate.png",
+          "expected": "/screenshots/360084b0-728d-4c32-a2a3-7c4bfbe46c49-expected.png",
+          "diff": "/screenshots/360084b0-728d-4c32-a2a3-7c4bfbe46c49-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "💪 Good effort! You've got the basics down.",
+          "With a few adjustments, your solution will be even better!"
+        ],
+        "improvements": [
+          "Add missing elements: Product Image, Product Button",
+          "Refine your semantic HTML structure with more descriptive classes"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [],
+            "rolesMissing": [
+              {
+                "role": "productImage",
+                "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+                "suggestion": "Add a <img> element with class \"image\""
+              },
+              {
+                "role": "productButton",
+                "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+                "suggestion": "Add a <button> element with class \"button\""
+              }
+            ],
+            "rolesPartial": [
+              {
+                "role": "productTitle",
+                "confidence": "medium",
+                "element": {
+                  "tag": "h1",
+                  "classes": "",
+                  "text": "Welcome to HTML"
+                },
+                "suggestion": "Consider adding a class like \"title\""
+              },
+              {
+                "role": "productPrice",
+                "confidence": "medium",
+                "element": {
+                  "tag": "p",
+                  "classes": "",
+                  "text": "Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using H"
+                },
+                "suggestion": "Consider adding a class like \"price\""
+              }
+            ],
+            "totalRoles": 4,
+            "foundRoles": 1,
+            "score": 25
+          },
+          "visual": 100,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [],
+          "minorDifferences": [
+            {
+              "icon": "⚠️",
+              "message": "Product Title partially matches",
+              "suggestion": "Consider adding a class like \"title\""
+            },
+            {
+              "icon": "⚠️",
+              "message": "Product Price partially matches",
+              "suggestion": "Consider adding a class like \"price\""
+            }
+          ],
+          "missing": [
+            {
+              "icon": "❌",
+              "message": "Product Image not found",
+              "suggestion": "Add a <img> element with class \"image\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Button not found",
+              "suggestion": "Add a <button> element with class \"button\""
+            }
+          ]
+        },
+        "contentValidation": "Overall Score: 70%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 67%\n   Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html.\n✓ Required HTML elements: 75%\n   ✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)\n",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 66.66666666666666,
+            "weight": 30,
+            "details": "Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html."
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 75,
+            "weight": 20,
+            "details": "✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "43c34925-5245-4949-9a89-d230c69b3e7d",
+    "challengeId": "course-html-css-l1-q3",
+    "candidateName": "user-admin-1",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <title>My Favorite Fruits and Sandwich Recipe</title>\r\n</head>\r\n<body>\r\n    <h1>My Favorite Fruits</h1>\r\n    <ul>\r\n        <li>Apple</li>\r\n        <li>Banana</li>\r\n        <li>Orange</li>\r\n        <li>Mango</li>\r\n        <li>Strawberry</li>\r\n    </ul>\r\n\r\n    <h1>How to Make a Sandwich</h1>\r\n    <ol>\r\n        <li>Get two slices of bread</li>\r\n        <li>Spread butter on both slices</li>\r\n        <li>Add cheese and vegetables</li>\r\n        <li>Put the slices together</li>\r\n        <li>Cut diagonally and serve</li>\r\n    </ol>\r\n</body>\r\n</html>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-11T17:59:12.411Z",
+    "evaluatedAt": "2025-11-11T17:59:15.057Z",
+    "result": {
+      "submissionId": "43c34925-5245-4949-9a89-d230c69b3e7d",
+      "timestamp": "2025-11-11T17:59:13.392Z",
+      "contentScore": 80,
+      "structureScore": 25,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 90,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 60,
+        "overall": 65
+      },
+      "content": {
+        "score": 80,
+        "passed": true,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 80,
+            "weight": 30,
+            "details": "Found 4/5 required texts. Missing: lists example"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 80,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✗ h2: 0 (required: 2), ✓ ul: 1 (required: 1), ✓ li: 10 (required: 10), ✓ ol: 1 (required: 1)"
+          }
+        ],
+        "feedback": "Overall Score: 80%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 80%\n   Found 4/5 required texts. Missing: lists example\n✓ Required HTML elements: 80%\n   ✓ title: 1 (required: 1), ✗ h2: 0 (required: 2), ✓ ul: 1 (required: 1), ✓ li: 10 (required: 10), ✓ ol: 1 (required: 1)\n",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "lists example",
+              "my favorite fruits",
+              "apple",
+              "banana",
+              "orange"
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "title": 1,
+              "h2": 2,
+              "ul": 1,
+              "li": 10,
+              "ol": 1
+            },
+            "weight": 20
+          }
+        ]
+      },
+      "structure": {
+        "score": 25,
+        "passed": false,
+        "rolesFound": [],
+        "rolesPartial": [
+          {
+            "role": "productTitle",
+            "confidence": "medium",
+            "element": {
+              "tag": "h1",
+              "classes": "",
+              "text": "My Favorite Fruits"
+            },
+            "suggestion": "Consider adding a class like \"title\""
+          },
+          {
+            "role": "productButton",
+            "confidence": "medium",
+            "element": {
+              "tag": "html",
+              "classes": "",
+              "text": "My Favorite Fruits and Sandwich Recipe\n\n\n    My Favorite Fruits\n    \n        Apple\n        Banana\n  "
+            },
+            "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+          }
+        ],
+        "rolesMissing": [
+          {
+            "role": "productImage",
+            "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+            "suggestion": "Add a <img> element with class \"image\""
+          },
+          {
+            "role": "productPrice",
+            "expected": "Element with tag span/div/p/strong and class matching price/cost/amount",
+            "suggestion": "Add a <span> element with class \"price\""
+          }
+        ],
+        "totalRoles": 4,
+        "foundRoles": 1
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 11378,
+        "totalPixels": 921600,
+        "diffPercentage": "1.23",
+        "screenshots": {
+          "candidate": "/screenshots/43c34925-5245-4949-9a89-d230c69b3e7d-candidate.png",
+          "expected": "/screenshots/43c34925-5245-4949-9a89-d230c69b3e7d-expected.png",
+          "diff": "/screenshots/43c34925-5245-4949-9a89-d230c69b3e7d-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "💪 Good effort! You've got the basics down.",
+          "With a few adjustments, your solution will be even better!"
+        ],
+        "improvements": [
+          "Add missing elements: Product Image, Product Price",
+          "Refine your semantic HTML structure with more descriptive classes"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [],
+            "rolesMissing": [
+              {
+                "role": "productImage",
+                "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+                "suggestion": "Add a <img> element with class \"image\""
+              },
+              {
+                "role": "productPrice",
+                "expected": "Element with tag span/div/p/strong and class matching price/cost/amount",
+                "suggestion": "Add a <span> element with class \"price\""
+              }
+            ],
+            "rolesPartial": [
+              {
+                "role": "productTitle",
+                "confidence": "medium",
+                "element": {
+                  "tag": "h1",
+                  "classes": "",
+                  "text": "My Favorite Fruits"
+                },
+                "suggestion": "Consider adding a class like \"title\""
+              },
+              {
+                "role": "productButton",
+                "confidence": "medium",
+                "element": {
+                  "tag": "html",
+                  "classes": "",
+                  "text": "My Favorite Fruits and Sandwich Recipe\n\n\n    My Favorite Fruits\n    \n        Apple\n        Banana\n  "
+                },
+                "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+              }
+            ],
+            "totalRoles": 4,
+            "foundRoles": 1,
+            "score": 25
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [],
+          "minorDifferences": [
+            {
+              "icon": "⚠️",
+              "message": "Product Title partially matches",
+              "suggestion": "Consider adding a class like \"title\""
+            },
+            {
+              "icon": "⚠️",
+              "message": "Product Button partially matches",
+              "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+            }
+          ],
+          "missing": [
+            {
+              "icon": "❌",
+              "message": "Product Image not found",
+              "suggestion": "Add a <img> element with class \"image\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Price not found",
+              "suggestion": "Add a <span> element with class \"price\""
+            }
+          ]
+        },
+        "contentValidation": "Overall Score: 80%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 80%\n   Found 4/5 required texts. Missing: lists example\n✓ Required HTML elements: 80%\n   ✓ title: 1 (required: 1), ✗ h2: 0 (required: 2), ✓ ul: 1 (required: 1), ✓ li: 10 (required: 10), ✓ ol: 1 (required: 1)\n",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 80,
+            "weight": 30,
+            "details": "Found 4/5 required texts. Missing: lists example"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 80,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✗ h2: 0 (required: 2), ✓ ul: 1 (required: 1), ✓ li: 10 (required: 10), ✓ ol: 1 (required: 1)"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "b1f43131-c3c0-417a-9170-0c255a68f593",
+    "challengeId": "course-html-css-l1-q1",
+    "candidateName": "user-admin-1",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <title>My First Webpage</title>\r\n</head>\r\n<body>\r\n    <h1>Welcome to HTML</h1>\r\n    <p>Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using HTML.</p>\r\n</body>\r\n</html>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-11T18:08:59.257Z",
+    "evaluatedAt": "2025-11-11T18:09:01.976Z",
+    "result": {
+      "submissionId": "b1f43131-c3c0-417a-9170-0c255a68f593",
+      "timestamp": "2025-11-11T18:09:00.264Z",
+      "contentScore": 70,
+      "structureScore": 25,
+      "visualScore": 100,
+      "behaviorScore": 0,
+      "finalScore": 85,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 60,
+        "overall": 65
+      },
+      "content": {
+        "score": 70,
+        "passed": true,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 66.66666666666666,
+            "weight": 30,
+            "details": "Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html."
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 75,
+            "weight": 20,
+            "details": "✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)"
+          }
+        ],
+        "feedback": "Overall Score: 70%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 67%\n   Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html.\n✓ Required HTML elements: 75%\n   ✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)\n",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "my first webpage",
+              "welcome to html",
+              "hello! my name is [your name] and i'm learning html."
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "meta": 2,
+              "title": 1,
+              "h1": 1,
+              "p": 1
+            },
+            "weight": 20
+          }
+        ]
+      },
+      "structure": {
+        "score": 25,
+        "passed": false,
+        "rolesFound": [],
+        "rolesPartial": [
+          {
+            "role": "productTitle",
+            "confidence": "medium",
+            "element": {
+              "tag": "h1",
+              "classes": "",
+              "text": "Welcome to HTML"
+            },
+            "suggestion": "Consider adding a class like \"title\""
+          },
+          {
+            "role": "productPrice",
+            "confidence": "medium",
+            "element": {
+              "tag": "p",
+              "classes": "",
+              "text": "Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using H"
+            },
+            "suggestion": "Consider adding a class like \"price\""
+          }
+        ],
+        "rolesMissing": [
+          {
+            "role": "productImage",
+            "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+            "suggestion": "Add a <img> element with class \"image\""
+          },
+          {
+            "role": "productButton",
+            "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+            "suggestion": "Add a <button> element with class \"button\""
+          }
+        ],
+        "totalRoles": 4,
+        "foundRoles": 1
+      },
+      "visual": {
+        "score": 100,
+        "passed": true,
+        "diffPixels": 2418,
+        "totalPixels": 921600,
+        "diffPercentage": "0.26",
+        "screenshots": {
+          "candidate": "/screenshots/b1f43131-c3c0-417a-9170-0c255a68f593-candidate.png",
+          "expected": "/screenshots/b1f43131-c3c0-417a-9170-0c255a68f593-expected.png",
+          "diff": "/screenshots/b1f43131-c3c0-417a-9170-0c255a68f593-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "💪 Good effort! You've got the basics down.",
+          "With a few adjustments, your solution will be even better!"
+        ],
+        "improvements": [
+          "Add missing elements: Product Image, Product Button",
+          "Refine your semantic HTML structure with more descriptive classes"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [],
+            "rolesMissing": [
+              {
+                "role": "productImage",
+                "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+                "suggestion": "Add a <img> element with class \"image\""
+              },
+              {
+                "role": "productButton",
+                "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+                "suggestion": "Add a <button> element with class \"button\""
+              }
+            ],
+            "rolesPartial": [
+              {
+                "role": "productTitle",
+                "confidence": "medium",
+                "element": {
+                  "tag": "h1",
+                  "classes": "",
+                  "text": "Welcome to HTML"
+                },
+                "suggestion": "Consider adding a class like \"title\""
+              },
+              {
+                "role": "productPrice",
+                "confidence": "medium",
+                "element": {
+                  "tag": "p",
+                  "classes": "",
+                  "text": "Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using H"
+                },
+                "suggestion": "Consider adding a class like \"price\""
+              }
+            ],
+            "totalRoles": 4,
+            "foundRoles": 1,
+            "score": 25
+          },
+          "visual": 100,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [],
+          "minorDifferences": [
+            {
+              "icon": "⚠️",
+              "message": "Product Title partially matches",
+              "suggestion": "Consider adding a class like \"title\""
+            },
+            {
+              "icon": "⚠️",
+              "message": "Product Price partially matches",
+              "suggestion": "Consider adding a class like \"price\""
+            }
+          ],
+          "missing": [
+            {
+              "icon": "❌",
+              "message": "Product Image not found",
+              "suggestion": "Add a <img> element with class \"image\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Button not found",
+              "suggestion": "Add a <button> element with class \"button\""
+            }
+          ]
+        },
+        "contentValidation": "Overall Score: 70%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 67%\n   Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html.\n✓ Required HTML elements: 75%\n   ✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)\n",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 66.66666666666666,
+            "weight": 30,
+            "details": "Found 2/3 required texts. Missing: hello! my name is [your name] and i'm learning html."
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 75,
+            "weight": 20,
+            "details": "✗ meta: 0 (required: 2), ✓ title: 1 (required: 1), ✓ h1: 1 (required: 1), ✓ p: 1 (required: 1)"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "ecc18726-f05f-4e2f-8f48-134830019529",
+    "challengeId": "html-css-l1-q1",
+    "candidateName": "user-admin-1",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <title>My First Webpage</title>\r\n</head>\r\n<body>\r\n    <h1>Welcome to HTML</h1>\r\n    <p>Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using HTML.</p>\r\n</body>\r\n</html>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-11T18:09:11.428Z",
+    "evaluatedAt": "2025-11-11T18:09:14.026Z",
+    "result": {
+      "submissionId": "ecc18726-f05f-4e2f-8f48-134830019529",
+      "timestamp": "2025-11-11T18:09:12.400Z",
+      "contentScore": 4,
+      "structureScore": 25,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 52,
+      "passed": false,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "content": {
+        "score": 4,
+        "passed": false,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": false,
+            "score": 0,
+            "weight": 30,
+            "details": "Found 0/4 required texts. Missing: profile card, john doe, web developer, passionate about creating beautiful and functional websites."
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 20,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✗ div: 0 (required: 1), ✗ img: 0 (required: 1), ✗ h2: 0 (required: 1), ✗ p: 1 (required: 2)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Found 0/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/11 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Matched 0/4 class names"
+          }
+        ],
+        "feedback": "Overall Score: 4%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✗ Required text content: 0%\n   Found 0/4 required texts. Missing: profile card, john doe, web developer, passionate about creating beautiful and functional websites.\n✗ Required HTML elements: 20%\n   ✓ title: 1 (required: 1), ✗ div: 0 (required: 1), ✗ img: 0 (required: 1), ✗ h2: 0 (required: 1), ✗ p: 1 (required: 2)\n✗ Required images: 0%\n   Found 0/1 required images\n✗ Required CSS styles: 0%\n   Found 0/11 required CSS properties\n✗ CSS class names: 0%\n   Matched 0/4 class names\n\n⚠️ 5 requirement(s) need attention",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "profile card",
+              "john doe",
+              "web developer",
+              "passionate about creating beautiful and functional websites."
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "title": 1,
+              "div": 1,
+              "img": 1,
+              "h2": 1,
+              "p": 2
+            },
+            "weight": 20
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "required": [
+              {
+                "src": "/assets/images/avatar-1.png",
+                "alt": "Profile"
+              }
+            ],
+            "weight": 15
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "required": [
+              "border-radius",
+              "box-shadow",
+              "background",
+              "width",
+              "height",
+              "padding",
+              "margin",
+              "display",
+              "flex",
+              "color",
+              "font"
+            ],
+            "weight": 20
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "required": [
+              "card",
+              "avatar",
+              "role",
+              "bio"
+            ],
+            "weight": 15
+          }
+        ]
+      },
+      "structure": {
+        "score": 25,
+        "passed": false,
+        "rolesFound": [],
+        "rolesPartial": [
+          {
+            "role": "productTitle",
+            "confidence": "medium",
+            "element": {
+              "tag": "h1",
+              "classes": "",
+              "text": "Welcome to HTML"
+            },
+            "suggestion": "Consider adding a class like \"title\""
+          },
+          {
+            "role": "productPrice",
+            "confidence": "medium",
+            "element": {
+              "tag": "p",
+              "classes": "",
+              "text": "Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using H"
+            },
+            "suggestion": "Consider adding a class like \"price\""
+          }
+        ],
+        "rolesMissing": [
+          {
+            "role": "productImage",
+            "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+            "suggestion": "Add a <img> element with class \"image\""
+          },
+          {
+            "role": "productButton",
+            "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+            "suggestion": "Add a <button> element with class \"button\""
+          }
+        ],
+        "totalRoles": 4,
+        "foundRoles": 1
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 6114,
+        "totalPixels": 921600,
+        "diffPercentage": "0.66",
+        "screenshots": {
+          "candidate": "/screenshots/ecc18726-f05f-4e2f-8f48-134830019529-candidate.png",
+          "expected": "/screenshots/ecc18726-f05f-4e2f-8f48-134830019529-expected.png",
+          "diff": "/screenshots/ecc18726-f05f-4e2f-8f48-134830019529-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "💪 Good effort! You've got the basics down.",
+          "With a few adjustments, your solution will be even better!"
+        ],
+        "improvements": [
+          "Add missing elements: Product Image, Product Button",
+          "Refine your semantic HTML structure with more descriptive classes"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [],
+            "rolesMissing": [
+              {
+                "role": "productImage",
+                "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+                "suggestion": "Add a <img> element with class \"image\""
+              },
+              {
+                "role": "productButton",
+                "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+                "suggestion": "Add a <button> element with class \"button\""
+              }
+            ],
+            "rolesPartial": [
+              {
+                "role": "productTitle",
+                "confidence": "medium",
+                "element": {
+                  "tag": "h1",
+                  "classes": "",
+                  "text": "Welcome to HTML"
+                },
+                "suggestion": "Consider adding a class like \"title\""
+              },
+              {
+                "role": "productPrice",
+                "confidence": "medium",
+                "element": {
+                  "tag": "p",
+                  "classes": "",
+                  "text": "Hi! My name is Gokul. I’m learning web development and this is my very first webpage created using H"
+                },
+                "suggestion": "Consider adding a class like \"price\""
+              }
+            ],
+            "totalRoles": 4,
+            "foundRoles": 1,
+            "score": 25
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [],
+          "minorDifferences": [
+            {
+              "icon": "⚠️",
+              "message": "Product Title partially matches",
+              "suggestion": "Consider adding a class like \"title\""
+            },
+            {
+              "icon": "⚠️",
+              "message": "Product Price partially matches",
+              "suggestion": "Consider adding a class like \"price\""
+            }
+          ],
+          "missing": [
+            {
+              "icon": "❌",
+              "message": "Product Image not found",
+              "suggestion": "Add a <img> element with class \"image\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Button not found",
+              "suggestion": "Add a <button> element with class \"button\""
+            }
+          ]
+        },
+        "contentValidation": "Overall Score: 4%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✗ Required text content: 0%\n   Found 0/4 required texts. Missing: profile card, john doe, web developer, passionate about creating beautiful and functional websites.\n✗ Required HTML elements: 20%\n   ✓ title: 1 (required: 1), ✗ div: 0 (required: 1), ✗ img: 0 (required: 1), ✗ h2: 0 (required: 1), ✗ p: 1 (required: 2)\n✗ Required images: 0%\n   Found 0/1 required images\n✗ Required CSS styles: 0%\n   Found 0/11 required CSS properties\n✗ CSS class names: 0%\n   Matched 0/4 class names\n\n⚠️ 5 requirement(s) need attention",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": false,
+            "score": 0,
+            "weight": 30,
+            "details": "Found 0/4 required texts. Missing: profile card, john doe, web developer, passionate about creating beautiful and functional websites."
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 20,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✗ div: 0 (required: 1), ✗ img: 0 (required: 1), ✗ h2: 0 (required: 1), ✗ p: 1 (required: 2)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Found 0/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/11 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Matched 0/4 class names"
+          }
+        ]
+      }
+    }
   }
 ]

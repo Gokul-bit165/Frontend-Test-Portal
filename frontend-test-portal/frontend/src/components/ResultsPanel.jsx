@@ -232,57 +232,13 @@ export default function ResultsPanel({ result }) {
         </div>
       )}
 
-      {/* Technical Details (Collapsible) */}
-      {result.structure && (
-        <details className="bg-white p-4 rounded-lg border border-gray-200">
-          <summary className="font-semibold cursor-pointer hover:text-blue-600">
-            🔍 Technical Details (Click to expand)
-          </summary>
-          <div className="mt-4 space-y-3 text-sm">
-            <div>
-              <p className="font-medium text-gray-700">Semantic Roles Detected:</p>
-              <p className="text-gray-600">
-                Found {result.structure.foundRoles} out of {result.structure.totalRoles} required roles
-              </p>
-            </div>
-            
-            {result.structure.rolesFound && result.structure.rolesFound.length > 0 && (
-              <div className="bg-green-50 p-3 rounded">
-                <p className="font-medium text-green-800 mb-2">✓ High Confidence Matches:</p>
-                <ul className="ml-4 space-y-1">
-                  {result.structure.rolesFound.map((role, i) => (
-                    <li key={i} className="text-xs text-gray-700">
-                      <strong>{role.role}:</strong> &lt;{role.element.tag}&gt;
-                      {role.element.classes && ` class="${role.element.classes}"`}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {result.structure.rolesPartial && result.structure.rolesPartial.length > 0 && (
-              <div className="bg-yellow-50 p-3 rounded">
-                <p className="font-medium text-yellow-800 mb-2">⚠ Partial Matches:</p>
-                <ul className="ml-4 space-y-1">
-                  {result.structure.rolesPartial.map((role, i) => (
-                    <li key={i} className="text-xs text-gray-700">
-                      <strong>{role.role}:</strong> &lt;{role.element.tag}&gt; (medium confidence)
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div className="pt-2 border-t">
-              <p className="text-xs text-gray-500">
-                <strong>Evaluation Method:</strong> Semantic role-based detection with fuzzy matching
-              </p>
-              <p className="text-xs text-gray-500">
-                <strong>Timestamp:</strong> {new Date(result.timestamp).toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </details>
+      {/* Technical Details - Timestamp Only */}
+      {result.timestamp && (
+        <div className="bg-gray-50 p-3 rounded border border-gray-200">
+          <p className="text-xs text-gray-600">
+            <strong>Evaluated:</strong> {new Date(result.timestamp).toLocaleString()}
+          </p>
+        </div>
       )}
     </div>
   );
