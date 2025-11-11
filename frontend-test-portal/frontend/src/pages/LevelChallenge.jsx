@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import CodeEditor from '../components/CodeEditor';
 import PreviewFrame from '../components/PreviewFrame';
+import ResultsPanel from '../components/ResultsPanel';
 import axios from 'axios';
 
 export default function LevelChallenge() {
@@ -11,19 +12,40 @@ export default function LevelChallenge() {
   
   const [assignedQuestions, setAssignedQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [userAnswers, setUserAnswers] = useState({});
-  const [submissions, setSubmissions] = useState({});
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [challenge, setChallenge] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [code, setCode] = useState({ html: '', css: '', js: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [evaluating, setEvaluating] = useState(false);
+  const [evaluationStep, setEvaluationStep] = useState('');
+  const [result, setResult] = useState(null);
+  const [showExpectedScreenshot, setShowExpectedScreenshot] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [showFinishModal, setShowFinishModal] = useState(false);
+  const [finalScore, setFinalScore] = useState(null);
+  const [feedback, setFeedback] = useState('');
+  
+  // Restrictions and Timer State
+  const [restrictions, setRestrictions] = useState({
+    blockCopy: false,
+    blockPaste: false,
+    forceFullscreen: false,
+    maxViolations: 3,
+    timeLimit: 0
+  });
+  const [violations, setViolations] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(null);
+  const [showViolationToast, setShowViolationToast] = useState(false);
+  const [violationMessage, setViolationMessage] = useState('');
+  const [lastViolationTime, setLastViolationTime] = useState(0);
+  
+  const previewRef = useRef();
 
   useEffect(() => {
     if (courseId && level) {
       loadLevelQuestions();
-    } else {
-      setError('Missing course or level parameter');
-      setLoading(false);
+      loadRestrictions();
     }
   }, [courseId, level]);
 
@@ -35,26 +57,29 @@ export default function LevelChallenge() {
 
   const loadLevelQuestions = async () => {
     try {
-      console.log('Loading questions for:', { userId, courseId, level });
-      
-      // Get assigned questions for this user and level
       const response = await axios.get(`http://localhost:5000/api/challenges/level-questions`, {
-        params: { userId, courseId, level: parseInt(level) }
+        params: { 
+          userId, 
+          courseId, 
+          level: parseInt(level),
+          forceNew: 'true' // Always get new random questions on each test entry
+        }
       });
       
-      console.log('Questions loaded:', response.data);
-      
-      const questions = response.data.assignedQuestions || [];
+      let questions = response.data.assignedQuestions || [];
       
       if (questions.length === 0) {
-        setError('No questions assigned for this level');
-        setLoading(false);
+        alert('No questions assigned for this level');
+        navigate(`/course/${courseId}`);
         return;
       }
       
+      // Shuffle questions array to randomize order every time
+      questions = shuffleArray(questions);
+      
       setAssignedQuestions(questions);
       
-      // Initialize answers object
+      // Initialize answers
       const initialAnswers = {};
       questions.forEach(q => {
         initialAnswers[q.id] = {
@@ -69,123 +94,349 @@ export default function LevelChallenge() {
       setLoading(false);
     } catch (error) {
       console.error('Failed to load level questions:', error);
-      setError('Failed to load questions: ' + error.message);
+      alert('Failed to load questions');
       setLoading(false);
     }
   };
 
-  const loadCurrentQuestion = async () => {
-    if (!assignedQuestions[currentQuestionIndex]) {
-      console.log('No question at index:', currentQuestionIndex);
-      return;
+  // Fisher-Yates shuffle algorithm for randomizing question order
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+    return shuffled;
+  };
+
+  const loadCurrentQuestion = async () => {
+    if (!assignedQuestions[currentQuestionIndex]) return;
     
     const questionId = assignedQuestions[currentQuestionIndex].id;
-    console.log('Loading question details for:', questionId);
     
     try {
       const response = await axios.get(`http://localhost:5000/api/challenges/${questionId}`);
-      console.log('Question details loaded:', response.data);
-      setCurrentQuestion(response.data);
-      setError(null);
+      const challengeData = response.data;
+      setChallenge(challengeData);
+      
+      // Load saved answer if exists
+      const savedAnswer = userAnswers[questionId];
+      if (savedAnswer) {
+        setCode({ html: savedAnswer.html, css: savedAnswer.css, js: savedAnswer.js });
+        setResult(savedAnswer.result);
+      } else {
+        setCode({ html: '', css: '', js: '' });
+        setResult(null);
+      }
     } catch (error) {
       console.error('Failed to load question:', error);
-      setError('Failed to load question details: ' + error.message);
     }
   };
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <div className="text-6xl mb-4">❌</div>
-          <h2 className="text-2xl font-bold mb-2">Error Loading Level</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <div className="space-y-2 text-sm text-gray-500 mb-6">
-            <p>User: {userId}</p>
-            <p>Course: {courseId}</p>
-            <p>Level: {level}</p>
-          </div>
-          <button
-            onClick={() => navigate(`/course/${courseId}`)}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Back to Course
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const handleCodeChange = (type, value) => {
-    const questionId = assignedQuestions[currentQuestionIndex].id;
-    setUserAnswers(prev => ({
-      ...prev,
-      [questionId]: {
-        ...prev[questionId],
-        [type]: value
+  // Load restrictions from API
+  const loadRestrictions = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/courses/${courseId}/restrictions`);
+      if (response.data) {
+        setRestrictions(response.data);
+        // Initialize timer if timeLimit is set
+        if (response.data.timeLimit > 0) {
+          setTimeRemaining(response.data.timeLimit * 60); // Convert minutes to seconds
+        }
       }
-    }));
+    } catch (error) {
+      console.error('Failed to load restrictions:', error);
+    }
   };
 
-  const handleSubmitQuestion = async () => {
-    const questionId = assignedQuestions[currentQuestionIndex].id;
-    const answer = userAnswers[questionId];
+  // Timer countdown
+  useEffect(() => {
+    if (timeRemaining === null || timeRemaining <= 0) return;
+    
+    const interval = setInterval(() => {
+      setTimeRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          alert('Time is up! Your test will be submitted automatically.');
+          handleFinishLevel();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [timeRemaining]);
 
-    if (!answer.html.trim()) {
-      alert('Please write some HTML code before submitting!');
-      return;
+  // Format time as MM:SS
+  const formatTime = (seconds) => {
+    if (seconds === null) return '';
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Handle violations
+  const handleViolation = (type) => {
+    const now = Date.now();
+    if (now - lastViolationTime < 2000) return; // 2 second cooldown
+    
+    setLastViolationTime(now);
+    const newViolations = violations + 1;
+    setViolations(newViolations);
+    
+    setViolationMessage(`${type}`);
+    setShowViolationToast(true);
+    setTimeout(() => setShowViolationToast(false), 3000);
+    
+    if (newViolations >= restrictions.maxViolations) {
+      setTimeout(() => {
+        alert('Maximum violations reached! Test will be submitted.');
+        handleFinishLevel();
+      }, 500);
     }
+  };
+
+  // Restriction enforcement
+  useEffect(() => {
+    if (!restrictions.blockCopy && !restrictions.blockPaste && !restrictions.forceFullscreen) return;
+
+    const handleCopy = (e) => { if (restrictions.blockCopy) { e.preventDefault(); handleViolation('Copy blocked'); } };
+    const handlePaste = (e) => { if (restrictions.blockPaste) { e.preventDefault(); handleViolation('Paste blocked'); } };
+    const handleContextMenu = (e) => { if (restrictions.blockCopy || restrictions.blockPaste) { e.preventDefault(); } };
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && restrictions.blockCopy && (e.key === 'c' || e.key === 'C' || e.key === 'x' || e.key === 'X')) {
+        e.preventDefault(); handleViolation('Copy shortcut blocked');
+      }
+      if ((e.ctrlKey || e.metaKey) && restrictions.blockPaste && (e.key === 'v' || e.key === 'V')) {
+        e.preventDefault(); handleViolation('Paste shortcut blocked');
+      }
+    };
+    const handleVisibilityChange = () => { if (restrictions.forceFullscreen && document.hidden) handleViolation('Tab switched'); };
+    const handleFullscreenChange = () => {
+      if (restrictions.forceFullscreen && !document.fullscreenElement && violations < restrictions.maxViolations) {
+        handleViolation('Exited fullscreen');
+        // Aggressively try to re-enter fullscreen
+        const reenterFullscreen = () => {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen()
+              .catch(() => {
+                // If first attempt fails, keep trying every 500ms
+                setTimeout(reenterFullscreen, 500);
+              });
+          }
+        };
+        setTimeout(reenterFullscreen, 100);
+      }
+    };
+
+    document.addEventListener('copy', handleCopy, { capture: true });
+    document.addEventListener('cut', handleCopy, { capture: true });
+    document.addEventListener('paste', handlePaste, { capture: true });
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown, { capture: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    // Auto-enter fullscreen on click if not in fullscreen
+    const handleClickForFullscreen = () => {
+      if (restrictions.forceFullscreen && !document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    };
+    document.addEventListener('click', handleClickForFullscreen);
+
+    if (restrictions.blockCopy) document.body.style.userSelect = 'none';
+    
+    // Initial fullscreen entry
+    if (restrictions.forceFullscreen && !document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {
+        console.log('Initial fullscreen request failed - user must interact first');
+      });
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickForFullscreen);
+      document.removeEventListener('copy', handleCopy, { capture: true });
+      document.removeEventListener('cut', handleCopy, { capture: true });
+      document.removeEventListener('paste', handlePaste, { capture: true });
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown, { capture: true });
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      if (restrictions.blockCopy) document.body.style.userSelect = '';
+    };
+  }, [restrictions, violations]);
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      // Save current code
+      const currentId = assignedQuestions[currentQuestionIndex].id;
+      setUserAnswers(prev => ({
+        ...prev,
+        [currentId]: { ...prev[currentId], html: code.html, css: code.css, js: code.js }
+      }));
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setResult(null);
+      setShowExpectedScreenshot(false);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < assignedQuestions.length - 1) {
+      // Save current code
+      const currentId = assignedQuestions[currentQuestionIndex].id;
+      setUserAnswers(prev => ({
+        ...prev,
+        [currentId]: { ...prev[currentId], html: code.html, css: code.css, js: code.js }
+      }));
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setResult(null);
+      setShowExpectedScreenshot(false);
+    }
+  };
+
+  const handleRunCode = () => {
+    if (previewRef.current) {
+      previewRef.current.updatePreview(code);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setEvaluating(true);
+    setResult(null);
+    setEvaluationStep('Submitting your solution...');
+
+    const questionId = challenge.id;
 
     try {
-      const response = await axios.post('http://localhost:5000/api/evaluate', {
-        userId,
+      // Step 1: Create submission
+      setEvaluationStep('Creating submission...');
+      const submitResponse = await axios.post('http://localhost:5000/api/submissions', {
         challengeId: questionId,
-        candidateCode: {
-          html: answer.html,
-          css: answer.css,
-          js: answer.js
+        candidateName: userId,
+        code: {
+          html: code.html,
+          css: code.css,
+          js: code.js
         }
       });
 
-      const result = response.data;
+      const submissionId = submitResponse.data.submissionId;
       
+      setEvaluationStep('Launching browser environment...');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setEvaluationStep('Rendering your code...');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setEvaluationStep('Comparing with expected solution...');
+      
+      // Step 2: Evaluate submission
+      const evalResponse = await axios.post('http://localhost:5000/api/evaluate', {
+        submissionId: submissionId
+      });
+
+      const evalResult = evalResponse.data.result;
+      setResult(evalResult);
+      
+      // Save result
       setUserAnswers(prev => ({
         ...prev,
         [questionId]: {
-          ...prev[questionId],
+          html: code.html,
+          css: code.css,
+          js: code.js,
           submitted: true,
-          result: result
+          result: evalResult
         }
       }));
-
-      setSubmissions(prev => ({
-        ...prev,
-        [questionId]: result
-      }));
-
-      alert(`Question ${currentQuestionIndex + 1} submitted! Score: ${result.finalScore}%`);
+      
+      setEvaluationStep('');
     } catch (error) {
       console.error('Submission failed:', error);
-      alert('Failed to submit. Please try again.');
+      console.error('Error details:', error.response?.data || error.message);
+      alert(`Failed to submit: ${error.response?.data?.error || error.message || 'Unknown error'}`);
+      setEvaluationStep('');
+    } finally {
+      setSubmitting(false);
+      setEvaluating(false);
     }
   };
 
   const handleFinishLevel = () => {
-    // Navigate to results page
     navigate(`/level-results/${courseId}/${level}`, {
-      state: { submissions, assignedQuestions }
+      state: { userAnswers, assignedQuestions }
     });
   };
 
-  const navigateToQuestion = (index) => {
-    setCurrentQuestionIndex(index);
+  const handleFinishTest = () => {
+    // Calculate overall results
+    const results = assignedQuestions.map(q => ({
+      questionId: q.id,
+      questionTitle: q.title,
+      submitted: userAnswers[q.id]?.submitted || false,
+      passed: userAnswers[q.id]?.result?.passed || false,
+      score: userAnswers[q.id]?.result?.finalScore || 0
+    }));
+
+    const submittedCount = results.filter(r => r.submitted).length;
+    const passedCount = results.filter(r => r.passed).length;
+    const avgScore = submittedCount > 0 
+      ? Math.round(results.reduce((sum, r) => sum + r.score, 0) / assignedQuestions.length)
+      : 0;
+
+    setFinalScore({
+      submittedCount,
+      passedCount,
+      totalQuestions: assignedQuestions.length,
+      avgScore,
+      allSubmitted: submittedCount === assignedQuestions.length,
+      allPassed: passedCount === assignedQuestions.length,
+      results
+    });
+
+    setShowFinishModal(true);
   };
 
-  const getQuestionStatus = (questionId) => {
-    const answer = userAnswers[questionId];
-    if (!answer) return 'not-answered';
-    return answer.submitted ? 'answered' : 'not-answered';
+  const handleSubmitFeedback = async () => {
+    try {
+      // Save level completion data
+      const completionData = {
+        userId,
+        courseId,
+        level: parseInt(level),
+        completedAt: new Date().toISOString(),
+        finalScore: finalScore.avgScore,
+        passed: finalScore.allPassed,
+        questionsSubmitted: finalScore.submittedCount,
+        questionsPassed: finalScore.passedCount,
+        totalQuestions: finalScore.totalQuestions,
+        feedback: feedback,
+        results: finalScore.results
+      };
+
+      // Save to backend
+      await axios.post('http://localhost:5000/api/level-completion', completionData);
+
+      // Close modal and navigate
+      setShowFinishModal(false);
+      navigate(`/level-results/${courseId}/${level}`, {
+        state: { 
+          userAnswers, 
+          assignedQuestions,
+          completionData 
+        }
+      });
+    } catch (error) {
+      console.error('Failed to save completion:', error);
+      // Still navigate even if save fails
+      setShowFinishModal(false);
+      navigate(`/level-results/${courseId}/${level}`, {
+        state: { userAnswers, assignedQuestions }
+      });
+    }
   };
 
   const allQuestionsSubmitted = () => {
@@ -194,309 +445,335 @@ export default function LevelChallenge() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Loading challenges...</p>
-          <p className="text-sm text-gray-500 mt-2">User: {userId}</p>
-          <p className="text-sm text-gray-500">Course: {courseId}</p>
-          <p className="text-sm text-gray-500">Level: {level}</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-lg">Loading challenge...</p>
         </div>
       </div>
     );
   }
 
-  if (assignedQuestions.length === 0) {
+  if (!challenge) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl mb-4">No questions available for this level.</p>
-          <button
-            onClick={() => navigate(`/course/${courseId}`)}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Back to Course
-          </button>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
       </div>
     );
   }
-
-  if (!currentQuestion) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl mb-4">Loading question details...</p>
-          <p className="text-sm text-gray-500">Question ID: {assignedQuestions[currentQuestionIndex]?.id}</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Make sure userAnswers is initialized before rendering
-  if (!userAnswers || Object.keys(userAnswers).length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl mb-4">Initializing answers...</p>
-          <p className="text-sm text-gray-500">Setting up your coding environment</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Use currentQuestion.id instead of assignedQuestions to avoid undefined errors
-  const questionId = currentQuestion.id;
-  console.log('Current state:', { questionId, userAnswers, hasAnswer: !!userAnswers[questionId] });
-  
-  const currentAnswer = userAnswers[questionId] || { 
-    html: '', 
-    css: '', 
-    js: '', 
-    submitted: false, 
-    result: null 
-  };
-  
-  console.log('Current answer:', currentAnswer);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <button
-              onClick={() => navigate(`/course/${courseId}`)}
-              className="text-blue-600 hover:text-blue-800 mb-2"
-            >
-              ← Back to Course
-            </button>
-            <h1 className="text-2xl font-bold">Level {level} Challenges</h1>
-            <p className="text-gray-600">Complete all questions to unlock the next level</p>
+      {/* Violation Toast Notification */}
+      {showViolationToast && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in">
+          <div className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+            <span>⚠️</span>
+            <span className="font-semibold">{violationMessage}</span>
           </div>
-          
-          {/* Question Navigator */}
-          <div className="flex items-center gap-4">
-            <div className="flex gap-2">
-              {assignedQuestions.map((q, index) => {
-                const status = getQuestionStatus(q.id);
-                return (
-                  <button
-                    key={q.id}
-                    onClick={() => navigateToQuestion(index)}
-                    className={`w-12 h-12 rounded font-semibold transition-all ${
-                      index === currentQuestionIndex
-                        ? 'bg-blue-600 text-white ring-2 ring-blue-300'
-                        : status === 'answered'
-                        ? 'bg-green-500 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                    title={`Question ${index + 1} - ${status === 'answered' ? 'Answered' : 'Not Answered'}`}
-                  >
-                    {index + 1}
-                  </button>
-                );
-              })}
+        </div>
+      )}
+      
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <button
+                onClick={() => navigate(`/course/${courseId}`)}
+                className="text-blue-600 hover:text-blue-800 mb-2"
+              >
+                ← Back to Course
+              </button>
+              <h1 className="text-2xl font-bold">{challenge.title}</h1>
+              <p className="text-gray-600">
+                Level {level} • Question {currentQuestionIndex + 1} of {assignedQuestions.length}
+              </p>
             </div>
             
+            {/* Question Navigator with Timer */}
+            <div className="flex items-center gap-3">
+              {/* Small Timer */}
+              {restrictions.timeLimit > 0 && timeRemaining !== null && (
+                <div className={`px-3 py-2 rounded border font-mono font-bold ${
+                  timeRemaining <= 300 ? 'bg-red-50 border-red-300 text-red-600' : 'bg-blue-50 border-blue-300 text-blue-600'
+                }`}>
+                  ⏱️ {formatTime(timeRemaining)}
+                </div>
+              )}
+              
+              {/* Question Number Boxes */}
+              <div className="flex gap-2">
+                {assignedQuestions.map((q, index) => {
+                  const isSubmitted = userAnswers[q.id]?.submitted;
+                  return (
+                    <div
+                      key={q.id}
+                      className={`w-10 h-10 rounded flex items-center justify-center font-semibold ${
+                        index === currentQuestionIndex
+                          ? 'bg-blue-600 text-white ring-2 ring-blue-300'
+                          : isSubmitted
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-200 text-gray-700'
+                      }`}
+                      title={`Question ${index + 1} - ${isSubmitted ? 'Submitted' : 'Not Submitted'}`}
+                    >
+                      {index + 1}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleFinishTest}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
+              title="Finish test and submit feedback"
+            >
+              🏁 Finish Test
+            </button>
             {allQuestionsSubmitted() && (
               <button
                 onClick={handleFinishLevel}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold"
               >
-                Finish & Submit Level
+                ✓ Finish Level & See Results
               </button>
             )}
+            {assignedQuestions.length > 1 && (
+              <div className="flex gap-2">
+                <button
+                  onClick={handlePreviousQuestion}
+                  disabled={currentQuestionIndex === 0}
+                  className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                  title="Previous Question"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Previous
+                </button>
+                <button
+                  onClick={handleNextQuestion}
+                  disabled={currentQuestionIndex === assignedQuestions.length - 1}
+                  className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                  title="Next Question"
+                >
+                  Next
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
+            <button onClick={handleRunCode} className="btn-secondary">
+              ▶ Run Code
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={submitting || evaluating}
+              className="btn-success disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {submitting || evaluating ? 'Evaluating...' : '✓ Submit & Evaluate'}
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div className="p-6">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Question Info */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold mb-2">{currentQuestion.title}</h2>
-                <p className="text-blue-100">Question {currentQuestionIndex + 1} of {assignedQuestions.length}</p>
-              </div>
-              {currentAnswer.submitted && (
-                <div className="bg-white bg-opacity-20 px-4 py-2 rounded-lg">
-                  <div className="text-sm text-blue-100">Your Score</div>
-                  <div className="text-2xl font-bold">{currentAnswer.result?.finalScore}%</div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6" style={{ height: 'calc(100vh - 180px)' }}>
+        {/* Left Panel: Instructions & Code Editors */}
+        <div className="flex flex-col gap-4 overflow-auto">
+          {/* Toggle Instructions Button */}
+          <button
+            onClick={() => setShowInstructions(!showInstructions)}
+            className="flex items-center justify-between px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            <span className="font-semibold">
+              {showInstructions ? '📖 Hide Instructions' : '📖 Show Instructions'}
+            </span>
+            <svg 
+              className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''}`}
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Instructions */}
+          {showInstructions && (
+          <div className="card">
+            <h2 className="text-lg font-bold mb-3">Challenge Instructions</h2>
+            
+            <div className="text-gray-700 whitespace-pre-wrap mb-4">{challenge.instructions || challenge.description}</div>
+            
+            {/* Assets Section */}
+            {challenge.assets && challenge.assets.length > 0 && (
+              <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <h3 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Assets for this challenge:
+                </h3>
+                <div className="space-y-2">
+                  {challenge.assets.map((asset, index) => (
+                    <div key={index} className="bg-white p-2 rounded border border-purple-100">
+                      <a 
+                        href={`http://localhost:5000/${asset}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-purple-700 hover:underline"
+                      >
+                        📄 {asset.split('/').pop()}
+                      </a>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
+            
+            {/* Hints Section */}
+            {challenge.hints && challenge.hints.length > 0 && (
+              <details className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg cursor-pointer">
+                <summary className="font-semibold text-yellow-900 cursor-pointer flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  💡 Hints ({challenge.hints.length})
+                </summary>
+                <div className="mt-3 space-y-2">
+                  {challenge.hints.map((hint, index) => (
+                    <p key={index} className="text-sm text-yellow-800 pl-4 border-l-2 border-yellow-300">
+                      {index + 1}. {hint}
+                    </p>
+                  ))}
+                </div>
+              </details>
+            )}
+          </div>
+          )}
+
+          {/* Code Editors */}
+          <div className={`card ${showInstructions ? 'flex-1' : 'flex-1'}`} style={!showInstructions ? { minHeight: 'calc(100vh - 250px)' } : {}}>
+            <CodeEditor
+              code={code}
+              onChange={setCode}
+            />
+          </div>
+        </div>
+
+        {/* Right Panel: Preview & Results */}
+        <div className="flex flex-col gap-4 overflow-auto">
+          {/* Preview */}
+          <div className="card flex-1">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-bold">Live Preview</h2>
+              <button
+                onClick={() => setShowExpectedScreenshot(!showExpectedScreenshot)}
+                className="text-sm px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                title="Toggle expected result view"
+              >
+                {showExpectedScreenshot ? '👁️ Hide' : '🎯 Show'} Expected Result
+              </button>
             </div>
+            <PreviewFrame ref={previewRef} code={code} />
           </div>
 
-          {/* Content Area */}
-          <div className="grid grid-cols-2 gap-6 p-6">
-            {/* Left Side - Instructions & Code */}
-            <div className="space-y-4">
-              {/* Instructions Toggle */}
-              <button
-                onClick={() => setShowInstructions(!showInstructions)}
-                className="w-full flex items-center justify-between bg-blue-50 hover:bg-blue-100 px-4 py-3 rounded-lg transition-colors"
-              >
-                <span className="font-semibold text-blue-900">
-                  {showInstructions ? '📖 Hide Instructions' : '📖 Show Instructions'}
-                </span>
-                <svg
-                  className={`w-5 h-5 transform transition-transform ${showInstructions ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {/* Instructions Panel */}
-              {showInstructions && (
-                <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                  <h3 className="font-bold text-lg mb-3 text-blue-900">📋 Instructions</h3>
-                  <div className="prose prose-sm max-w-none text-gray-700">
-                    <p>{currentQuestion.description || currentQuestion.instructions || 'No description available'}</p>
-                    
-                    {currentQuestion.instructions && currentQuestion.instructions !== currentQuestion.description && (
-                      <div className="mt-4">
-                        <h4 className="font-semibold mb-2">Details:</h4>
-                        <p>{currentQuestion.instructions}</p>
-                      </div>
-                    )}
-                    
-                    {currentQuestion.hints && currentQuestion.hints.length > 0 && (
-                      <div className="mt-4">
-                        <h4 className="font-semibold mb-2">💡 Hints:</h4>
-                        <ul className="space-y-1">
-                          {currentQuestion.hints.map((hint, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                              <span className="text-blue-600 mt-1">•</span>
-                              <span>{hint}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Assets Folder */}
-              {showInstructions && currentQuestion.assets && currentQuestion.assets.length > 0 && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">📁 Assets Available</h4>
-                  <div className="bg-white p-3 rounded border border-gray-200">
-                    {currentQuestion.assets.map((asset, index) => (
-                      <div key={index} className="flex items-center gap-2 mb-2">
-                        <span className="text-gray-500">📄</span>
-                        <a 
-                          href={`http://localhost:5000/${asset}`} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline text-sm"
-                        >
-                          {asset.split('/').pop()}
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Code Editors - Much Taller */}
-              <div style={{ height: showInstructions ? '700px' : '900px' }}>
-                <CodeEditor
-                  code={currentAnswer}
-                  onChange={(newCode) => {
-                    setUserAnswers({
-                      ...userAnswers,
-                      [questionId]: {
-                        ...currentAnswer,
-                        ...newCode
-                      }
-                    });
-                  }}
+          {/* Expected Screenshot */}
+          {showExpectedScreenshot && challenge?.expectedSolution && (
+            <div className="card">
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-bold text-green-700">✅ Expected Result</h2>
+                <span className="text-xs text-gray-500">This is what your solution should look like</span>
+              </div>
+              <div className="border-2 border-green-200 rounded-lg overflow-hidden bg-white">
+                <PreviewFrame 
+                  code={{
+                    html: challenge.expectedSolution.html || '',
+                    css: challenge.expectedSolution.css || '',
+                    js: challenge.expectedSolution.js || ''
+                  }} 
                 />
               </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <button
-                  onClick={handleSubmitQuestion}
-                  disabled={currentAnswer.submitted}
-                  className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${
-                    currentAnswer.submitted
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
-                  }`}
-                >
-                  {currentAnswer.submitted ? '✓ Submitted' : '📤 Submit Answer'}
-                </button>
-
-                {/* Next Question Button */}
-                {currentQuestionIndex < assignedQuestions.length - 1 && (
-                  <button
-                    onClick={() => navigateToQuestion(currentQuestionIndex + 1)}
-                    className="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-                  >
-                    Next →
-                  </button>
-                )}
-
-                {/* Finish Test Button */}
-                {currentQuestionIndex === assignedQuestions.length - 1 && allQuestionsSubmitted() && (
-                  <button
-                    onClick={handleFinishLevel}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center gap-2"
-                  >
-                    <span>✓</span> Finish Test
-                  </button>
-                )}
-              </div>
             </div>
+          )}
 
-            {/* Right Side - Preview & Expected Output */}
-            <div className="space-y-4">
-              {/* Live Preview */}
-              <div>
-                <h3 className="font-semibold text-lg mb-3">👁️ Your Output (Live Preview)</h3>
-                <div className="border-2 border-gray-300 rounded-lg overflow-hidden" style={{ height: '40vh' }}>
-                  <PreviewFrame code={currentAnswer} />
-                </div>
-              </div>
-
-              {/* Expected Output */}
-              {currentQuestion.expectedSolution && (
-                <div>
-                  <h3 className="font-semibold text-lg mb-3">✨ Expected Output</h3>
-                  <div className="border-2 border-green-300 rounded-lg overflow-hidden bg-green-50" style={{ height: '40vh' }}>
-                    <PreviewFrame code={currentQuestion.expectedSolution} />
+          {/* Results */}
+          {(evaluating || result) && (
+            <div className="card">
+              <h2 className="text-lg font-bold mb-3">Evaluation Results</h2>
+              {evaluating ? (
+                <div className="text-center py-8">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                  <p className="text-lg font-semibold text-gray-700 mb-2">{evaluationStep || 'Evaluating...'}</p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    This may take 5-10 seconds
+                  </p>
+                  <div className="max-w-md mx-auto text-left bg-blue-50 p-4 rounded-lg">
+                    <p className="text-xs font-semibold text-blue-900 mb-2">🔄 Evaluation Process:</p>
+                    <ul className="text-xs text-blue-800 space-y-1">
+                      <li>• Launching headless browser (Chrome)</li>
+                      <li>• Rendering your code as screenshot</li>
+                      <li>• Rendering expected solution</li>
+                      <li>• Comparing DOM structure</li>
+                      <li>• Comparing visual appearance (pixels)</li>
+                      <li>• Calculating final score</li>
+                    </ul>
                   </div>
                 </div>
-              )}
-
-              {/* Result Display */}
-              {currentAnswer.submitted && currentAnswer.result && (
-                <div className={`p-4 rounded-lg border-2 ${
-                  currentAnswer.result.finalScore >= 70 
-                    ? 'bg-green-50 border-green-300' 
-                    : 'bg-yellow-50 border-yellow-300'
-                }`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-semibold">Your Score:</span>
-                    <span className="text-2xl font-bold">{currentAnswer.result.finalScore}%</span>
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    {currentAnswer.result.finalScore >= 70 
-                      ? '✓ Great job! You passed this question.' 
-                      : '⚠️ Keep practicing to improve your score.'}
-                  </div>
-                </div>
+              ) : (
+                <ResultsPanel result={result} />
               )}
             </div>
-          </div>
+          )}
+          {/* Finish Test Modal */}
+          {showFinishModal && finalScore && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black opacity-40" onClick={() => setShowFinishModal(false)}></div>
+              <div className="bg-white rounded-lg shadow-lg z-20 w-full max-w-lg mx-4">
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2">Finish Test — Summary & Feedback</h3>
+                  <p className="text-sm text-gray-600 mb-4">Questions submitted: {finalScore.submittedCount}/{finalScore.totalQuestions}</p>
+
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-semibold">Questions Passed</div>
+                      <div className="font-bold">{finalScore.passedCount}/{finalScore.totalQuestions}</div>
+                    </div>
+                    <div className="mb-2">Average Score: <span className="font-bold">{finalScore.avgScore}%</span></div>
+                    <div className="mt-3 border rounded p-2 max-h-40 overflow-auto">
+                      {finalScore.results.map((r, idx) => (
+                        <div key={idx} className="flex items-center justify-between py-1">
+                          <div className="text-sm">{idx + 1}. {r.questionTitle}</div>
+                          <div className={`text-sm font-semibold ${r.passed ? 'text-green-600' : 'text-red-600'}`}>{r.passed ? 'Passed' : 'Failed'} ({r.score}%)</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <label className="block text-sm font-medium mb-2">Any feedback for this level (optional)</label>
+                  <textarea
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    className="w-full border rounded p-2 mb-4"
+                    rows={4}
+                    placeholder="Tell us what went well or what was unclear..."
+                  />
+
+                  <div className="flex justify-end gap-2">
+                    <button onClick={() => setShowFinishModal(false)} className="px-4 py-2 rounded bg-gray-200">Cancel</button>
+                    <button onClick={handleSubmitFeedback} className="px-4 py-2 rounded bg-blue-600 text-white">Submit & Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

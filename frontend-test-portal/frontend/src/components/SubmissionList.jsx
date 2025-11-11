@@ -134,16 +134,76 @@ export default function SubmissionList({ submissions, onReEvaluate, onDelete }) 
 
           {expandedId === submission.id && (
             <div className="mt-4 space-y-6">
+              {/* Summary Card */}
+              <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-6 rounded-lg border-2 border-indigo-200">
+                <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  📊 Submission Details
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="text-xs text-gray-600 mb-1">Final Score</div>
+                    <div className="text-2xl font-bold text-blue-600">
+                      {submission.result?.finalScore || submission.total_score || 0}%
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="text-xs text-gray-600 mb-1">Structure</div>
+                    <div className="text-2xl font-bold text-green-600">
+                      {submission.result?.structureScore || 0}%
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="text-xs text-gray-600 mb-1">Visual Match</div>
+                    <div className="text-2xl font-bold text-purple-600">
+                      {submission.result?.visualScore || 0}%
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="text-xs text-gray-600 mb-1">Status</div>
+                    <div className="text-xl font-bold">
+                      {submission.status === 'passed' ? (
+                        <span className="text-green-600">✅ PASSED</span>
+                      ) : (
+                        <span className="text-red-600">❌ FAILED</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600">👤 Candidate:</span>
+                    <span className="font-semibold text-gray-900">{submission.candidateName}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600">📝 Challenge:</span>
+                    <span className="font-semibold text-gray-900">{submission.challengeId}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600">🕐 Submitted:</span>
+                    <span className="font-semibold text-gray-900">{formatDate(submission.submittedAt)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600">🆔 ID:</span>
+                    <span className="font-mono text-xs text-gray-600">{submission.id}</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Screenshot Comparison Section */}
-              {submission.result && submission.result.pixel && submission.result.pixel.screenshots && (
+              {((submission.result && submission.result.visual && submission.result.visual.screenshots) || 
+                (submission.user_screenshot && submission.expected_screenshot)) && (
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
                   <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     🖼️ Visual Comparison
                     <button
                       onClick={() => {
-                        downloadScreenshot(`http://localhost:5000${submission.result.pixel.screenshots.candidate}`, `${submission.candidateName}-output.png`);
-                        downloadScreenshot(`http://localhost:5000${submission.result.pixel.screenshots.expected}`, `expected-output.png`);
-                        downloadScreenshot(`http://localhost:5000${submission.result.pixel.screenshots.diff}`, `diff-output.png`);
+                        const userScreenshot = submission.user_screenshot || submission.result?.visual?.screenshots?.candidate;
+                        const expectedScreenshot = submission.expected_screenshot || submission.result?.visual?.screenshots?.expected;
+                        const diffScreenshot = submission.result?.visual?.screenshots?.diff;
+                        
+                        if (userScreenshot) downloadScreenshot(`http://localhost:5000${userScreenshot}`, `${submission.candidateName}-output.png`);
+                        if (expectedScreenshot) downloadScreenshot(`http://localhost:5000${expectedScreenshot}`, `expected-output.png`);
+                        if (diffScreenshot) downloadScreenshot(`http://localhost:5000${diffScreenshot}`, `diff-output.png`);
                       }}
                       className="ml-auto text-xs bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded"
                     >
@@ -153,76 +213,82 @@ export default function SubmissionList({ submissions, onReEvaluate, onDelete }) 
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Candidate Output */}
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                      <div className="bg-blue-600 text-white px-3 py-2 text-sm font-semibold">
-                        📸 Candidate's Output
+                    {(submission.user_screenshot || submission.result?.visual?.screenshots?.candidate) && (
+                      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div className="bg-blue-600 text-white px-3 py-2 text-sm font-semibold">
+                          📸 Candidate's Output
+                        </div>
+                        <div 
+                          className="p-2 cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => setScreenshotModal({
+                            src: `http://localhost:5000${submission.user_screenshot || submission.result.visual.screenshots.candidate}`,
+                            title: `📸 ${submission.candidateName}'s Output - Full View`
+                          })}
+                        >
+                          <img 
+                            src={`http://localhost:5000${submission.user_screenshot || submission.result.visual.screenshots.candidate}`}
+                            alt="Candidate Output"
+                            className="w-full border border-gray-200 rounded"
+                            onError={(e) => e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="50" fill="gray">No Image</text></svg>'}
+                          />
+                        </div>
+                        <div className="px-3 py-2 bg-gray-50 text-xs text-gray-600">
+                          User's rendered code • Click to enlarge
+                        </div>
                       </div>
-                      <div 
-                        className="p-2 cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => setScreenshotModal({
-                          src: `http://localhost:5000${submission.result.pixel.screenshots.candidate}`,
-                          title: `📸 ${submission.candidateName}'s Output - Full View`
-                        })}
-                      >
-                        <img 
-                          src={`http://localhost:5000${submission.result.pixel.screenshots.candidate}`}
-                          alt="Candidate Output"
-                          className="w-full border border-gray-200 rounded"
-                          onError={(e) => e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="50" fill="gray">No Image</text></svg>'}
-                        />
-                      </div>
-                      <div className="px-3 py-2 bg-gray-50 text-xs text-gray-600">
-                        User's rendered code • Click to enlarge
-                      </div>
-                    </div>
+                    )}
 
                     {/* Expected Output */}
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                      <div className="bg-green-600 text-white px-3 py-2 text-sm font-semibold">
-                        ✅ Expected Output
+                    {(submission.expected_screenshot || submission.result?.visual?.screenshots?.expected) && (
+                      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div className="bg-green-600 text-white px-3 py-2 text-sm font-semibold">
+                          ✅ Expected Output
+                        </div>
+                        <div 
+                          className="p-2 cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => setScreenshotModal({
+                            src: `http://localhost:5000${submission.expected_screenshot || submission.result.visual.screenshots.expected}`,
+                            title: '✅ Expected Output - Full View'
+                          })}
+                        >
+                          <img 
+                            src={`http://localhost:5000${submission.expected_screenshot || submission.result.visual.screenshots.expected}`}
+                            alt="Expected Output"
+                            className="w-full border border-gray-200 rounded"
+                            onError={(e) => e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="50" fill="gray">No Image</text></svg>'}
+                          />
+                        </div>
+                        <div className="px-3 py-2 bg-gray-50 text-xs text-gray-600">
+                          Correct solution • Click to enlarge
+                        </div>
                       </div>
-                      <div 
-                        className="p-2 cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => setScreenshotModal({
-                          src: `http://localhost:5000${submission.result.pixel.screenshots.expected}`,
-                          title: '✅ Expected Output - Full View'
-                        })}
-                      >
-                        <img 
-                          src={`http://localhost:5000${submission.result.pixel.screenshots.expected}`}
-                          alt="Expected Output"
-                          className="w-full border border-gray-200 rounded"
-                          onError={(e) => e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="50" fill="gray">No Image</text></svg>'}
-                        />
-                      </div>
-                      <div className="px-3 py-2 bg-gray-50 text-xs text-gray-600">
-                        Correct solution • Click to enlarge
-                      </div>
-                    </div>
+                    )}
 
                     {/* Diff Image */}
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                      <div className="bg-red-600 text-white px-3 py-2 text-sm font-semibold">
-                        🔍 Difference Map
+                    {submission.result?.visual?.screenshots?.diff && (
+                      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div className="bg-red-600 text-white px-3 py-2 text-sm font-semibold">
+                          🔍 Difference Map
+                        </div>
+                        <div 
+                          className="p-2 cursor-pointer hover:opacity-80 transition-opacity"
+                          onClick={() => setScreenshotModal({
+                            src: `http://localhost:5000${submission.result.visual.screenshots.diff}`,
+                            title: '🔍 Difference Map - Full View (Red = Different)'
+                          })}
+                        >
+                          <img 
+                            src={`http://localhost:5000${submission.result.visual.screenshots.diff}`}
+                            alt="Difference Map"
+                            className="w-full border border-gray-200 rounded"
+                            onError={(e) => e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="50" fill="gray">No Image</text></svg>'}
+                          />
+                        </div>
+                        <div className="px-3 py-2 bg-gray-50 text-xs text-gray-600">
+                          Red = Different pixels • Click to enlarge
+                        </div>
                       </div>
-                      <div 
-                        className="p-2 cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => setScreenshotModal({
-                          src: `http://localhost:5000${submission.result.pixel.screenshots.diff}`,
-                          title: '🔍 Difference Map - Full View (Red = Different)'
-                        })}
-                      >
-                        <img 
-                          src={`http://localhost:5000${submission.result.pixel.screenshots.diff}`}
-                          alt="Difference Map"
-                          className="w-full border border-gray-200 rounded"
-                          onError={(e) => e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="50" fill="gray">No Image</text></svg>'}
-                        />
-                      </div>
-                      <div className="px-3 py-2 bg-gray-50 text-xs text-gray-600">
-                        Red = Different pixels • Click to enlarge
-                      </div>
-                    </div>
+                    )}
                   </div>
 
                   {/* Pixel Match Statistics */}
@@ -235,24 +301,24 @@ export default function SubmissionList({ submissions, onReEvaluate, onDelete }) 
                           {submission.result.visualScore}%
                         </span>
                       </div>
-                      {submission.result.pixel.diffPixels !== undefined && (
+                      {submission.result.visual?.diffPixels !== undefined && (
                         <>
                           <div>
                             <span className="text-gray-600">Different Pixels:</span>
                             <span className="ml-2 font-bold text-red-600">
-                              {submission.result.pixel.diffPixels.toLocaleString()}
+                              {submission.result.visual.diffPixels.toLocaleString()}
                             </span>
                           </div>
                           <div>
                             <span className="text-gray-600">Total Pixels:</span>
                             <span className="ml-2 font-bold text-gray-700">
-                              {submission.result.pixel.totalPixels.toLocaleString()}
+                              {submission.result.visual.totalPixels.toLocaleString()}
                             </span>
                           </div>
                           <div>
                             <span className="text-gray-600">Match Rate:</span>
                             <span className="ml-2 font-bold text-green-600">
-                              {((1 - submission.result.pixel.diffPixels / submission.result.pixel.totalPixels) * 100).toFixed(2)}%
+                              {((1 - submission.result.visual.diffPixels / submission.result.visual.totalPixels) * 100).toFixed(2)}%
                             </span>
                           </div>
                         </>
@@ -263,31 +329,164 @@ export default function SubmissionList({ submissions, onReEvaluate, onDelete }) 
               )}
 
               {/* Code Section */}
-              <div className="space-y-3">
-                <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
                   💻 Submitted Code
+                  <span className="ml-auto text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full">
+                    {submission.code.html ? 'HTML' : ''} 
+                    {submission.code.css ? ' • CSS' : ''} 
+                    {submission.code.js ? ' • JS' : ''}
+                  </span>
                 </h4>
-                <div>
-                  <div className="text-xs font-semibold text-gray-700 mb-1">HTML:</div>
-                  <pre className="bg-gray-900 text-gray-100 p-3 rounded text-xs overflow-x-auto">
-                    {submission.code.html}
-                  </pre>
+                
+                <div className="space-y-4">
+                  {/* HTML Code */}
+                  {submission.code.html && (
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      <div className="bg-orange-100 border-b border-orange-200 px-4 py-2 flex items-center gap-2">
+                        <span className="text-orange-600 font-bold text-sm">📄 HTML</span>
+                        <span className="ml-auto text-xs text-gray-600">
+                          {submission.code.html.split('\n').length} lines
+                        </span>
+                      </div>
+                      <pre className="bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto max-h-96 overflow-y-auto">
+                        <code>{submission.code.html}</code>
+                      </pre>
+                    </div>
+                  )}
+
+                  {/* CSS Code */}
+                  {submission.code.css && (
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      <div className="bg-blue-100 border-b border-blue-200 px-4 py-2 flex items-center gap-2">
+                        <span className="text-blue-600 font-bold text-sm">🎨 CSS</span>
+                        <span className="ml-auto text-xs text-gray-600">
+                          {submission.code.css.split('\n').length} lines
+                        </span>
+                      </div>
+                      <pre className="bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto max-h-96 overflow-y-auto">
+                        <code>{submission.code.css}</code>
+                      </pre>
+                    </div>
+                  )}
+
+                  {/* JavaScript Code */}
+                  {submission.code.js && (
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      <div className="bg-yellow-100 border-b border-yellow-200 px-4 py-2 flex items-center gap-2">
+                        <span className="text-yellow-600 font-bold text-sm">⚡ JavaScript</span>
+                        <span className="ml-auto text-xs text-gray-600">
+                          {submission.code.js.split('\n').length} lines
+                        </span>
+                      </div>
+                      <pre className="bg-gray-900 text-gray-100 p-4 text-sm overflow-x-auto max-h-96 overflow-y-auto">
+                        <code>{submission.code.js}</code>
+                      </pre>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <div className="text-xs font-semibold text-gray-700 mb-1">CSS:</div>
-                  <pre className="bg-gray-900 text-gray-100 p-3 rounded text-xs overflow-x-auto">
-                    {submission.code.css}
-                  </pre>
-                </div>
-                {submission.code.js && (
-                  <div>
-                    <div className="text-xs font-semibold text-gray-700 mb-1">JavaScript:</div>
-                    <pre className="bg-gray-900 text-gray-100 p-3 rounded text-xs overflow-x-auto">
-                      {submission.code.js}
-                    </pre>
-                  </div>
-                )}
               </div>
+
+              {/* Detailed Evaluation Results */}
+              {submission.result && (
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    📈 Detailed Evaluation Results
+                  </h4>
+                  
+                  <div className="space-y-4">
+                    {/* Structure Analysis */}
+                    {submission.result.structure && (
+                      <div className="border-l-4 border-green-500 pl-4">
+                        <h5 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                          🏗️ Structure Analysis
+                          <span className="ml-2 text-sm font-bold text-green-600">
+                            {submission.result.structureScore}%
+                          </span>
+                        </h5>
+                        <div className="text-sm text-gray-700 space-y-1">
+                          {submission.result.structure.missingTags?.length > 0 && (
+                            <div>
+                              <span className="font-medium">Missing Tags:</span>
+                              <span className="ml-2 text-red-600">
+                                {submission.result.structure.missingTags.join(', ')}
+                              </span>
+                            </div>
+                          )}
+                          {submission.result.structure.extraTags?.length > 0 && (
+                            <div>
+                              <span className="font-medium">Extra Tags:</span>
+                              <span className="ml-2 text-orange-600">
+                                {submission.result.structure.extraTags.join(', ')}
+                              </span>
+                            </div>
+                          )}
+                          {submission.result.structure.matchedTags?.length > 0 && (
+                            <div>
+                              <span className="font-medium">Matched Tags:</span>
+                              <span className="ml-2 text-green-600">
+                                {submission.result.structure.matchedTags.length} correct
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Visual Analysis */}
+                    {submission.result.visual && (
+                      <div className="border-l-4 border-purple-500 pl-4">
+                        <h5 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                          🎨 Visual Analysis
+                          <span className="ml-2 text-sm font-bold text-purple-600">
+                            {submission.result.visualScore}%
+                          </span>
+                        </h5>
+                        <div className="grid grid-cols-2 gap-3 text-sm text-gray-700">
+                          {submission.result.visual.diffPixels !== undefined && (
+                            <>
+                              <div>
+                                <span className="font-medium">Different Pixels:</span>
+                                <span className="ml-2 text-red-600 font-mono">
+                                  {submission.result.visual.diffPixels.toLocaleString()}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="font-medium">Total Pixels:</span>
+                                <span className="ml-2 text-gray-600 font-mono">
+                                  {submission.result.visual.totalPixels.toLocaleString()}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="font-medium">Accuracy:</span>
+                                <span className="ml-2 text-green-600 font-bold">
+                                  {((1 - submission.result.visual.diffPixels / submission.result.visual.totalPixels) * 100).toFixed(2)}%
+                                </span>
+                              </div>
+                              <div>
+                                <span className="font-medium">Difference:</span>
+                                <span className="ml-2 text-red-600 font-bold">
+                                  {((submission.result.visual.diffPixels / submission.result.visual.totalPixels) * 100).toFixed(2)}%
+                                </span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Raw Result Data (for debugging) */}
+                    <details className="bg-gray-50 rounded p-3">
+                      <summary className="cursor-pointer text-sm font-semibold text-gray-700 hover:text-gray-900">
+                        🔍 View Raw Evaluation Data (JSON)
+                      </summary>
+                      <pre className="mt-2 bg-gray-900 text-gray-100 p-3 rounded text-xs overflow-x-auto max-h-64 overflow-y-auto">
+                        {JSON.stringify(submission.result, null, 2)}
+                      </pre>
+                    </details>
+                  </div>
+                </div>
+              )}
 
               {/* Feedback Section */}
               {submission.result && submission.result.feedback && submission.result.feedback.length > 0 && (

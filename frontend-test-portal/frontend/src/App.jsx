@@ -41,7 +41,7 @@ function App() {
           <Route path="/" element={<ProtectedRoute><CoursesHome /></ProtectedRoute>} />
           <Route path="/course/:courseId" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
           <Route path="/course/:courseId/level/:level" element={<ProtectedRoute><LevelPage /></ProtectedRoute>} />
-          <Route path="/level/:courseId/:level" element={<ProtectedRoute><LevelChallengeOld /></ProtectedRoute>} />
+          <Route path="/level/:courseId/:level" element={<ProtectedRoute><LevelChallenge /></ProtectedRoute>} />
           <Route path="/level-results/:courseId/:level" element={<ProtectedRoute><LevelResults /></ProtectedRoute>} />
           <Route path="/old-challenges" element={<ProtectedRoute><CandidateDashboard /></ProtectedRoute>} />
           <Route path="/challenge/:id" element={<ProtectedRoute><ChallengeView /></ProtectedRoute>} />

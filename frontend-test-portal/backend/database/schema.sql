@@ -66,7 +66,7 @@ CREATE TABLE challenges (
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
 );
 
--- Submissions Table
+-- Submissions Table (Enhanced with screenshots)
 CREATE TABLE submissions (
     id VARCHAR(100) PRIMARY KEY,
     challenge_id VARCHAR(100) NOT NULL,
@@ -84,10 +84,15 @@ CREATE TABLE submissions (
     final_score INT DEFAULT 0,
     passed BOOLEAN DEFAULT FALSE,
     evaluation_result JSON,
+    user_screenshot VARCHAR(500),
+    expected_screenshot VARCHAR(500),
+    course_id VARCHAR(100),
+    level INT,
     INDEX idx_challenge (challenge_id),
     INDEX idx_user (user_id),
     INDEX idx_status (status),
     INDEX idx_submitted_at (submitted_at),
+    INDEX idx_course_level (course_id, level),
     FOREIGN KEY (challenge_id) REFERENCES challenges(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

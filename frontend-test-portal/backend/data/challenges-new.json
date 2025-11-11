@@ -240,199 +240,1196 @@
     "courseId": "course-html-css",
     "level": 1,
     "questionNumber": 1,
-    "title": "Create a Personal Introduction Page",
-    "description": "Build a simple personal introduction page using HTML and CSS. Include your name, a short paragraph, and an image. (/assets/courses/fullstack-thumb.png)",
-    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create an HTML structure with a header, a main content area, and a footer.\n- Step 2: Add your name as a heading inside the header.\n- Step 3: Include a short introduction paragraph and an image (use any placeholder image).\n- Step 4: Use CSS to center the content and style text and image with basic margins and colors.\n- Step 5: Ensure the layout looks clean on desktop view.",
+    "title": "Basic HTML Structure",
+    "description": "Create a simple HTML page with proper document structure",
+    "instructions": "Create an HTML page with the following:\n- DOCTYPE declaration\n- HTML, head, and body tags\n- Title: 'My First Webpage'\n- A heading (h1) that says 'Welcome to HTML'\n- A paragraph introducing yourself",
     "assets": {
-      "images": [
-        "/assets/courses/fullstack-thumb.png"
-      ],
+      "images": [],
       "reference": ""
     },
     "hints": [
-      "Hint 1: Use <header>, <main>, and <footer> tags",
-      "Hint 2: Apply text-align: center",
-      "Hint 3: Add padding for clean spacing"
+      "Start with <!DOCTYPE html>",
+      "Use semantic HTML5 tags",
+      "Remember to close all tags properly"
     ],
     "tags": [
       "HTML",
-      "CSS"
+      "Basics",
+      "Structure"
     ],
-    "timeLimit": 20,
+    "timeLimit": 15,
     "points": 100,
     "passingThreshold": {
       "structure": 70,
-      "visual": 80,
-      "overall": 75
+      "visual": 60,
+      "overall": 65
     },
     "isLocked": false,
     "prerequisite": null,
     "expectedSolution": {
-      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Personal Intro</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <header>\n    <h1>John Doe</h1>\n  </header>\n  <main>\n    <p>Hello! I'm learning web development and this is my first webpage.</p>\n    <img src=\"https://via.placeholder.com/150\" alt=\"Profile Picture\">\n  </main>\n  <footer>\n    <p>© 2025 John Doe</p>\n  </footer>\n</body>\n</html>",
-      "css": "body {\n  font-family: Arial, sans-serif;\n  text-align: center;\n  padding: 20px;\n}\nimg {\n  border-radius: 50%;\n  margin-top: 10px;\n}\nfooter {\n  margin-top: 20px;\n  color: gray;\n  font-size: 14px;\n}",
+      "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>My First Webpage</title>\n</head>\n<body>\n  <h1>Welcome to HTML</h1>\n  <p>Hello! My name is [Your Name] and I'm learning HTML.</p>\n</body>\n</html>",
+      "css": "",
       "js": ""
     },
-    "createdAt": "2025-11-11T05:52:58.876Z",
-    "updatedAt": "2025-11-11T05:52:58.876Z"
+    "createdAt": "2025-11-11T06:43:15.525Z",
+    "updatedAt": "2025-11-11T06:43:15.525Z"
   },
   {
     "id": "course-html-css-l1-q2",
     "courseId": "course-html-css",
     "level": 1,
     "questionNumber": 2,
-    "title": "Build a Simple Product Card",
-    "description": "Design a single product card with a product image, name, description, and price. (/assets/courses/fullstack-thumb.png)",
-    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create a container div with class 'product-card'.\n- Step 2: Inside it, add an image, product name (h2), short description (p), and a price (span).\n- Step 3: Use CSS to add a border, shadow, and padding.\n- Step 4: Center the card and ensure it looks good visually.\n- Step 5: Keep the width around 300px for pixel match consistency.",
+    "title": "Text Formatting Elements",
+    "description": "Use various HTML text formatting tags",
+    "instructions": "Create a page that demonstrates:\n- Bold text using <strong>\n- Italic text using <em>\n- Underlined text using <u>\n- Line breaks using <br>\n- Horizontal rule using <hr>\n\nWrite a short paragraph about your favorite hobby using these tags.",
     "assets": {
-      "images": [
-        "/assets/courses/fullstack-thumb.png"
-      ],
+      "images": [],
       "reference": ""
     },
     "hints": [
-      "Hint 1: Use box-shadow for card effect",
-      "Hint 2: Keep consistent padding",
-      "Hint 3: Use display: inline-block"
+      "Use <strong> for important text",
+      "Use <em> for emphasis",
+      "Don't forget to use proper HTML structure"
     ],
     "tags": [
       "HTML",
-      "CSS"
+      "Text Formatting"
     ],
-    "timeLimit": 25,
-    "points": 120,
+    "timeLimit": 20,
+    "points": 100,
     "passingThreshold": {
       "structure": 70,
-      "visual": 80,
-      "overall": 75
+      "visual": 60,
+      "overall": 65
     },
     "isLocked": false,
-    "prerequisite": "course-html-css-l1-q1",
+    "prerequisite": null,
     "expectedSolution": {
-      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <div class=\"product-card\">\n    <img src=\"https://via.placeholder.com/200\" alt=\"Product\">\n    <h2>Wireless Headphones</h2>\n    <p>High-quality wireless sound with long battery life.</p>\n    <span>$59.99</span>\n  </div>\n</body>\n</html>",
-      "css": "body { text-align: center; font-family: sans-serif; }\n.product-card {\n  border: 1px solid #ccc;\n  display: inline-block;\n  padding: 15px;\n  border-radius: 10px;\n  box-shadow: 0 2px 6px rgba(0,0,0,0.1);\n  width: 300px;\n}\n.product-card img {\n  width: 100%;\n  border-radius: 10px;\n}\nspan {\n  color: green;\n  font-weight: bold;\n}",
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Text Formatting</title>\n</head>\n<body>\n  <h1>My Favorite Hobby</h1>\n  <p>\n    I <strong>love</strong> reading books! <em>Fiction</em> is my favorite genre.<br>\n    My favorite author is <u>J.K. Rowling</u>.\n  </p>\n  <hr>\n  <p>Reading helps me <strong>relax</strong> and <em>learn</em> new things.</p>\n</body>\n</html>",
+      "css": "",
       "js": ""
     },
-    "createdAt": "2025-11-11T05:52:58.876Z",
-    "updatedAt": "2025-11-11T05:52:58.876Z"
+    "createdAt": "2025-11-11T06:43:15.525Z",
+    "updatedAt": "2025-11-11T06:43:15.525Z"
   },
   {
     "id": "course-html-css-l1-q3",
     "courseId": "course-html-css",
     "level": 1,
     "questionNumber": 3,
-    "title": "Design a Navigation Bar",
-    "description": "Create a horizontal navigation bar with links like Home, About, and Contact. (/assets/courses/fullstack-thumb.png)",
-    "instructions": "Detailed step-by-step instructions:\n- Step 1: Use a <nav> element with <ul> and <li> tags for menu items.\n- Step 2: Add anchor (<a>) tags inside each <li>.\n- Step 3: Style the nav with background color, horizontal layout using flex or inline-block.\n- Step 4: Add hover effect on links.\n- Step 5: Keep spacing and alignment pixel-perfect.",
+    "title": "Lists in HTML",
+    "description": "Create both ordered and unordered lists",
+    "instructions": "Create a webpage with:\n- An unordered list of 5 fruits\n- An ordered list of 5 steps to make a sandwich\n- Use proper headings for each list",
     "assets": {
-      "images": [
-        "/assets/courses/fullstack-thumb.png"
-      ],
+      "images": [],
       "reference": ""
     },
     "hints": [
-      "Hint 1: Use display: flex or inline-block for list items",
-      "Hint 2: Remove list-style-type",
-      "Hint 3: Add hover color change"
+      "Use <ul> for unordered lists",
+      "Use <ol> for ordered lists",
+      "Each item goes in <li> tags"
     ],
     "tags": [
       "HTML",
-      "CSS"
+      "Lists"
     ],
     "timeLimit": 20,
-    "points": 110,
+    "points": 100,
     "passingThreshold": {
       "structure": 70,
-      "visual": 80,
-      "overall": 75
+      "visual": 60,
+      "overall": 65
     },
     "isLocked": false,
-    "prerequisite": "course-html-css-l1-q2",
+    "prerequisite": null,
     "expectedSolution": {
-      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <nav>\n    <ul>\n      <li><a href=\"#\">Home</a></li>\n      <li><a href=\"#\">About</a></li>\n      <li><a href=\"#\">Contact</a></li>\n    </ul>\n  </nav>\n</body>\n</html>",
-      "css": "nav {\n  background-color: #333;\n  padding: 10px 0;\n}\nul {\n  list-style-type: none;\n  margin: 0;\n  padding: 0;\n  text-align: center;\n}\nli { display: inline-block; margin: 0 15px; }\na {\n  color: white;\n  text-decoration: none;\n  font-weight: bold;\n}\na:hover { color: #ff9800; }",
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Lists Example</title>\n</head>\n<body>\n  <h2>My Favorite Fruits</h2>\n  <ul>\n    <li>Apple</li>\n    <li>Banana</li>\n    <li>Orange</li>\n    <li>Mango</li>\n    <li>Strawberry</li>\n  </ul>\n\n  <h2>How to Make a Sandwich</h2>\n  <ol>\n    <li>Get two slices of bread</li>\n    <li>Spread butter on both slices</li>\n    <li>Add cheese and vegetables</li>\n    <li>Put the slices together</li>\n    <li>Cut diagonally and serve</li>\n  </ol>\n</body>\n</html>",
+      "css": "",
       "js": ""
     },
-    "createdAt": "2025-11-11T05:52:58.876Z",
-    "updatedAt": "2025-11-11T05:52:58.876Z"
+    "createdAt": "2025-11-11T06:43:15.525Z",
+    "updatedAt": "2025-11-11T06:43:15.525Z"
   },
   {
     "id": "course-html-css-l1-q4",
     "courseId": "course-html-css",
     "level": 1,
     "questionNumber": 4,
-    "title": "Create a Two-Column Layout",
-    "description": "Build a responsive two-column layout using HTML and CSS. (/assets/courses/fullstack-thumb.png)",
-    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create a container div with two child divs: 'left' and 'right'.\n- Step 2: Add text or placeholders in both sections.\n- Step 3: Use CSS Flexbox to arrange them side by side.\n- Step 4: Add border and padding to each column.\n- Step 5: Ensure it becomes a single column on small screens.",
+    "title": "Links and Navigation",
+    "description": "Create hyperlinks to different pages and websites",
+    "instructions": "Create a navigation menu with:\n- Links to 3 popular websites (Google, YouTube, Wikipedia)\n- Use target=\"_blank\" to open in new tab\n- Add a heading 'My Favorite Websites'\n- Make each link descriptive",
     "assets": {
-      "images": [
-        "/assets/courses/fullstack-thumb.png"
-      ],
+      "images": [],
       "reference": ""
     },
     "hints": [
-      "Hint 1: Use display: flex",
-      "Hint 2: Add @media for responsiveness",
-      "Hint 3: Apply box-sizing: border-box"
+      "Use <a href=\"URL\"> for links",
+      "target=\"_blank\" opens in new tab",
+      "Use meaningful link text"
     ],
     "tags": [
       "HTML",
-      "CSS"
+      "Links",
+      "Navigation"
     ],
-    "timeLimit": 25,
-    "points": 130,
+    "timeLimit": 20,
+    "points": 100,
     "passingThreshold": {
       "structure": 70,
-      "visual": 80,
-      "overall": 75
+      "visual": 60,
+      "overall": 65
     },
     "isLocked": false,
-    "prerequisite": "course-html-css-l1-q3",
+    "prerequisite": null,
     "expectedSolution": {
-      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"left\">Left Column Content</div>\n    <div class=\"right\">Right Column Content</div>\n  </div>\n</body>\n</html>",
-      "css": ".container {\n  display: flex;\n  gap: 20px;\n  padding: 20px;\n}\n.left, .right {\n  flex: 1;\n  border: 1px solid #ccc;\n  padding: 20px;\n}\n@media (max-width: 600px) {\n  .container { flex-direction: column; }\n}",
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>My Links</title>\n</head>\n<body>\n  <h1>My Favorite Websites</h1>\n  <nav>\n    <ul>\n      <li><a href=\"https://www.google.com\" target=\"_blank\">Google - Search Engine</a></li>\n      <li><a href=\"https://www.youtube.com\" target=\"_blank\">YouTube - Video Platform</a></li>\n      <li><a href=\"https://www.wikipedia.org\" target=\"_blank\">Wikipedia - Free Encyclopedia</a></li>\n    </ul>\n  </nav>\n</body>\n</html>",
+      "css": "",
       "js": ""
     },
-    "createdAt": "2025-11-11T05:52:58.876Z",
-    "updatedAt": "2025-11-11T05:52:58.876Z"
+    "createdAt": "2025-11-11T06:43:15.525Z",
+    "updatedAt": "2025-11-11T06:43:15.525Z"
   },
   {
     "id": "course-html-css-l1-q5",
     "courseId": "course-html-css",
     "level": 1,
     "questionNumber": 5,
-    "title": "Build a Simple Contact Form",
-    "description": "Create a contact form with input fields for name, email, and message, and a submit button. (/assets/courses/fullstack-thumb.png)",
-    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create a <form> element with name, email, and message fields.\n- Step 2: Use <input> and <textarea> elements properly labeled.\n- Step 3: Add a submit button.\n- Step 4: Use CSS to style inputs with padding, border-radius, and spacing.\n- Step 5: Center the form on the page and limit its width to 400px.",
+    "title": "Basic HTML Table",
+    "description": "Create a simple data table",
+    "instructions": "Create a table showing:\n- Your weekly schedule (3 days, 3 time slots)\n- Use <table>, <tr>, <th>, <td> tags\n- Add a caption 'My Weekly Schedule'\n- Include borders using border=\"1\"",
     "assets": {
-      "images": [
-        "/assets/courses/fullstack-thumb.png"
-      ],
+      "images": [],
       "reference": ""
     },
     "hints": [
-      "Hint 1: Wrap inputs in <label>",
-      "Hint 2: Use display: block for inputs",
-      "Hint 3: Add hover effect for button"
+      "Use <table> to start the table",
+      "Use <tr> for rows",
+      "Use <th> for headers, <td> for data",
+      "Add border attribute to table tag"
     ],
     "tags": [
       "HTML",
-      "CSS"
+      "Tables"
+    ],
+    "timeLimit": 25,
+    "points": 100,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 60,
+      "overall": 65
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Weekly Schedule</title>\n</head>\n<body>\n  <table border=\"1\">\n    <caption>My Weekly Schedule</caption>\n    <tr>\n      <th>Time</th>\n      <th>Monday</th>\n      <th>Wednesday</th>\n      <th>Friday</th>\n    </tr>\n    <tr>\n      <td>9:00 AM</td>\n      <td>Math</td>\n      <td>English</td>\n      <td>Science</td>\n    </tr>\n    <tr>\n      <td>11:00 AM</td>\n      <td>History</td>\n      <td>Art</td>\n      <td>Music</td>\n    </tr>\n    <tr>\n      <td>2:00 PM</td>\n      <td>Sports</td>\n      <td>Computer</td>\n      <td>Library</td>\n    </tr>\n  </table>\n</body>\n</html>",
+      "css": "",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:15.525Z",
+    "updatedAt": "2025-11-11T06:43:15.525Z"
+  },
+  {
+    "id": "course-html-css-l2-q1",
+    "courseId": "course-html-css",
+    "level": 2,
+    "questionNumber": 1,
+    "title": "CSS Basics - Text Styling",
+    "description": "Apply basic CSS styling to text elements",
+    "instructions": "Create a page with:\n- A heading with color: #2c3e50\n- A paragraph with font-size: 18px and line-height: 1.6\n- Use external CSS (in <style> tag)\n- Apply font-family: Arial, sans-serif to body",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use <style> tag in head section",
+      "Use CSS selectors: h1, p, body",
+      "Remember to use semicolons after each property"
+    ],
+    "tags": [
+      "CSS",
+      "Text Styling",
+      "Basics"
+    ],
+    "timeLimit": 20,
+    "points": 120,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 75,
+      "overall": 70
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>CSS Text Styling</title>\n</head>\n<body>\n  <h1>Welcome to CSS</h1>\n  <p>CSS makes web pages beautiful and engaging. With CSS, we can control colors, fonts, spacing, and much more!</p>\n</body>\n</html>",
+      "css": "body {\n  font-family: Arial, sans-serif;\n}\n\nh1 {\n  color: #2c3e50;\n}\n\np {\n  font-size: 18px;\n  line-height: 1.6;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:31.556Z",
+    "updatedAt": "2025-11-11T06:43:31.556Z"
+  },
+  {
+    "id": "course-html-css-l2-q2",
+    "courseId": "course-html-css",
+    "level": 2,
+    "questionNumber": 2,
+    "title": "CSS Box Model",
+    "description": "Understand and apply margin, padding, and border",
+    "instructions": "Create a div with class 'box' that has:\n- Width: 300px\n- Padding: 20px\n- Margin: 30px\n- Border: 2px solid #3498db\n- Background-color: #ecf0f1\n- Add some text inside the div",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use class selector .box in CSS",
+      "Apply all box model properties",
+      "Remember: margin is outside, padding is inside"
+    ],
+    "tags": [
+      "CSS",
+      "Box Model",
+      "Layout"
+    ],
+    "timeLimit": 25,
+    "points": 120,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 75,
+      "overall": 70
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Box Model</title>\n</head>\n<body>\n  <div class=\"box\">\n    <h2>The Box Model</h2>\n    <p>This box demonstrates margin, padding, and border properties.</p>\n  </div>\n</body>\n</html>",
+      "css": ".box {\n  width: 300px;\n  padding: 20px;\n  margin: 30px;\n  border: 2px solid #3498db;\n  background-color: #ecf0f1;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:31.556Z",
+    "updatedAt": "2025-11-11T06:43:31.556Z"
+  },
+  {
+    "id": "course-html-css-l2-q3",
+    "courseId": "course-html-css",
+    "level": 2,
+    "questionNumber": 3,
+    "title": "CSS Colors and Backgrounds",
+    "description": "Work with different color formats and background properties",
+    "instructions": "Create three divs with different background colors:\n- First div: RGB color rgb(231, 76, 60)\n- Second div: Hex color #27ae60\n- Third div: Named color dodgerblue\n- Each div should be 200px wide, 100px tall\n- Add white text color to all divs\n- Add some text in each div",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use class names like .red-box, .green-box, .blue-box",
+      "Set color: white for text",
+      "Use padding for better text visibility"
+    ],
+    "tags": [
+      "CSS",
+      "Colors",
+      "Backgrounds"
+    ],
+    "timeLimit": 25,
+    "points": 120,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 75,
+      "overall": 70
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>CSS Colors</title>\n</head>\n<body>\n  <div class=\"red-box\">RGB Color</div>\n  <div class=\"green-box\">Hex Color</div>\n  <div class=\"blue-box\">Named Color</div>\n</body>\n</html>",
+      "css": ".red-box {\n  width: 200px;\n  height: 100px;\n  background-color: rgb(231, 76, 60);\n  color: white;\n  padding: 10px;\n}\n\n.green-box {\n  width: 200px;\n  height: 100px;\n  background-color: #27ae60;\n  color: white;\n  padding: 10px;\n}\n\n.blue-box {\n  width: 200px;\n  height: 100px;\n  background-color: dodgerblue;\n  color: white;\n  padding: 10px;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:31.556Z",
+    "updatedAt": "2025-11-11T06:43:31.556Z"
+  },
+  {
+    "id": "course-html-css-l2-q4",
+    "courseId": "course-html-css",
+    "level": 2,
+    "questionNumber": 4,
+    "title": "CSS Class and ID Selectors",
+    "description": "Practice using class and ID selectors",
+    "instructions": "Create:\n- A header with id='main-header', background: #34495e, color: white, padding: 20px\n- Three paragraphs with class='info-text', color: #555, font-size: 16px\n- One special paragraph with id='highlight', background: #f39c12, padding: 15px",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use # for ID selectors",
+      "Use . for class selectors",
+      "IDs are unique, classes can be reused"
+    ],
+    "tags": [
+      "CSS",
+      "Selectors",
+      "Classes",
+      "IDs"
+    ],
+    "timeLimit": 25,
+    "points": 120,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 75,
+      "overall": 70
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Selectors</title>\n</head>\n<body>\n  <header id=\"main-header\">\n    <h1>Understanding CSS Selectors</h1>\n  </header>\n  \n  <p class=\"info-text\">This is the first paragraph with info-text class.</p>\n  <p class=\"info-text\">This is the second paragraph with info-text class.</p>\n  <p class=\"info-text\">This is the third paragraph with info-text class.</p>\n  \n  <p id=\"highlight\">This paragraph is special and highlighted!</p>\n</body>\n</html>",
+      "css": "#main-header {\n  background: #34495e;\n  color: white;\n  padding: 20px;\n}\n\n.info-text {\n  color: #555;\n  font-size: 16px;\n}\n\n#highlight {\n  background: #f39c12;\n  padding: 15px;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:31.556Z",
+    "updatedAt": "2025-11-11T06:43:31.556Z"
+  },
+  {
+    "id": "course-html-css-l2-q5",
+    "courseId": "course-html-css",
+    "level": 2,
+    "questionNumber": 5,
+    "title": "CSS Text Alignment and Decoration",
+    "description": "Apply text alignment and decoration properties",
+    "instructions": "Create a page with:\n- A centered heading (h1) with text-decoration: underline\n- A right-aligned paragraph\n- A left-aligned paragraph with text-transform: uppercase\n- A centered paragraph with letter-spacing: 2px",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use text-align property for alignment",
+      "Use text-decoration for underline",
+      "Use text-transform for uppercase",
+      "Use letter-spacing for spacing"
+    ],
+    "tags": [
+      "CSS",
+      "Text Properties",
+      "Alignment"
+    ],
+    "timeLimit": 25,
+    "points": 120,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 75,
+      "overall": 70
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Text Properties</title>\n</head>\n<body>\n  <h1 class=\"title\">Text Styling Demo</h1>\n  <p class=\"right-text\">This text is aligned to the right.</p>\n  <p class=\"upper-text\">This text is in uppercase.</p>\n  <p class=\"spaced-text\">This text has letter spacing.</p>\n</body>\n</html>",
+      "css": ".title {\n  text-align: center;\n  text-decoration: underline;\n}\n\n.right-text {\n  text-align: right;\n}\n\n.upper-text {\n  text-align: left;\n  text-transform: uppercase;\n}\n\n.spaced-text {\n  text-align: center;\n  letter-spacing: 2px;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:31.556Z",
+    "updatedAt": "2025-11-11T06:43:31.556Z"
+  },
+  {
+    "id": "course-html-css-l3-q1",
+    "courseId": "course-html-css",
+    "level": 3,
+    "questionNumber": 1,
+    "title": "CSS Flexbox - Basic Layout",
+    "description": "Create a horizontal layout using Flexbox",
+    "instructions": "Create a container with display: flex containing 3 boxes:\n- Container: display: flex, justify-content: space-around, padding: 20px\n- Each box: width: 150px, height: 150px, different background colors\n- Add text in each box with centered alignment",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use display: flex on the container",
+      "Use justify-content for horizontal spacing",
+      "Use align-items: center for vertical centering"
+    ],
+    "tags": [
+      "CSS",
+      "Flexbox",
+      "Layout"
     ],
     "timeLimit": 30,
     "points": 150,
     "passingThreshold": {
-      "structure": 70,
+      "structure": 75,
       "visual": 80,
       "overall": 75
     },
     "isLocked": false,
-    "prerequisite": "course-html-css-l1-q4",
+    "prerequisite": null,
     "expectedSolution": {
-      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <form>\n    <label>Name:<br><input type=\"text\" name=\"name\"></label><br>\n    <label>Email:<br><input type=\"email\" name=\"email\"></label><br>\n    <label>Message:<br><textarea name=\"message\"></textarea></label><br>\n    <button type=\"submit\">Send</button>\n  </form>\n</body>\n</html>",
-      "css": "body { text-align: center; font-family: Arial; }\nform {\n  display: inline-block;\n  text-align: left;\n  border: 1px solid #ccc;\n  padding: 20px;\n  border-radius: 10px;\n  width: 350px;\n}\ninput, textarea {\n  width: 100%;\n  margin-bottom: 10px;\n  padding: 8px;\n  border-radius: 5px;\n  border: 1px solid #aaa;\n}\nbutton {\n  background-color: #4CAF50;\n  color: white;\n  border: none;\n  padding: 10px 15px;\n  border-radius: 5px;\n}\nbutton:hover { background-color: #45a049; }",
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Flexbox Layout</title>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"box box1\">Box 1</div>\n    <div class=\"box box2\">Box 2</div>\n    <div class=\"box box3\">Box 3</div>\n  </div>\n</body>\n</html>",
+      "css": ".container {\n  display: flex;\n  justify-content: space-around;\n  padding: 20px;\n  background-color: #ecf0f1;\n}\n\n.box {\n  width: 150px;\n  height: 150px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-weight: bold;\n}\n\n.box1 {\n  background-color: #e74c3c;\n}\n\n.box2 {\n  background-color: #3498db;\n}\n\n.box3 {\n  background-color: #2ecc71;\n}",
       "js": ""
     },
-    "createdAt": "2025-11-11T05:52:58.876Z",
-    "updatedAt": "2025-11-11T05:52:58.876Z"
+    "createdAt": "2025-11-11T06:43:42.838Z",
+    "updatedAt": "2025-11-11T06:43:42.838Z"
+  },
+  {
+    "id": "course-html-css-l3-q2",
+    "courseId": "course-html-css",
+    "level": 3,
+    "questionNumber": 2,
+    "title": "CSS Grid - Basic Grid Layout",
+    "description": "Create a simple grid layout with CSS Grid",
+    "instructions": "Create a grid container with:\n- display: grid\n- grid-template-columns: repeat(3, 1fr)\n- gap: 20px\n- 6 grid items with different background colors\n- Each item: padding: 20px, text-align: center",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use display: grid on container",
+      "repeat(3, 1fr) creates 3 equal columns",
+      "gap property sets spacing between items"
+    ],
+    "tags": [
+      "CSS",
+      "Grid",
+      "Layout"
+    ],
+    "timeLimit": 30,
+    "points": 150,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Grid Layout</title>\n</head>\n<body>\n  <div class=\"grid-container\">\n    <div class=\"grid-item\">Item 1</div>\n    <div class=\"grid-item\">Item 2</div>\n    <div class=\"grid-item\">Item 3</div>\n    <div class=\"grid-item\">Item 4</div>\n    <div class=\"grid-item\">Item 5</div>\n    <div class=\"grid-item\">Item 6</div>\n  </div>\n</body>\n</html>",
+      "css": ".grid-container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 20px;\n  padding: 20px;\n}\n\n.grid-item {\n  background-color: #3498db;\n  color: white;\n  padding: 20px;\n  text-align: center;\n  border-radius: 5px;\n}\n\n.grid-item:nth-child(even) {\n  background-color: #9b59b6;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:42.838Z",
+    "updatedAt": "2025-11-11T06:43:42.838Z"
+  },
+  {
+    "id": "course-html-css-l3-q3",
+    "courseId": "course-html-css",
+    "level": 3,
+    "questionNumber": 3,
+    "title": "Responsive Navigation Bar",
+    "description": "Create a horizontal navigation bar with hover effects",
+    "instructions": "Build a navigation bar with:\n- Unordered list styled as horizontal menu\n- list-style: none, display: flex\n- Each link: padding: 15px 20px, text-decoration: none\n- Hover effect: background-color change\n- Nav background: #2c3e50, text color: white",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use display: flex on ul",
+      "Remove default list styling",
+      "Use :hover pseudo-class for effects"
+    ],
+    "tags": [
+      "CSS",
+      "Navigation",
+      "Hover Effects"
+    ],
+    "timeLimit": 30,
+    "points": 150,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Navigation Bar</title>\n</head>\n<body>\n  <nav class=\"navbar\">\n    <ul>\n      <li><a href=\"#\">Home</a></li>\n      <li><a href=\"#\">About</a></li>\n      <li><a href=\"#\">Services</a></li>\n      <li><a href=\"#\">Contact</a></li>\n    </ul>\n  </nav>\n</body>\n</html>",
+      "css": ".navbar {\n  background-color: #2c3e50;\n}\n\n.navbar ul {\n  list-style: none;\n  display: flex;\n  margin: 0;\n  padding: 0;\n}\n\n.navbar li a {\n  display: block;\n  padding: 15px 20px;\n  color: white;\n  text-decoration: none;\n}\n\n.navbar li a:hover {\n  background-color: #34495e;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:42.838Z",
+    "updatedAt": "2025-11-11T06:43:42.838Z"
+  },
+  {
+    "id": "course-html-css-l3-q4",
+    "courseId": "course-html-css",
+    "level": 3,
+    "questionNumber": 4,
+    "title": "Card Component with Shadow",
+    "description": "Create a styled card component",
+    "instructions": "Build a card with:\n- Width: 300px, border-radius: 10px\n- box-shadow: 0 4px 6px rgba(0,0,0,0.1)\n- Padding: 20px, background: white\n- Card title (h3), description (p), and a button\n- Button: padding 10px 20px, background #3498db, color white, border-radius 5px\n- Hover effect on button",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use box-shadow for depth effect",
+      "Use border-radius for rounded corners",
+      "Style button with hover state"
+    ],
+    "tags": [
+      "CSS",
+      "Components",
+      "Cards",
+      "Shadows"
+    ],
+    "timeLimit": 35,
+    "points": 150,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Card Component</title>\n</head>\n<body>\n  <div class=\"card\">\n    <h3>Product Card</h3>\n    <p>This is a beautiful card component with shadow effects and hover states.</p>\n    <button class=\"btn\">Learn More</button>\n  </div>\n</body>\n</html>",
+      "css": "body {\n  background-color: #ecf0f1;\n  padding: 50px;\n}\n\n.card {\n  width: 300px;\n  background: white;\n  border-radius: 10px;\n  padding: 20px;\n  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\n}\n\n.card h3 {\n  margin-top: 0;\n  color: #2c3e50;\n}\n\n.btn {\n  padding: 10px 20px;\n  background-color: #3498db;\n  color: white;\n  border: none;\n  border-radius: 5px;\n  cursor: pointer;\n}\n\n.btn:hover {\n  background-color: #2980b9;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:42.838Z",
+    "updatedAt": "2025-11-11T06:43:42.838Z"
+  },
+  {
+    "id": "course-html-css-l3-q5",
+    "courseId": "course-html-css",
+    "level": 3,
+    "questionNumber": 5,
+    "title": "Centered Content Layout",
+    "description": "Create a perfectly centered layout",
+    "instructions": "Create a centered container:\n- Full viewport height (100vh)\n- Use Flexbox to center content vertically and horizontally\n- Inner box: 400px width, padding: 40px, background: white\n- Add heading and paragraph inside\n- Page background: linear-gradient",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use min-height: 100vh on body",
+      "Use display: flex with justify-content and align-items",
+      "Use linear-gradient for background"
+    ],
+    "tags": [
+      "CSS",
+      "Centering",
+      "Flexbox",
+      "Gradients"
+    ],
+    "timeLimit": 30,
+    "points": 150,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Centered Layout</title>\n</head>\n<body>\n  <div class=\"content\">\n    <h1>Perfectly Centered</h1>\n    <p>This content is centered both horizontally and vertically using Flexbox.</p>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  min-height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  font-family: Arial, sans-serif;\n}\n\n.content {\n  width: 400px;\n  padding: 40px;\n  background: white;\n  border-radius: 10px;\n  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);\n  text-align: center;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:42.838Z",
+    "updatedAt": "2025-11-11T06:43:42.838Z"
+  },
+  {
+    "id": "course-html-css-l4-q1",
+    "courseId": "course-html-css",
+    "level": 4,
+    "questionNumber": 1,
+    "title": "Responsive Image Gallery",
+    "description": "Create a responsive image gallery using CSS Grid",
+    "instructions": "Build an image gallery:\n- Grid with 3 columns on desktop\n- Use grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))\n- Add 6 placeholder boxes (200px height, different colors)\n- gap: 15px\n- Each box should have border-radius: 8px",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "auto-fit makes grid responsive",
+      "minmax creates flexible column sizes",
+      "Use different background colors for visual variety"
+    ],
+    "tags": [
+      "CSS",
+      "Grid",
+      "Responsive",
+      "Gallery"
+    ],
+    "timeLimit": 35,
+    "points": 180,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 78
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Image Gallery</title>\n</head>\n<body>\n  <div class=\"gallery\">\n    <div class=\"gallery-item\">Image 1</div>\n    <div class=\"gallery-item\">Image 2</div>\n    <div class=\"gallery-item\">Image 3</div>\n    <div class=\"gallery-item\">Image 4</div>\n    <div class=\"gallery-item\">Image 5</div>\n    <div class=\"gallery-item\">Image 6</div>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  padding: 20px;\n  background-color: #f5f5f5;\n}\n\n.gallery {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n  gap: 15px;\n}\n\n.gallery-item {\n  height: 200px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-weight: bold;\n}\n\n.gallery-item:nth-child(2n) {\n  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);\n}\n\n.gallery-item:nth-child(3n) {\n  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:58.188Z",
+    "updatedAt": "2025-11-11T06:43:58.188Z"
+  },
+  {
+    "id": "course-html-css-l4-q2",
+    "courseId": "course-html-css",
+    "level": 4,
+    "questionNumber": 2,
+    "title": "Animated Button with Transitions",
+    "description": "Create buttons with smooth CSS transitions",
+    "instructions": "Create 3 buttons with different hover effects:\n- Button 1: Scale up (transform: scale(1.1))\n- Button 2: Slide right (transform: translateX(10px))\n- Button 3: Color transition\n- All transitions: 0.3s ease\n- Base style: padding 15px 30px, border-radius 25px, border: none",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use transition property for smooth animations",
+      "Use transform for scale and translate",
+      "Use :hover pseudo-class"
+    ],
+    "tags": [
+      "CSS",
+      "Animations",
+      "Transitions",
+      "Buttons"
+    ],
+    "timeLimit": 35,
+    "points": 180,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 78
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Animated Buttons</title>\n</head>\n<body>\n  <div class=\"button-container\">\n    <button class=\"btn btn-scale\">Scale Button</button>\n    <button class=\"btn btn-slide\">Slide Button</button>\n    <button class=\"btn btn-color\">Color Button</button>\n  </div>\n</body>\n</html>",
+      "css": "body {\n  min-height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  background-color: #ecf0f1;\n  font-family: Arial, sans-serif;\n}\n\n.button-container {\n  display: flex;\n  gap: 20px;\n  flex-wrap: wrap;\n  justify-content: center;\n}\n\n.btn {\n  padding: 15px 30px;\n  border-radius: 25px;\n  border: none;\n  font-size: 16px;\n  font-weight: bold;\n  cursor: pointer;\n  transition: all 0.3s ease;\n}\n\n.btn-scale {\n  background-color: #3498db;\n  color: white;\n}\n\n.btn-scale:hover {\n  transform: scale(1.1);\n  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);\n}\n\n.btn-slide {\n  background-color: #e74c3c;\n  color: white;\n}\n\n.btn-slide:hover {\n  transform: translateX(10px);\n}\n\n.btn-color {\n  background-color: #2ecc71;\n  color: white;\n}\n\n.btn-color:hover {\n  background-color: #27ae60;\n  box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:58.188Z",
+    "updatedAt": "2025-11-11T06:43:58.188Z"
+  },
+  {
+    "id": "course-html-css-l4-q3",
+    "courseId": "course-html-css",
+    "level": 4,
+    "questionNumber": 3,
+    "title": "Responsive Pricing Cards",
+    "description": "Create a set of pricing cards that adapt to screen size",
+    "instructions": "Build 3 pricing cards:\n- Container: display flex, wrap on small screens\n- Each card: width 300px, padding 30px, text-align center\n- Include: title, price (large font), features list, button\n- Middle card highlighted with different color\n- box-shadow on all cards",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use flexbox with flex-wrap",
+      "Add :nth-child(2) for middle card",
+      "Use transform: translateY for highlight effect"
+    ],
+    "tags": [
+      "CSS",
+      "Responsive",
+      "Cards",
+      "Flexbox"
+    ],
+    "timeLimit": 40,
+    "points": 180,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 78
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Pricing Cards</title>\n</head>\n<body>\n  <div class=\"pricing-container\">\n    <div class=\"card\">\n      <h2>Basic</h2>\n      <div class=\"price\">$9.99</div>\n      <ul>\n        <li>Feature 1</li>\n        <li>Feature 2</li>\n        <li>Feature 3</li>\n      </ul>\n      <button class=\"btn\">Choose Plan</button>\n    </div>\n    \n    <div class=\"card featured\">\n      <h2>Pro</h2>\n      <div class=\"price\">$19.99</div>\n      <ul>\n        <li>All Basic Features</li>\n        <li>Feature 4</li>\n        <li>Feature 5</li>\n      </ul>\n      <button class=\"btn\">Choose Plan</button>\n    </div>\n    \n    <div class=\"card\">\n      <h2>Enterprise</h2>\n      <div class=\"price\">$29.99</div>\n      <ul>\n        <li>All Pro Features</li>\n        <li>Feature 6</li>\n        <li>Priority Support</li>\n      </ul>\n      <button class=\"btn\">Choose Plan</button>\n    </div>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  min-height: 100vh;\n  display: flex;\n  align-items: center;\n  padding: 20px;\n}\n\n.pricing-container {\n  display: flex;\n  gap: 30px;\n  flex-wrap: wrap;\n  justify-content: center;\n  width: 100%;\n}\n\n.card {\n  background: white;\n  width: 300px;\n  padding: 30px;\n  border-radius: 10px;\n  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);\n  text-align: center;\n  transition: transform 0.3s ease;\n}\n\n.card:hover {\n  transform: translateY(-10px);\n}\n\n.featured {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  transform: scale(1.05);\n}\n\n.price {\n  font-size: 36px;\n  font-weight: bold;\n  margin: 20px 0;\n}\n\n.card ul {\n  list-style: none;\n  margin: 20px 0;\n}\n\n.card li {\n  padding: 10px 0;\n}\n\n.btn {\n  padding: 12px 30px;\n  background-color: #3498db;\n  color: white;\n  border: none;\n  border-radius: 5px;\n  cursor: pointer;\n  font-size: 16px;\n  transition: background 0.3s ease;\n}\n\n.btn:hover {\n  background-color: #2980b9;\n}\n\n.featured .btn {\n  background-color: white;\n  color: #667eea;\n}\n\n.featured .btn:hover {\n  background-color: #f8f9fa;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:58.189Z",
+    "updatedAt": "2025-11-11T06:43:58.189Z"
+  },
+  {
+    "id": "course-html-css-l4-q4",
+    "courseId": "course-html-css",
+    "level": 4,
+    "questionNumber": 4,
+    "title": "CSS Custom Properties (Variables)",
+    "description": "Use CSS variables for theming",
+    "instructions": "Create a themed page using CSS variables:\n- Define variables in :root for primary color, secondary color, spacing\n- Create a header, main content, and footer using these variables\n- Add a class .dark-theme that changes the variables\n- Use var(--variable-name) to apply variables",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Define variables in :root selector",
+      "Use var(--variable-name) to use variables",
+      "Create alternative theme with different values"
+    ],
+    "tags": [
+      "CSS",
+      "Variables",
+      "Theming",
+      "Custom Properties"
+    ],
+    "timeLimit": 35,
+    "points": 180,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 78
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>CSS Variables</title>\n</head>\n<body>\n  <header>\n    <h1>CSS Custom Properties</h1>\n  </header>\n  <main>\n    <h2>Theme Example</h2>\n    <p>This page uses CSS variables for consistent styling and easy theming.</p>\n  </main>\n  <footer>\n    <p>&copy; 2024 CSS Demo</p>\n  </footer>\n</body>\n</html>",
+      "css": ":root {\n  --primary-color: #3498db;\n  --secondary-color: #2c3e50;\n  --bg-color: #ecf0f1;\n  --text-color: #333;\n  --spacing: 20px;\n}\n\n* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n  background-color: var(--bg-color);\n  color: var(--text-color);\n}\n\nheader {\n  background-color: var(--primary-color);\n  color: white;\n  padding: calc(var(--spacing) * 2);\n  text-align: center;\n}\n\nmain {\n  padding: var(--spacing);\n  max-width: 800px;\n  margin: var(--spacing) auto;\n  background: white;\n  border-radius: 10px;\n}\n\nmain h2 {\n  color: var(--secondary-color);\n  margin-bottom: var(--spacing);\n}\n\nfooter {\n  background-color: var(--secondary-color);\n  color: white;\n  padding: var(--spacing);\n  text-align: center;\n  margin-top: var(--spacing);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:58.189Z",
+    "updatedAt": "2025-11-11T06:43:58.189Z"
+  },
+  {
+    "id": "course-html-css-l4-q5",
+    "courseId": "course-html-css",
+    "level": 4,
+    "questionNumber": 5,
+    "title": "Advanced Form Styling",
+    "description": "Create a beautifully styled form with focus effects",
+    "instructions": "Build a contact form with:\n- Input fields for name, email, message\n- Styled inputs: padding 12px, border-radius 5px, border 2px solid #ddd\n- Focus effects: border color change to primary color\n- Submit button with hover effect\n- Label styling with proper spacing\n- Form container with box-shadow",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use :focus pseudo-class for input effects",
+      "Use outline: none and add custom border",
+      "Add transition for smooth effects"
+    ],
+    "tags": [
+      "CSS",
+      "Forms",
+      "Input Styling",
+      "Focus States"
+    ],
+    "timeLimit": 40,
+    "points": 180,
+    "passingThreshold": {
+      "structure": 75,
+      "visual": 80,
+      "overall": 78
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Contact Form</title>\n</head>\n<body>\n  <div class=\"form-container\">\n    <h2>Contact Us</h2>\n    <form>\n      <div class=\"form-group\">\n        <label for=\"name\">Name</label>\n        <input type=\"text\" id=\"name\" placeholder=\"Your name\">\n      </div>\n      \n      <div class=\"form-group\">\n        <label for=\"email\">Email</label>\n        <input type=\"email\" id=\"email\" placeholder=\"your@email.com\">\n      </div>\n      \n      <div class=\"form-group\">\n        <label for=\"message\">Message</label>\n        <textarea id=\"message\" rows=\"5\" placeholder=\"Your message\"></textarea>\n      </div>\n      \n      <button type=\"submit\" class=\"submit-btn\">Send Message</button>\n    </form>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  min-height: 100vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 20px;\n}\n\n.form-container {\n  background: white;\n  padding: 40px;\n  border-radius: 10px;\n  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);\n  width: 100%;\n  max-width: 500px;\n}\n\n.form-container h2 {\n  text-align: center;\n  color: #2c3e50;\n  margin-bottom: 30px;\n}\n\n.form-group {\n  margin-bottom: 20px;\n}\n\nlabel {\n  display: block;\n  margin-bottom: 8px;\n  color: #555;\n  font-weight: bold;\n}\n\ninput,\ntextarea {\n  width: 100%;\n  padding: 12px;\n  border: 2px solid #ddd;\n  border-radius: 5px;\n  font-size: 16px;\n  transition: border-color 0.3s ease;\n}\n\ninput:focus,\ntextarea:focus {\n  outline: none;\n  border-color: #667eea;\n}\n\n.submit-btn {\n  width: 100%;\n  padding: 15px;\n  background-color: #667eea;\n  color: white;\n  border: none;\n  border-radius: 5px;\n  font-size: 16px;\n  font-weight: bold;\n  cursor: pointer;\n  transition: background-color 0.3s ease;\n}\n\n.submit-btn:hover {\n  background-color: #764ba2;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:43:58.189Z",
+    "updatedAt": "2025-11-11T06:43:58.189Z"
+  },
+  {
+    "id": "course-html-css-l5-q1",
+    "courseId": "course-html-css",
+    "level": 5,
+    "questionNumber": 1,
+    "title": "CSS Keyframe Animations",
+    "description": "Create animations using @keyframes",
+    "instructions": "Create animated elements:\n- A box that bounces continuously\n- Use @keyframes bounce with transform: translateY\n- Animation: 2s infinite ease-in-out\n- Box: 100px square, background gradient\n- Add animation-play-state: paused on hover",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use @keyframes to define animation",
+      "Use animation property to apply it",
+      "Use transform: translateY for vertical movement"
+    ],
+    "tags": [
+      "CSS",
+      "Animations",
+      "Keyframes",
+      "Advanced"
+    ],
+    "timeLimit": 40,
+    "points": 200,
+    "passingThreshold": {
+      "structure": 80,
+      "visual": 85,
+      "overall": 82
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>CSS Animations</title>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"bounce-box\">Hover to Pause</div>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  min-height: 100vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n}\n\n.container {\n  text-align: center;\n}\n\n.bounce-box {\n  width: 100px;\n  height: 100px;\n  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 10px;\n  font-weight: bold;\n  animation: bounce 2s infinite ease-in-out;\n  cursor: pointer;\n}\n\n.bounce-box:hover {\n  animation-play-state: paused;\n}\n\n@keyframes bounce {\n  0%, 100% {\n    transform: translateY(0);\n  }\n  50% {\n    transform: translateY(-50px);\n  }\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:10.431Z",
+    "updatedAt": "2025-11-11T06:44:10.431Z"
+  },
+  {
+    "id": "course-html-css-l5-q2",
+    "courseId": "course-html-css",
+    "level": 5,
+    "questionNumber": 2,
+    "title": "Advanced Grid - Grid Template Areas",
+    "description": "Create complex layouts using grid-template-areas",
+    "instructions": "Build a website layout with:\n- Header across full width\n- Sidebar, main content, and right widget\n- Footer across full width\n- Use grid-template-areas for layout\n- Each section with distinct background color",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use grid-template-areas with named areas",
+      "Assign grid-area names to elements",
+      "Use grid-template-columns and rows"
+    ],
+    "tags": [
+      "CSS",
+      "Grid",
+      "Layout",
+      "Template Areas"
+    ],
+    "timeLimit": 45,
+    "points": 200,
+    "passingThreshold": {
+      "structure": 80,
+      "visual": 85,
+      "overall": 82
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Grid Template Areas</title>\n</head>\n<body>\n  <div class=\"grid-container\">\n    <header class=\"header\">Header</header>\n    <aside class=\"sidebar\">Sidebar</aside>\n    <main class=\"main\">Main Content</main>\n    <aside class=\"widget\">Widget</aside>\n    <footer class=\"footer\">Footer</footer>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n}\n\n.grid-container {\n  display: grid;\n  grid-template-areas:\n    'header header header'\n    'sidebar main widget'\n    'footer footer footer';\n  grid-template-columns: 200px 1fr 200px;\n  grid-template-rows: auto 1fr auto;\n  min-height: 100vh;\n  gap: 10px;\n  padding: 10px;\n}\n\n.header {\n  grid-area: header;\n  background-color: #3498db;\n  padding: 20px;\n  color: white;\n  text-align: center;\n}\n\n.sidebar {\n  grid-area: sidebar;\n  background-color: #2ecc71;\n  padding: 20px;\n  color: white;\n}\n\n.main {\n  grid-area: main;\n  background-color: #ecf0f1;\n  padding: 20px;\n}\n\n.widget {\n  grid-area: widget;\n  background-color: #f39c12;\n  padding: 20px;\n  color: white;\n}\n\n.footer {\n  grid-area: footer;\n  background-color: #34495e;\n  padding: 20px;\n  color: white;\n  text-align: center;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:10.431Z",
+    "updatedAt": "2025-11-11T06:44:10.431Z"
+  },
+  {
+    "id": "course-html-css-l5-q3",
+    "courseId": "course-html-css",
+    "level": 5,
+    "questionNumber": 3,
+    "title": "CSS Clip-path and Shapes",
+    "description": "Create custom shapes using clip-path",
+    "instructions": "Create different shapes:\n- Circle shape using clip-path: circle()\n- Triangle using clip-path: polygon()\n- Hexagon shape\n- Each shape 200px, different colors\n- Arrange them horizontally with flexbox",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use clip-path property",
+      "polygon() takes coordinate points",
+      "circle() takes radius and position"
+    ],
+    "tags": [
+      "CSS",
+      "Clip-path",
+      "Shapes",
+      "Advanced"
+    ],
+    "timeLimit": 40,
+    "points": 200,
+    "passingThreshold": {
+      "structure": 80,
+      "visual": 85,
+      "overall": 82
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>CSS Shapes</title>\n</head>\n<body>\n  <div class=\"shapes-container\">\n    <div class=\"shape circle\">Circle</div>\n    <div class=\"shape triangle\">Triangle</div>\n    <div class=\"shape hexagon\">Hexagon</div>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  min-height: 100vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  font-family: Arial, sans-serif;\n}\n\n.shapes-container {\n  display: flex;\n  gap: 50px;\n  flex-wrap: wrap;\n  justify-content: center;\n}\n\n.shape {\n  width: 200px;\n  height: 200px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n}\n\n.circle {\n  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);\n  clip-path: circle(50%);\n}\n\n.triangle {\n  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);\n  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);\n}\n\n.hexagon {\n  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);\n  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:10.431Z",
+    "updatedAt": "2025-11-11T06:44:10.431Z"
+  },
+  {
+    "id": "course-html-css-l5-q4",
+    "courseId": "course-html-css",
+    "level": 5,
+    "questionNumber": 4,
+    "title": "CSS Filters and Backdrop Effects",
+    "description": "Apply CSS filters and backdrop-filter",
+    "instructions": "Create a card with glass morphism effect:\n- background: rgba with transparency\n- backdrop-filter: blur(10px)\n- border: 1px solid rgba(255,255,255,0.2)\n- box-shadow for depth\n- Body background with gradient and pattern",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use backdrop-filter: blur() for glass effect",
+      "Use rgba for transparent backgrounds",
+      "Combine multiple box-shadows"
+    ],
+    "tags": [
+      "CSS",
+      "Filters",
+      "Glass Morphism",
+      "Modern"
+    ],
+    "timeLimit": 45,
+    "points": 200,
+    "passingThreshold": {
+      "structure": 80,
+      "visual": 85,
+      "overall": 82
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Glass Morphism</title>\n</head>\n<body>\n  <div class=\"glass-card\">\n    <h2>Glass Morphism</h2>\n    <p>This card uses backdrop-filter and transparency to create a modern glass effect.</p>\n    <button class=\"glass-btn\">Learn More</button>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  min-height: 100vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  position: relative;\n  font-family: Arial, sans-serif;\n}\n\nbody::before {\n  content: '';\n  position: absolute;\n  width: 300px;\n  height: 300px;\n  background: rgba(255, 255, 255, 0.1);\n  border-radius: 50%;\n  top: 10%;\n  left: 20%;\n}\n\nbody::after {\n  content: '';\n  position: absolute;\n  width: 200px;\n  height: 200px;\n  background: rgba(255, 255, 255, 0.1);\n  border-radius: 50%;\n  bottom: 20%;\n  right: 15%;\n}\n\n.glass-card {\n  background: rgba(255, 255, 255, 0.15);\n  backdrop-filter: blur(10px);\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  border-radius: 20px;\n  padding: 40px;\n  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);\n  max-width: 400px;\n  text-align: center;\n  color: white;\n}\n\n.glass-card h2 {\n  margin-bottom: 20px;\n  font-size: 28px;\n}\n\n.glass-card p {\n  margin-bottom: 30px;\n  line-height: 1.6;\n}\n\n.glass-btn {\n  padding: 12px 30px;\n  background: rgba(255, 255, 255, 0.2);\n  backdrop-filter: blur(10px);\n  border: 1px solid rgba(255, 255, 255, 0.3);\n  border-radius: 25px;\n  color: white;\n  cursor: pointer;\n  transition: all 0.3s ease;\n}\n\n.glass-btn:hover {\n  background: rgba(255, 255, 255, 0.3);\n  transform: translateY(-2px);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:10.431Z",
+    "updatedAt": "2025-11-11T06:44:10.431Z"
+  },
+  {
+    "id": "course-html-css-l5-q5",
+    "courseId": "course-html-css",
+    "level": 5,
+    "questionNumber": 5,
+    "title": "CSS Scroll Snap",
+    "description": "Create smooth scrolling sections with scroll-snap",
+    "instructions": "Build a page with scroll snap:\n- Container with scroll-snap-type: y mandatory\n- 4 sections, each 100vh height\n- scroll-snap-align: start on sections\n- Different background gradients for each\n- Center content in each section",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use scroll-snap-type on container",
+      "Use scroll-snap-align on children",
+      "Set overflow-y: scroll on container"
+    ],
+    "tags": [
+      "CSS",
+      "Scroll Snap",
+      "Scrolling",
+      "UX"
+    ],
+    "timeLimit": 40,
+    "points": 200,
+    "passingThreshold": {
+      "structure": 80,
+      "visual": 85,
+      "overall": 82
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Scroll Snap</title>\n</head>\n<body>\n  <div class=\"snap-container\">\n    <section class=\"snap-section section-1\">\n      <h1>Section 1</h1>\n      <p>Scroll down to see snap effect</p>\n    </section>\n    <section class=\"snap-section section-2\">\n      <h1>Section 2</h1>\n      <p>Sections snap into place</p>\n    </section>\n    <section class=\"snap-section section-3\">\n      <h1>Section 3</h1>\n      <p>Smooth scrolling experience</p>\n    </section>\n    <section class=\"snap-section section-4\">\n      <h1>Section 4</h1>\n      <p>End of sections</p>\n    </section>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\n.snap-container {\n  height: 100vh;\n  overflow-y: scroll;\n  scroll-snap-type: y mandatory;\n}\n\n.snap-section {\n  height: 100vh;\n  scroll-snap-align: start;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-family: Arial, sans-serif;\n}\n\n.snap-section h1 {\n  font-size: 48px;\n  margin-bottom: 20px;\n}\n\n.snap-section p {\n  font-size: 20px;\n}\n\n.section-1 {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n}\n\n.section-2 {\n  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);\n}\n\n.section-3 {\n  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);\n}\n\n.section-4 {\n  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:10.431Z",
+    "updatedAt": "2025-11-11T06:44:10.431Z"
+  },
+  {
+    "id": "course-html-css-l6-q1",
+    "courseId": "course-html-css",
+    "level": 6,
+    "questionNumber": 1,
+    "title": "Complete Landing Page",
+    "description": "Build a full landing page with all modern features",
+    "instructions": "Create a complete landing page with:\n- Hero section with gradient background and CTA button\n- Features section with 3 cards in grid\n- Testimonial section\n- Footer with social links\n- Responsive design\n- Smooth transitions on all interactive elements",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use semantic HTML5 tags",
+      "Apply flexbox and grid for layouts",
+      "Add hover effects on all clickable elements",
+      "Use CSS variables for consistency"
+    ],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Landing Page",
+      "Project",
+      "Advanced"
+    ],
+    "timeLimit": 60,
+    "points": 250,
+    "passingThreshold": {
+      "structure": 85,
+      "visual": 90,
+      "overall": 87
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Product Landing Page</title>\n</head>\n<body>\n  <header class=\"hero\">\n    <nav>\n      <h2 class=\"logo\">MyProduct</h2>\n    </nav>\n    <div class=\"hero-content\">\n      <h1>Welcome to the Future</h1>\n      <p>Discover amazing features that will transform your workflow</p>\n      <button class=\"cta-btn\">Get Started</button>\n    </div>\n  </header>\n\n  <section class=\"features\">\n    <h2>Our Features</h2>\n    <div class=\"features-grid\">\n      <div class=\"feature-card\">\n        <h3>⚡ Fast</h3>\n        <p>Lightning fast performance</p>\n      </div>\n      <div class=\"feature-card\">\n        <h3>🔒 Secure</h3>\n        <p>Enterprise-grade security</p>\n      </div>\n      <div class=\"feature-card\">\n        <h3>📱 Responsive</h3>\n        <p>Works on all devices</p>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"testimonial\">\n    <blockquote>\n      <p>\"This product changed how we work. Highly recommended!\"</p>\n      <cite>- John Doe, CEO</cite>\n    </blockquote>\n  </section>\n\n  <footer>\n    <p>&copy; 2024 MyProduct. All rights reserved.</p>\n  </footer>\n</body>\n</html>",
+      "css": ":root {\n  --primary: #667eea;\n  --secondary: #764ba2;\n  --text: #2c3e50;\n}\n\n* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n  color: var(--text);\n}\n\n.hero {\n  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);\n  color: white;\n  min-height: 100vh;\n  display: flex;\n  flex-direction: column;\n}\n\nnav {\n  padding: 20px 50px;\n}\n\n.logo {\n  font-size: 28px;\n}\n\n.hero-content {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  padding: 50px;\n}\n\n.hero-content h1 {\n  font-size: 56px;\n  margin-bottom: 20px;\n}\n\n.hero-content p {\n  font-size: 24px;\n  margin-bottom: 40px;\n}\n\n.cta-btn {\n  padding: 18px 40px;\n  font-size: 18px;\n  background: white;\n  color: var(--primary);\n  border: none;\n  border-radius: 30px;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  font-weight: bold;\n}\n\n.cta-btn:hover {\n  transform: translateY(-3px);\n  box-shadow: 0 10px 25px rgba(0,0,0,0.2);\n}\n\n.features {\n  padding: 80px 50px;\n  text-align: center;\n}\n\n.features h2 {\n  font-size: 42px;\n  margin-bottom: 50px;\n  color: var(--primary);\n}\n\n.features-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n  gap: 40px;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\n.feature-card {\n  padding: 40px;\n  background: white;\n  border-radius: 15px;\n  box-shadow: 0 5px 20px rgba(0,0,0,0.1);\n  transition: transform 0.3s ease;\n}\n\n.feature-card:hover {\n  transform: translateY(-10px);\n}\n\n.feature-card h3 {\n  font-size: 32px;\n  margin-bottom: 15px;\n}\n\n.testimonial {\n  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);\n  padding: 80px 50px;\n  color: white;\n  text-align: center;\n}\n\nblockquote {\n  max-width: 800px;\n  margin: 0 auto;\n  font-size: 28px;\n  font-style: italic;\n}\n\ncite {\n  display: block;\n  margin-top: 20px;\n  font-size: 18px;\n  font-style: normal;\n}\n\nfooter {\n  background: var(--text);\n  color: white;\n  padding: 30px;\n  text-align: center;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:21.148Z",
+    "updatedAt": "2025-11-11T06:44:21.148Z"
+  },
+  {
+    "id": "course-html-css-l6-q2",
+    "courseId": "course-html-css",
+    "level": 6,
+    "questionNumber": 2,
+    "title": "Portfolio Website",
+    "description": "Create a personal portfolio website",
+    "instructions": "Build a portfolio with:\n- About section with profile info\n- Skills section with progress bars\n- Projects section in grid layout\n- Contact form\n- Fixed navigation header\n- Smooth scroll behavior",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use position: fixed for navigation",
+      "Create custom progress bars with CSS",
+      "Use grid for projects gallery",
+      "Add smooth scroll with CSS"
+    ],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Portfolio",
+      "Project",
+      "Professional"
+    ],
+    "timeLimit": 60,
+    "points": 250,
+    "passingThreshold": {
+      "structure": 85,
+      "visual": 90,
+      "overall": 87
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>My Portfolio</title>\n</head>\n<body>\n  <header class=\"fixed-nav\">\n    <h2>John Developer</h2>\n  </header>\n\n  <section class=\"about\">\n    <h1>About Me</h1>\n    <p>I'm a passionate web developer creating amazing digital experiences.</p>\n  </section>\n\n  <section class=\"skills\">\n    <h2>My Skills</h2>\n    <div class=\"skill\">\n      <span>HTML/CSS</span>\n      <div class=\"progress-bar\">\n        <div class=\"progress\" style=\"width: 90%\"></div>\n      </div>\n    </div>\n    <div class=\"skill\">\n      <span>JavaScript</span>\n      <div class=\"progress-bar\">\n        <div class=\"progress\" style=\"width: 80%\"></div>\n      </div>\n    </div>\n    <div class=\"skill\">\n      <span>Design</span>\n      <div class=\"progress-bar\">\n        <div class=\"progress\" style=\"width: 75%\"></div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"projects\">\n    <h2>My Projects</h2>\n    <div class=\"projects-grid\">\n      <div class=\"project-card\">Project 1</div>\n      <div class=\"project-card\">Project 2</div>\n      <div class=\"project-card\">Project 3</div>\n      <div class=\"project-card\">Project 4</div>\n    </div>\n  </section>\n\n  <section class=\"contact\">\n    <h2>Contact Me</h2>\n    <form>\n      <input type=\"email\" placeholder=\"Your Email\">\n      <textarea placeholder=\"Your Message\" rows=\"4\"></textarea>\n      <button type=\"submit\">Send</button>\n    </form>\n  </section>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nhtml {\n  scroll-behavior: smooth;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n  padding-top: 70px;\n}\n\n.fixed-nav {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  background: #2c3e50;\n  color: white;\n  padding: 20px 50px;\n  z-index: 1000;\n  box-shadow: 0 2px 10px rgba(0,0,0,0.1);\n}\n\nsection {\n  padding: 80px 50px;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\nh1, h2 {\n  margin-bottom: 30px;\n  color: #2c3e50;\n}\n\n.about {\n  min-height: 50vh;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  text-align: center;\n}\n\n.about h1 {\n  font-size: 48px;\n}\n\n.about p {\n  font-size: 20px;\n  color: #555;\n}\n\n.skills {\n  background: #ecf0f1;\n}\n\n.skill {\n  margin-bottom: 25px;\n}\n\n.skill span {\n  display: block;\n  margin-bottom: 10px;\n  font-weight: bold;\n  color: #2c3e50;\n}\n\n.progress-bar {\n  background: #ddd;\n  height: 30px;\n  border-radius: 15px;\n  overflow: hidden;\n}\n\n.progress {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  height: 100%;\n  transition: width 1s ease;\n}\n\n.projects-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n  gap: 30px;\n}\n\n.project-card {\n  height: 200px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 10px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-size: 20px;\n  font-weight: bold;\n  transition: transform 0.3s ease;\n}\n\n.project-card:hover {\n  transform: scale(1.05);\n}\n\n.contact {\n  background: #ecf0f1;\n}\n\n.contact form {\n  max-width: 600px;\n  margin: 0 auto;\n}\n\n.contact input,\n.contact textarea {\n  width: 100%;\n  padding: 15px;\n  margin-bottom: 15px;\n  border: 2px solid #ddd;\n  border-radius: 5px;\n  font-size: 16px;\n}\n\n.contact button {\n  width: 100%;\n  padding: 15px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border: none;\n  border-radius: 5px;\n  font-size: 18px;\n  cursor: pointer;\n  transition: transform 0.3s ease;\n}\n\n.contact button:hover {\n  transform: translateY(-2px);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:21.148Z",
+    "updatedAt": "2025-11-11T06:44:21.148Z"
+  },
+  {
+    "id": "course-html-css-l6-q3",
+    "courseId": "course-html-css",
+    "level": 6,
+    "questionNumber": 3,
+    "title": "E-commerce Product Page",
+    "description": "Create a product page for an e-commerce site",
+    "instructions": "Build a product page with:\n- Product image gallery with thumbnails\n- Product details (title, price, description)\n- Size/color selector buttons\n- Quantity selector\n- Add to cart button with animation\n- Related products section\n- Review section",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use grid for product layout",
+      "Style custom radio buttons for size/color",
+      "Add number input for quantity",
+      "Create animated Add to Cart effect"
+    ],
+    "tags": [
+      "HTML",
+      "CSS",
+      "E-commerce",
+      "Product Page",
+      "Advanced"
+    ],
+    "timeLimit": 60,
+    "points": 250,
+    "passingThreshold": {
+      "structure": 85,
+      "visual": 90,
+      "overall": 87
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Product Page</title>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"product-container\">\n      <div class=\"product-image\">\n        <div class=\"main-image\">Product Image</div>\n      </div>\n      \n      <div class=\"product-details\">\n        <h1>Premium Product</h1>\n        <div class=\"price\">$99.99</div>\n        <p class=\"description\">High-quality product with amazing features and modern design.</p>\n        \n        <div class=\"options\">\n          <h3>Select Size:</h3>\n          <div class=\"size-buttons\">\n            <button class=\"size-btn\">S</button>\n            <button class=\"size-btn active\">M</button>\n            <button class=\"size-btn\">L</button>\n            <button class=\"size-btn\">XL</button>\n          </div>\n        </div>\n        \n        <div class=\"options\">\n          <h3>Quantity:</h3>\n          <input type=\"number\" value=\"1\" min=\"1\" class=\"quantity-input\">\n        </div>\n        \n        <button class=\"add-to-cart\">Add to Cart</button>\n      </div>\n    </div>\n    \n    <div class=\"related-products\">\n      <h2>Related Products</h2>\n      <div class=\"related-grid\">\n        <div class=\"related-item\">Product 1</div>\n        <div class=\"related-item\">Product 2</div>\n        <div class=\"related-item\">Product 3</div>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n  background-color: #f5f5f5;\n  padding: 20px;\n}\n\n.container {\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\n.product-container {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 50px;\n  background: white;\n  padding: 40px;\n  border-radius: 10px;\n  box-shadow: 0 2px 10px rgba(0,0,0,0.1);\n  margin-bottom: 50px;\n}\n\n.main-image {\n  width: 100%;\n  aspect-ratio: 1;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  border-radius: 10px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-size: 24px;\n  font-weight: bold;\n}\n\n.product-details h1 {\n  font-size: 32px;\n  margin-bottom: 15px;\n  color: #2c3e50;\n}\n\n.price {\n  font-size: 36px;\n  color: #27ae60;\n  font-weight: bold;\n  margin-bottom: 20px;\n}\n\n.description {\n  color: #555;\n  line-height: 1.6;\n  margin-bottom: 30px;\n}\n\n.options {\n  margin-bottom: 25px;\n}\n\n.options h3 {\n  margin-bottom: 15px;\n  color: #2c3e50;\n}\n\n.size-buttons {\n  display: flex;\n  gap: 10px;\n}\n\n.size-btn {\n  width: 50px;\n  height: 50px;\n  border: 2px solid #ddd;\n  background: white;\n  border-radius: 5px;\n  cursor: pointer;\n  font-weight: bold;\n  transition: all 0.3s ease;\n}\n\n.size-btn:hover,\n.size-btn.active {\n  border-color: #667eea;\n  background: #667eea;\n  color: white;\n}\n\n.quantity-input {\n  width: 100px;\n  padding: 10px;\n  border: 2px solid #ddd;\n  border-radius: 5px;\n  font-size: 16px;\n}\n\n.add-to-cart {\n  width: 100%;\n  padding: 18px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border: none;\n  border-radius: 5px;\n  font-size: 18px;\n  font-weight: bold;\n  cursor: pointer;\n  transition: transform 0.3s ease;\n}\n\n.add-to-cart:hover {\n  transform: translateY(-2px);\n  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);\n}\n\n.related-products h2 {\n  margin-bottom: 30px;\n  color: #2c3e50;\n}\n\n.related-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n  gap: 20px;\n}\n\n.related-item {\n  background: white;\n  padding: 40px;\n  border-radius: 10px;\n  box-shadow: 0 2px 10px rgba(0,0,0,0.1);\n  text-align: center;\n  transition: transform 0.3s ease;\n}\n\n.related-item:hover {\n  transform: translateY(-5px);\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:21.149Z",
+    "updatedAt": "2025-11-11T06:44:21.149Z"
+  },
+  {
+    "id": "course-html-css-l6-q4",
+    "courseId": "course-html-css",
+    "level": 6,
+    "questionNumber": 4,
+    "title": "Dashboard Interface",
+    "description": "Create a modern dashboard UI",
+    "instructions": "Build a dashboard with:\n- Sidebar navigation with icons\n- Top header with search bar and profile\n- Stats cards showing metrics\n- Chart placeholder sections\n- Data table with striped rows\n- Responsive layout that collapses sidebar on mobile",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use CSS Grid for main layout",
+      "Create reusable card components",
+      "Style tables with nth-child for stripes",
+      "Use media queries for responsiveness"
+    ],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Dashboard",
+      "UI",
+      "Professional"
+    ],
+    "timeLimit": 60,
+    "points": 250,
+    "passingThreshold": {
+      "structure": 85,
+      "visual": 90,
+      "overall": 87
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Dashboard</title>\n</head>\n<body>\n  <div class=\"dashboard\">\n    <aside class=\"sidebar\">\n      <h2>Dashboard</h2>\n      <nav>\n        <a href=\"#\" class=\"active\">📊 Overview</a>\n        <a href=\"#\">📈 Analytics</a>\n        <a href=\"#\">👥 Users</a>\n        <a href=\"#\">⚙️ Settings</a>\n      </nav>\n    </aside>\n    \n    <main class=\"main-content\">\n      <header class=\"top-header\">\n        <input type=\"search\" placeholder=\"Search...\" class=\"search-bar\">\n        <div class=\"profile\">👤 Admin</div>\n      </header>\n      \n      <div class=\"stats-grid\">\n        <div class=\"stat-card\">\n          <h3>Total Users</h3>\n          <p class=\"stat-value\">1,234</p>\n        </div>\n        <div class=\"stat-card\">\n          <h3>Revenue</h3>\n          <p class=\"stat-value\">$12,345</p>\n        </div>\n        <div class=\"stat-card\">\n          <h3>Active</h3>\n          <p class=\"stat-value\">567</p>\n        </div>\n        <div class=\"stat-card\">\n          <h3>Growth</h3>\n          <p class=\"stat-value\">+23%</p>\n        </div>\n      </div>\n      \n      <div class=\"data-table\">\n        <h2>Recent Activity</h2>\n        <table>\n          <thead>\n            <tr>\n              <th>Name</th>\n              <th>Status</th>\n              <th>Date</th>\n            </tr>\n          </thead>\n          <tbody>\n            <tr>\n              <td>John Doe</td>\n              <td>Active</td>\n              <td>2024-01-15</td>\n            </tr>\n            <tr>\n              <td>Jane Smith</td>\n              <td>Pending</td>\n              <td>2024-01-14</td>\n            </tr>\n            <tr>\n              <td>Bob Wilson</td>\n              <td>Active</td>\n              <td>2024-01-13</td>\n            </tr>\n          </tbody>\n        </table>\n      </div>\n    </main>\n  </div>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n  background-color: #f5f7fa;\n}\n\n.dashboard {\n  display: grid;\n  grid-template-columns: 250px 1fr;\n  min-height: 100vh;\n}\n\n.sidebar {\n  background: #2c3e50;\n  color: white;\n  padding: 30px 20px;\n}\n\n.sidebar h2 {\n  margin-bottom: 30px;\n  font-size: 24px;\n}\n\n.sidebar nav {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n}\n\n.sidebar a {\n  color: white;\n  text-decoration: none;\n  padding: 15px 20px;\n  border-radius: 8px;\n  transition: background 0.3s ease;\n}\n\n.sidebar a:hover,\n.sidebar a.active {\n  background: #34495e;\n}\n\n.main-content {\n  padding: 20px;\n}\n\n.top-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  background: white;\n  padding: 20px;\n  border-radius: 10px;\n  box-shadow: 0 2px 5px rgba(0,0,0,0.05);\n  margin-bottom: 30px;\n}\n\n.search-bar {\n  padding: 10px 20px;\n  border: 2px solid #ddd;\n  border-radius: 25px;\n  width: 300px;\n  font-size: 16px;\n}\n\n.profile {\n  font-weight: bold;\n  color: #2c3e50;\n}\n\n.stats-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n  gap: 20px;\n  margin-bottom: 30px;\n}\n\n.stat-card {\n  background: white;\n  padding: 25px;\n  border-radius: 10px;\n  box-shadow: 0 2px 5px rgba(0,0,0,0.05);\n}\n\n.stat-card h3 {\n  color: #7f8c8d;\n  font-size: 14px;\n  margin-bottom: 10px;\n}\n\n.stat-value {\n  font-size: 32px;\n  font-weight: bold;\n  color: #2c3e50;\n}\n\n.data-table {\n  background: white;\n  padding: 25px;\n  border-radius: 10px;\n  box-shadow: 0 2px 5px rgba(0,0,0,0.05);\n}\n\n.data-table h2 {\n  margin-bottom: 20px;\n  color: #2c3e50;\n}\n\ntable {\n  width: 100%;\n  border-collapse: collapse;\n}\n\nthead {\n  background: #ecf0f1;\n}\n\nth, td {\n  padding: 15px;\n  text-align: left;\n}\n\nth {\n  font-weight: bold;\n  color: #2c3e50;\n}\n\ntbody tr:nth-child(even) {\n  background: #f8f9fa;\n}\n\ntbody tr:hover {\n  background: #e8f4f8;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:21.149Z",
+    "updatedAt": "2025-11-11T06:44:21.149Z"
+  },
+  {
+    "id": "course-html-css-l6-q5",
+    "courseId": "course-html-css",
+    "level": 6,
+    "questionNumber": 5,
+    "title": "Complete Blog Website",
+    "description": "Create a full-featured blog website",
+    "instructions": "Build a blog site with:\n- Hero header with featured post\n- Blog post grid with cards\n- Sidebar with categories and recent posts\n- Individual blog post layout\n- Author bio section\n- Comments section mockup\n- Newsletter signup form\n- Responsive footer with multiple columns",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Use CSS Grid for main layout",
+      "Create card components for posts",
+      "Style blockquotes for quotes",
+      "Add read more buttons with hover effects"
+    ],
+    "tags": [
+      "HTML",
+      "CSS",
+      "Blog",
+      "Complete Site",
+      "Professional"
+    ],
+    "timeLimit": 60,
+    "points": 250,
+    "passingThreshold": {
+      "structure": 85,
+      "visual": 90,
+      "overall": 87
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Tech Blog</title>\n</head>\n<body>\n  <header class=\"hero\">\n    <div class=\"hero-content\">\n      <span class=\"badge\">Featured</span>\n      <h1>The Future of Web Development</h1>\n      <p class=\"meta\">By John Doe • Jan 15, 2024</p>\n    </div>\n  </header>\n  \n  <div class=\"container\">\n    <main class=\"blog-posts\">\n      <article class=\"post-card\">\n        <div class=\"post-image\">Image</div>\n        <div class=\"post-content\">\n          <h2>Getting Started with CSS Grid</h2>\n          <p>Learn the basics of CSS Grid layout...</p>\n          <button class=\"read-more\">Read More →</button>\n        </div>\n      </article>\n      \n      <article class=\"post-card\">\n        <div class=\"post-image\">Image</div>\n        <div class=\"post-content\">\n          <h2>Modern JavaScript Features</h2>\n          <p>Explore the latest ES2024 features...</p>\n          <button class=\"read-more\">Read More →</button>\n        </div>\n      </article>\n      \n      <article class=\"post-card\">\n        <div class=\"post-image\">Image</div>\n        <div class=\"post-content\">\n          <h2>Responsive Design Tips</h2>\n          <p>Master responsive web design...</p>\n          <button class=\"read-more\">Read More →</button>\n        </div>\n      </article>\n    </main>\n    \n    <aside class=\"sidebar\">\n      <div class=\"widget\">\n        <h3>Categories</h3>\n        <ul>\n          <li><a href=\"#\">Web Development</a></li>\n          <li><a href=\"#\">JavaScript</a></li>\n          <li><a href=\"#\">CSS</a></li>\n          <li><a href=\"#\">Design</a></li>\n        </ul>\n      </div>\n      \n      <div class=\"widget newsletter\">\n        <h3>Newsletter</h3>\n        <p>Subscribe for updates</p>\n        <input type=\"email\" placeholder=\"Your email\">\n        <button>Subscribe</button>\n      </div>\n    </aside>\n  </div>\n  \n  <footer>\n    <p>&copy; 2024 Tech Blog. All rights reserved.</p>\n  </footer>\n</body>\n</html>",
+      "css": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Georgia, serif;\n  line-height: 1.6;\n  color: #333;\n}\n\n.hero {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  padding: 100px 50px;\n  text-align: center;\n}\n\n.badge {\n  display: inline-block;\n  background: rgba(255,255,255,0.2);\n  padding: 8px 20px;\n  border-radius: 20px;\n  font-size: 14px;\n  margin-bottom: 20px;\n}\n\n.hero h1 {\n  font-size: 48px;\n  margin-bottom: 15px;\n}\n\n.meta {\n  font-size: 16px;\n  opacity: 0.9;\n}\n\n.container {\n  display: grid;\n  grid-template-columns: 2fr 1fr;\n  gap: 40px;\n  max-width: 1200px;\n  margin: 50px auto;\n  padding: 0 20px;\n}\n\n.blog-posts {\n  display: grid;\n  gap: 30px;\n}\n\n.post-card {\n  background: white;\n  border-radius: 10px;\n  overflow: hidden;\n  box-shadow: 0 2px 10px rgba(0,0,0,0.1);\n  transition: transform 0.3s ease;\n}\n\n.post-card:hover {\n  transform: translateY(-5px);\n}\n\n.post-image {\n  height: 200px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-size: 20px;\n}\n\n.post-content {\n  padding: 25px;\n}\n\n.post-content h2 {\n  margin-bottom: 15px;\n  color: #2c3e50;\n}\n\n.post-content p {\n  color: #555;\n  margin-bottom: 20px;\n}\n\n.read-more {\n  background: #667eea;\n  color: white;\n  border: none;\n  padding: 10px 25px;\n  border-radius: 5px;\n  cursor: pointer;\n  font-size: 16px;\n  transition: background 0.3s ease;\n}\n\n.read-more:hover {\n  background: #764ba2;\n}\n\n.sidebar {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n\n.widget {\n  background: white;\n  padding: 25px;\n  border-radius: 10px;\n  box-shadow: 0 2px 10px rgba(0,0,0,0.1);\n}\n\n.widget h3 {\n  margin-bottom: 20px;\n  color: #2c3e50;\n}\n\n.widget ul {\n  list-style: none;\n}\n\n.widget li {\n  margin-bottom: 10px;\n}\n\n.widget a {\n  color: #667eea;\n  text-decoration: none;\n  transition: color 0.3s ease;\n}\n\n.widget a:hover {\n  color: #764ba2;\n}\n\n.newsletter input {\n  width: 100%;\n  padding: 12px;\n  border: 2px solid #ddd;\n  border-radius: 5px;\n  margin: 15px 0;\n  font-size: 16px;\n}\n\n.newsletter button {\n  width: 100%;\n  padding: 12px;\n  background: #667eea;\n  color: white;\n  border: none;\n  border-radius: 5px;\n  cursor: pointer;\n  font-size: 16px;\n  transition: background 0.3s ease;\n}\n\n.newsletter button:hover {\n  background: #764ba2;\n}\n\nfooter {\n  background: #2c3e50;\n  color: white;\n  text-align: center;\n  padding: 30px;\n  margin-top: 50px;\n}",
+      "js": ""
+    },
+    "createdAt": "2025-11-11T06:44:21.149Z",
+    "updatedAt": "2025-11-11T06:44:21.149Z"
   }
 ]

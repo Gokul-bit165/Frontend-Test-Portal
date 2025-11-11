@@ -1,15 +1,5 @@
 [
   {
-    "filename": "fullstack-thumb.png",
-    "originalName": "fullstack-thumb.png",
-    "relativePath": "courses/fullstack-thumb.png",
-    "url": "/assets/courses/fullstack-thumb.png",
-    "type": "image/png",
-    "size": 4783,
-    "category": "courses",
-    "uploadedAt": "2025-11-08T08:37:40.025Z"
-  },
-  {
     "filename": "html-css-thumb.png",
     "originalName": "html-css-thumb.png",
     "relativePath": "courses/html-css-thumb.png",
@@ -90,13 +80,13 @@
     "uploadedAt": "2025-11-08T08:45:30.209Z"
   },
   {
-    "filename": "avatar-1-1762835540238.png",
+    "filename": "avatar-1.png",
     "originalName": "avatar-1.png",
-    "relativePath": "images/avatar-1-1762835540238.png",
-    "url": "/assets/images/avatar-1-1762835540238.png",
+    "relativePath": "images/avatar-1.png",
+    "url": "/assets/images/avatar-1.png",
     "type": "image/png",
     "size": 138346,
     "category": "general",
-    "uploadedAt": "2025-11-11T04:32:20.250Z"
+    "uploadedAt": "2025-11-11T16:39:04.804Z"
   }
 ]

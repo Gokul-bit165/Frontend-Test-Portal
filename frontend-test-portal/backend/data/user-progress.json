@@ -40,10 +40,347 @@
           1
         ],
         "currentLevel": 2,
-        "totalPoints": 364
+        "totalPoints": 453,
+        "completedQuestions": [
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T06:56:01.818Z",
+            "finalScore": 89,
+            "passed": true,
+            "questionsSubmitted": 2,
+            "questionsPassed": 2,
+            "results": [
+              {
+                "questionId": "course-html-css-l1-q1",
+                "questionTitle": "Basic HTML Structure",
+                "submitted": true,
+                "passed": true,
+                "score": 90
+              },
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": true,
+                "passed": true,
+                "score": 88
+              }
+            ],
+            "feedback": "good"
+          }
+        ]
       }
     ],
-    "totalPoints": 364,
+    "totalPoints": 453,
     "achievements": []
+  },
+  {
+    "userId": "user-demo-student",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [
+          1,
+          2
+        ],
+        "currentLevel": 3,
+        "totalPoints": 383,
+        "completedQuestions": [
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T07:49:09.884Z",
+            "finalScore": 41,
+            "passed": false,
+            "questionsSubmitted": 1,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": true,
+                "passed": false,
+                "score": 82
+              },
+              {
+                "questionId": "course-html-css-l1-q2",
+                "questionTitle": "Text Formatting Elements",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
+          },
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T09:51:51.914Z",
+            "finalScore": 55,
+            "passed": false,
+            "questionsSubmitted": 2,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": true,
+                "passed": false,
+                "score": 50
+              },
+              {
+                "questionId": "course-html-css-l1-q2",
+                "questionTitle": "Text Formatting Elements",
+                "submitted": true,
+                "passed": false,
+                "score": 59
+              }
+            ],
+            "feedback": ""
+          },
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T09:59:04.566Z",
+            "finalScore": 0,
+            "passed": false,
+            "questionsSubmitted": 0,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              },
+              {
+                "questionId": "course-html-css-l1-q2",
+                "questionTitle": "Text Formatting Elements",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
+          },
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T09:59:12.579Z",
+            "finalScore": 0,
+            "passed": false,
+            "questionsSubmitted": 0,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              },
+              {
+                "questionId": "course-html-css-l1-q2",
+                "questionTitle": "Text Formatting Elements",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
+          },
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T09:59:30.909Z",
+            "finalScore": 0,
+            "passed": false,
+            "questionsSubmitted": 0,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "course-html-css-l1-q2",
+                "questionTitle": "Text Formatting Elements",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              },
+              {
+                "questionId": "html-css-l1-q2",
+                "questionTitle": "Product Card with Image",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
+          },
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T09:59:49.327Z",
+            "finalScore": 0,
+            "passed": false,
+            "questionsSubmitted": 0,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              },
+              {
+                "questionId": "course-html-css-l1-q5",
+                "questionTitle": "Basic HTML Table",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
+          },
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T10:11:03.544Z",
+            "finalScore": 89,
+            "passed": true,
+            "questionsSubmitted": 2,
+            "questionsPassed": 2,
+            "results": [
+              {
+                "questionId": "html-css-l1-q2",
+                "questionTitle": "Product Card with Image",
+                "submitted": true,
+                "passed": true,
+                "score": 88
+              },
+              {
+                "questionId": "course-html-css-l1-q3",
+                "questionTitle": "Lists in HTML",
+                "submitted": true,
+                "passed": true,
+                "score": 90
+              }
+            ],
+            "feedback": "good"
+          },
+          {
+            "level": 2,
+            "completedAt": "2025-11-11T10:40:47.135Z",
+            "finalScore": 0,
+            "passed": false,
+            "questionsSubmitted": 0,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "html-css-l2-q1",
+                "questionTitle": "Hero Section with Background",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              },
+              {
+                "questionId": "course-html-css-l2-q1",
+                "questionTitle": "CSS Basics - Text Styling",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
+          },
+          {
+            "level": 2,
+            "completedAt": "2025-11-11T15:31:54.540Z",
+            "finalScore": 98,
+            "passed": true,
+            "questionsSubmitted": 2,
+            "questionsPassed": 2,
+            "results": [
+              {
+                "questionId": "html-css-l2-q1",
+                "questionTitle": "Hero Section with Background",
+                "submitted": true,
+                "passed": true,
+                "score": 96
+              },
+              {
+                "questionId": "course-html-css-l2-q1",
+                "questionTitle": "CSS Basics - Text Styling",
+                "submitted": true,
+                "passed": true,
+                "score": 100
+              }
+            ],
+            "feedback": "good"
+          },
+          {
+            "level": 2,
+            "completedAt": "2025-11-11T15:42:30.094Z",
+            "finalScore": 100,
+            "passed": true,
+            "questionsSubmitted": 2,
+            "questionsPassed": 2,
+            "results": [
+              {
+                "questionId": "course-html-css-l2-q2",
+                "questionTitle": "CSS Box Model",
+                "submitted": true,
+                "passed": true,
+                "score": 100
+              },
+              {
+                "questionId": "course-html-css-l2-q4",
+                "questionTitle": "CSS Class and ID Selectors",
+                "submitted": true,
+                "passed": true,
+                "score": 100
+              }
+            ],
+            "feedback": ""
+          }
+        ]
+      }
+    ],
+    "totalPoints": 383,
+    "achievements": [],
+    "createdAt": "2025-11-11T07:49:10.425Z"
+  },
+  {
+    "userId": "user-admin-1",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [],
+        "currentLevel": 1,
+        "totalPoints": 50,
+        "completedQuestions": [
+          {
+            "level": 1,
+            "completedAt": "2025-11-11T07:56:20.179Z",
+            "finalScore": 50,
+            "passed": false,
+            "questionsSubmitted": 1,
+            "questionsPassed": 1,
+            "results": [
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              },
+              {
+                "questionId": "course-html-css-l1-q5",
+                "questionTitle": "Basic HTML Table",
+                "submitted": true,
+                "passed": true,
+                "score": 100
+              }
+            ],
+            "feedback": ""
+          }
+        ]
+      }
+    ],
+    "totalPoints": 50,
+    "achievements": [],
+    "createdAt": "2025-11-11T07:56:19.681Z"
   }
 ]

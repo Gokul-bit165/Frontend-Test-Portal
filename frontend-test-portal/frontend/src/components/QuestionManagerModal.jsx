@@ -33,7 +33,8 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
     blockCopy: false,
     blockPaste: false,
     forceFullscreen: false,
-    maxViolations: 3
+    maxViolations: 3,
+    timeLimit: 0 // in minutes, 0 = no limit
   });
   
   // Level settings
@@ -580,6 +581,32 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
                     className="px-4 py-2 border rounded-lg w-32"
                   />
                   <span className="ml-3 text-sm text-gray-600">violations allowed</span>
+                </div>
+
+                <div className="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+                  <label className="font-semibold text-gray-900 block mb-2">⏱️ Time Limit</label>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Set a time limit for the entire test (0 = no time limit)
+                  </p>
+                  <input
+                    type="number"
+                    min="0"
+                    max="180"
+                    value={restrictions.timeLimit}
+                    onChange={(e) => setRestrictions({...restrictions, timeLimit: parseInt(e.target.value) || 0})}
+                    className="px-4 py-2 border rounded-lg w-32"
+                  />
+                  <span className="ml-3 text-sm text-gray-600">minutes</span>
+                  {restrictions.timeLimit > 0 && (
+                    <div className="mt-2 text-sm font-semibold text-blue-600">
+                      Total time: {restrictions.timeLimit} minutes
+                    </div>
+                  )}
+                  {restrictions.timeLimit === 0 && (
+                    <div className="mt-2 text-sm text-gray-500">
+                      No time limit set
+                    </div>
+                  )}
                 </div>
               </div>
 

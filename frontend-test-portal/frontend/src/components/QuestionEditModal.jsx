@@ -13,6 +13,8 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
     tags: '',
     hints: '',
     isLocked: false,
+    assetImages: '',
+    assetReference: '',
     expectedSolutionHtml: '',
     expectedSolutionCss: '',
     expectedSolutionJs: ''
@@ -20,6 +22,10 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
 
   useEffect(() => {
     if (question) {
+      // Convert assets array to string paths
+      const imagePaths = question.assets?.images?.map(img => img.path || img).join('\n') || '';
+      const referencePath = question.assets?.reference || '';
+      
       setFormData({
         id: question.id || '',
         title: question.title || '',
@@ -32,6 +38,8 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
         tags: Array.isArray(question.tags) ? question.tags.join(', ') : '',
         hints: Array.isArray(question.hints) ? question.hints.join('\n') : '',
         isLocked: question.isLocked || false,
+        assetImages: imagePaths,
+        assetReference: referencePath,
         expectedSolutionHtml: question.expectedSolution?.html || '',
         expectedSolutionCss: question.expectedSolution?.css || '',
         expectedSolutionJs: question.expectedSolution?.js || ''
@@ -46,6 +54,21 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Convert asset paths to proper format
+    const imagePaths = formData.assetImages
+      .split('\n')
+      .map(path => path.trim())
+      .filter(path => path);
+    
+    const assetImages = imagePaths.map(path => {
+      const filename = path.split('/').pop();
+      return {
+        name: filename,
+        path: path,
+        description: `${filename} image`
+      };
+    });
     
     const questionData = {
       id: formData.id,
@@ -70,7 +93,10 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
         css: formData.expectedSolutionCss,
         js: formData.expectedSolutionJs
       },
-      assets: question?.assets || { images: [], reference: '' },
+      assets: {
+        images: assetImages,
+        reference: formData.assetReference.trim()
+      },
       prerequisite: question?.prerequisite || null,
       createdAt: question?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -220,6 +246,48 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
               rows="3"
               placeholder="Hint 1&#10;Hint 2&#10;Hint 3"
             />
+          </div>
+
+          {/* Assets Section */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <span>🖼️ Assets</span>
+              <span className="text-sm font-normal text-gray-500">(Images & Reference Screenshots)</span>
+            </h3>
+            
+            <div className="space-y-4 bg-blue-50 p-4 rounded-lg">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Image Asset Paths (one per line)
+                </label>
+                <textarea
+                  value={formData.assetImages}
+                  onChange={(e) => setFormData({ ...formData, assetImages: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg font-mono text-sm"
+                  rows="4"
+                  placeholder="/assets/images/avatar-1.png&#10;/assets/images/product-1.png&#10;/assets/images/hero-bg-1.jpg"
+                />
+                <p className="text-xs text-gray-600 mt-1">
+                  💡 Upload images in <strong>Asset Manager</strong>, then copy their paths here
+                </p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Reference Screenshot Path (expected output)
+                </label>
+                <input
+                  type="text"
+                  value={formData.assetReference}
+                  onChange={(e) => setFormData({ ...formData, assetReference: e.target.value })}
+                  className="w-full px-4 py-2 border rounded-lg font-mono text-sm"
+                  placeholder="/assets/references/html-css-l1-q1-ref.png"
+                />
+                <p className="text-xs text-gray-600 mt-1">
+                  📸 Screenshot showing what the final result should look like
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Expected Solution */}

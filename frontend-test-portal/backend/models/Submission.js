@@ -59,6 +59,10 @@ class SubmissionModel {
 
   // Update submission with evaluation result
   static async updateEvaluation(id, evaluationData) {
+    // Extract screenshot paths from evaluation result
+    const userScreenshot = evaluationData.pixel?.screenshots?.candidate || null;
+    const expectedScreenshot = evaluationData.pixel?.screenshots?.expected || null;
+    
     await query(
       `UPDATE submissions SET
        status = ?,
@@ -68,7 +72,9 @@ class SubmissionModel {
        content_score = ?,
        final_score = ?,
        passed = ?,
-       evaluation_result = ?
+       evaluation_result = ?,
+       user_screenshot = ?,
+       expected_screenshot = ?
        WHERE id = ?`,
       [
         evaluationData.passed ? 'passed' : 'failed',
@@ -78,6 +84,8 @@ class SubmissionModel {
         evaluationData.finalScore || 0,
         evaluationData.passed || false,
         JSON.stringify(evaluationData),
+        userScreenshot,
+        expectedScreenshot,
         id
       ]
     );
@@ -119,6 +127,9 @@ class SubmissionModel {
       status: submission.status,
       submittedAt: submission.submitted_at,
       evaluatedAt: submission.evaluated_at,
+      user_screenshot: submission.user_screenshot,
+      expected_screenshot: submission.expected_screenshot,
+      total_score: submission.final_score,
       result: submission.evaluation_result ? JSON.parse(submission.evaluation_result) : {
         structureScore: submission.structure_score,
         visualScore: submission.visual_score,

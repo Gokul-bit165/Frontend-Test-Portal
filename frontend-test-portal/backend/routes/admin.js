@@ -10,6 +10,11 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 
+// Import models for MySQL support
+const SubmissionModel = require('../models/Submission');
+const UserModel = require('../models/User');
+const { USE_JSON } = require('../database/connection');
+
 const usersPath = path.join(__dirname, '../data/users.json');
 const challengesPath = path.join(__dirname, '../data/challenges.json');
 const submissionsPath = path.join(__dirname, '../data/submissions.json');
@@ -184,11 +189,18 @@ router.delete('/challenges/:id', (req, res) => {
  * GET /api/admin/submissions
  * Get all submissions with results
  */
-router.get('/submissions', (req, res) => {
+router.get('/submissions', async (req, res) => {
   try {
-    const submissions = getSubmissions();
-    res.json(submissions);
+    if (USE_JSON) {
+      const submissions = getSubmissions();
+      res.json(submissions);
+    } else {
+      // Fetch from MySQL with user and challenge details
+      const submissions = await SubmissionModel.findAll();
+      res.json(submissions);
+    }
   } catch (error) {
+    console.error('Failed to fetch submissions:', error);
     res.status(500).json({ error: 'Failed to fetch submissions' });
   }
 });
@@ -240,17 +252,27 @@ router.post('/evaluate/:submissionId', async (req, res) => {
  * DELETE /api/admin/submissions/:id
  * Delete a submission
  */
-router.delete('/submissions/:id', (req, res) => {
+router.delete('/submissions/:id', async (req, res) => {
   try {
-    const submissions = getSubmissions();
-    const filtered = submissions.filter(s => s.id !== req.params.id);
-    
-    if (filtered.length === submissions.length) {
-      return res.status(404).json({ error: 'Submission not found' });
+    if (USE_JSON) {
+      const submissions = getSubmissions();
+      const filtered = submissions.filter(s => s.id !== req.params.id);
+      
+      if (filtered.length === submissions.length) {
+        return res.status(404).json({ error: 'Submission not found' });
+      }
+      
+      // Save updated submissions
+      fs.writeFileSync(submissionsPath, JSON.stringify(filtered, null, 2));
+    } else {
+      // Delete from MySQL
+      const submission = await SubmissionModel.findById(req.params.id);
+      if (!submission) {
+        return res.status(404).json({ error: 'Submission not found' });
+      }
+      
+      await SubmissionModel.delete(req.params.id);
     }
-    
-    // Save updated submissions
-    fs.writeFileSync(submissionsPath, JSON.stringify(filtered, null, 2));
     
     // Optional: Delete associated screenshot files
     const screenshotDir = path.join(__dirname, '../screenshots');

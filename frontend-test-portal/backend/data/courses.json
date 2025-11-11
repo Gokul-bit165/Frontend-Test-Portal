@@ -20,13 +20,29 @@
     "levelSettings": {
       "1": {
         "randomizeCount": 2
+      },
+      "2": {
+        "randomizeCount": 2
+      },
+      "3": {
+        "randomizeCount": 2
+      },
+      "4": {
+        "randomizeCount": 2
+      },
+      "5": {
+        "randomizeCount": 2
+      },
+      "6": {
+        "randomizeCount": 2
       }
     },
     "restrictions": {
-      "blockCopy": true,
-      "blockPaste": true,
-      "forceFullscreen": true,
-      "maxViolations": 3
+      "blockCopy": false,
+      "blockPaste": false,
+      "forceFullscreen": false,
+      "maxViolations": 3,
+      "timeLimit": 5
     }
   },
   {

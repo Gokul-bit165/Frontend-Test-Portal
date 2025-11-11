@@ -1052,7 +1052,7 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
 router.put('/:courseId/restrictions', (req, res) => {
   try {
     const { courseId } = req.params;
-    const { blockCopy, blockPaste, forceFullscreen, maxViolations } = req.body;
+    const { blockCopy, blockPaste, forceFullscreen, maxViolations, timeLimit } = req.body;
     
     const courses = getCourses();
     const courseIndex = courses.findIndex(c => c.id === courseId);
@@ -1066,7 +1066,8 @@ router.put('/:courseId/restrictions', (req, res) => {
       blockCopy: blockCopy !== undefined ? blockCopy : true,
       blockPaste: blockPaste !== undefined ? blockPaste : true,
       forceFullscreen: forceFullscreen !== undefined ? forceFullscreen : true,
-      maxViolations: maxViolations || 3
+      maxViolations: maxViolations || 3,
+      timeLimit: timeLimit !== undefined ? timeLimit : 0 // in minutes, 0 = no limit
     };
     
     fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
@@ -1100,7 +1101,8 @@ router.get('/:courseId/restrictions', (req, res) => {
       blockCopy: true,
       blockPaste: true,
       forceFullscreen: true,
-      maxViolations: 3
+      maxViolations: 3,
+      timeLimit: 0
     };
     
     res.json(restrictions);

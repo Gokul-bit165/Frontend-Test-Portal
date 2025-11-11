@@ -94,7 +94,7 @@ router.get('/', async (req, res) => {
  */
 router.get('/level-questions', (req, res) => {
   try {
-    const { userId, courseId, level } = req.query;
+    const { userId, courseId, level, forceNew } = req.query;
     
     if (!userId || !courseId || !level) {
       return res.status(400).json({ error: 'Missing required parameters' });
@@ -117,11 +117,16 @@ router.get('/level-questions', (req, res) => {
       return res.status(404).json({ error: 'No questions found for this level' });
     }
 
-    // If no assignment exists, create one with random questions
-    if (!userAssignment) {
-      // Select 2 random questions
+    // If forceNew=true or no assignment exists, create a new random assignment
+    if (forceNew === 'true' || !userAssignment) {
+      // Select 2 random questions (or all if less than 2)
       const shuffled = [...levelQuestions].sort(() => 0.5 - Math.random());
       const selectedQuestions = shuffled.slice(0, Math.min(2, shuffled.length));
+      
+      // Remove old assignment if it exists and forceNew is true
+      if (forceNew === 'true' && userAssignment) {
+        assignments = assignments.filter(a => a.key !== assignmentKey);
+      }
       
       userAssignment = {
         key: assignmentKey,
@@ -134,7 +139,12 @@ router.get('/level-questions', (req, res) => {
         totalAvailable: levelQuestions.length
       };
       
-      assignments.push(userAssignment);
+      // Add or update assignment
+      if (forceNew === 'true') {
+        assignments.push(userAssignment);
+      } else {
+        assignments.push(userAssignment);
+      }
       saveAssignments(assignments);
     }
 

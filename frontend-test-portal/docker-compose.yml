@@ -15,7 +15,11 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=5000
-      - USE_JSON=true
+      - DB_HOST=${DB_HOST:-host.docker.internal}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME:-frontend_test_portal}
+      - USE_JSON=${USE_JSON:-false}
     restart: unless-stopped
     networks:
       - test-portal-network
