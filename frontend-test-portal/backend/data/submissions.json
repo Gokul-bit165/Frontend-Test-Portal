@@ -8785,5 +8785,707 @@
         ]
       }
     }
+  },
+  {
+    "id": "25d422a6-57c3-4c70-89e8-7f80287fafc9",
+    "challengeId": "course-html-css-l1-q2",
+    "candidateName": "user-demo-student",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n  <title>Product Card</title>\r\n  <!-- Required link tag -->\r\n  <link rel=\"stylesheet\" href=\"styles.css\">\r\n  <style>\r\n    body {\r\n      background-color: #f8f8f8;\r\n      display: flex;\r\n      justify-content: center;\r\n      align-items: center;\r\n      height: 100vh;\r\n      margin: 0;\r\n      font-family: Arial, sans-serif;\r\n    }\r\n\r\n    .product-card {\r\n      display: inline-block;\r\n      width: 300px;\r\n      background-color: #fff;\r\n      border: 1px solid #ddd;\r\n      border-radius: 8px;\r\n      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);\r\n      text-align: center;\r\n      padding: 20px;\r\n    }\r\n\r\n    .product-card img {\r\n      width: 100%;\r\n      border-radius: 8px;\r\n      margin-bottom: 15px;\r\n    }\r\n\r\n    .product-card h2 {\r\n      font-size: 1.4em;\r\n      margin: 0 0 10px;\r\n      font-weight: bold;\r\n      color: #000;\r\n    }\r\n\r\n    .product-card p {\r\n      font-size: 0.95em;\r\n      color: #333;\r\n      margin: 0 0 10px;\r\n    }\r\n\r\n    .product-card span {\r\n      display: block;\r\n      color: #28a745;\r\n      font-weight: bold;\r\n      font-size: 1em;\r\n    }\r\n  </style>\r\n</head>\r\n<body>\r\n  <div class=\"product-card\">\r\n    <img src=\"/assets/images/product.png\" alt=\"Wireless Headphones\">\r\n    <h2>Wireless Headphones</h2>\r\n    <p>High-quality wireless sound with long battery life.</p>\r\n    <span>$59.99</span>\r\n  </div>\r\n</body>\r\n</html>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-11T06:09:40.376Z",
+    "evaluatedAt": "2025-11-11T06:09:43.367Z",
+    "result": {
+      "submissionId": "25d422a6-57c3-4c70-89e8-7f80287fafc9",
+      "timestamp": "2025-11-11T06:09:41.609Z",
+      "contentScore": 65,
+      "structureScore": 88,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 82,
+      "passed": false,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "content": {
+        "score": 65,
+        "passed": false,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 3/3 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 100,
+            "weight": 20,
+            "details": "✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Found 0/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/7 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Matched 1/1 class names"
+          }
+        ],
+        "feedback": "Overall Score: 65%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✓ Required text content: 100%\n   Found 3/3 required texts. All texts found!\n✓ Required HTML elements: 100%\n   ✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)\n✗ Required images: 0%\n   Found 0/1 required images\n✗ Required CSS styles: 0%\n   Found 0/7 required CSS properties\n✓ CSS class names: 100%\n   Matched 1/1 class names\n\n⚠️ 2 requirement(s) need attention",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "wireless headphones",
+              "high-quality wireless sound with long battery life.",
+              "$59.99"
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "link": 1,
+              "div": 1,
+              "img": 1,
+              "h2": 1,
+              "p": 1,
+              "span": 1
+            },
+            "weight": 20
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "required": [
+              {
+                "src": "https://via.placeholder.com/200",
+                "alt": "Product"
+              }
+            ],
+            "weight": 15
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "required": [
+              "border-radius",
+              "box-shadow",
+              "width",
+              "padding",
+              "display",
+              "color",
+              "font"
+            ],
+            "weight": 20
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "required": [
+              "product-card"
+            ],
+            "weight": 15
+          }
+        ]
+      },
+      "structure": {
+        "score": 88,
+        "passed": true,
+        "rolesFound": [
+          {
+            "role": "productImage",
+            "confidence": "high",
+            "element": {
+              "tag": "img",
+              "classes": "",
+              "text": ""
+            },
+            "matches": {
+              "tag": "img",
+              "src": "/assets/images/product.png",
+              "alt": "Wireless Headphones"
+            }
+          },
+          {
+            "role": "productTitle",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "product-card",
+              "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "product-card",
+              "text": "Wireless Headphones\n    High-quality wireless soun"
+            }
+          },
+          {
+            "role": "productPrice",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "product-card",
+              "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+            },
+            "matches": {
+              "tag": "div",
+              "text": "Wireless Headphones\n    High-quality wireless soun"
+            }
+          }
+        ],
+        "rolesPartial": [
+          {
+            "role": "productButton",
+            "confidence": "medium",
+            "element": {
+              "tag": "html",
+              "classes": "",
+              "text": "Product Card\n  \n  \n  \n    body {\n      background-color: #f8f8f8;\n      display: flex;\n      justify"
+            },
+            "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+          }
+        ],
+        "rolesMissing": [],
+        "totalRoles": 4,
+        "foundRoles": 3.5
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 6488,
+        "totalPixels": 921600,
+        "diffPercentage": "0.70",
+        "screenshots": {
+          "candidate": "/screenshots/25d422a6-57c3-4c70-89e8-7f80287fafc9-candidate.png",
+          "expected": "/screenshots/25d422a6-57c3-4c70-89e8-7f80287fafc9-expected.png",
+          "diff": "/screenshots/25d422a6-57c3-4c70-89e8-7f80287fafc9-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "🌟 Great job! You're on the right track!",
+          "Your design looks good with just a few small improvements needed."
+        ],
+        "improvements": [
+          "Refine your semantic HTML structure with more descriptive classes"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [
+              {
+                "role": "productImage",
+                "confidence": "high",
+                "element": {
+                  "tag": "img",
+                  "classes": "",
+                  "text": ""
+                },
+                "matches": {
+                  "tag": "img",
+                  "src": "/assets/images/product.png",
+                  "alt": "Wireless Headphones"
+                }
+              },
+              {
+                "role": "productTitle",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "product-card",
+                  "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "product-card",
+                  "text": "Wireless Headphones\n    High-quality wireless soun"
+                }
+              },
+              {
+                "role": "productPrice",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "product-card",
+                  "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+                },
+                "matches": {
+                  "tag": "div",
+                  "text": "Wireless Headphones\n    High-quality wireless soun"
+                }
+              }
+            ],
+            "rolesMissing": [],
+            "rolesPartial": [
+              {
+                "role": "productButton",
+                "confidence": "medium",
+                "element": {
+                  "tag": "html",
+                  "classes": "",
+                  "text": "Product Card\n  \n  \n  \n    body {\n      background-color: #f8f8f8;\n      display: flex;\n      justify"
+                },
+                "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+              }
+            ],
+            "totalRoles": 4,
+            "foundRoles": 3.5,
+            "score": 88
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [
+            {
+              "icon": "✅",
+              "message": "Product Image detected successfully",
+              "details": "Found as <img>"
+            },
+            {
+              "icon": "✅",
+              "message": "Product Title detected successfully",
+              "details": "Found as <div> with class \"product-card\""
+            },
+            {
+              "icon": "✅",
+              "message": "Product Price detected successfully",
+              "details": "Found as <div> with class \"product-card\""
+            }
+          ],
+          "minorDifferences": [
+            {
+              "icon": "⚠️",
+              "message": "Product Button partially matches",
+              "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+            }
+          ],
+          "missing": []
+        },
+        "contentValidation": "Overall Score: 65%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✓ Required text content: 100%\n   Found 3/3 required texts. All texts found!\n✓ Required HTML elements: 100%\n   ✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)\n✗ Required images: 0%\n   Found 0/1 required images\n✗ Required CSS styles: 0%\n   Found 0/7 required CSS properties\n✓ CSS class names: 100%\n   Matched 1/1 class names\n\n⚠️ 2 requirement(s) need attention",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 3/3 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 100,
+            "weight": 20,
+            "details": "✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Found 0/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/7 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Matched 1/1 class names"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "d36e01ce-13a8-4038-b999-ddea84d1ec40",
+    "challengeId": "course-html-css-l1-q2",
+    "candidateName": "user-demo-student",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n  <title>Product Card</title>\r\n  <!-- required link tag -->\r\n  <link rel=\"stylesheet\" href=\"styles.css\">\r\n  <style>\r\n    body {\r\n      background-color: #f8f8f8;\r\n      display: flex;\r\n      justify-content: center;\r\n      align-items: center;\r\n      height: 100vh;\r\n      margin: 0;\r\n      font-family: Arial, sans-serif;\r\n      text-align: center;\r\n    }\r\n\r\n    .product-card {\r\n      width: 300px;\r\n      background-color: #ffffff;\r\n      border: 1px solid #ddd;\r\n      border-radius: 8px;\r\n      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);\r\n      padding: 20px;\r\n      text-align: center;\r\n      display: inline-block;\r\n    }\r\n\r\n    .product-card img {\r\n      width: 100%;\r\n      border-radius: 8px;\r\n      margin-bottom: 15px;\r\n    }\r\n\r\n    .product-card h2 {\r\n      font-size: 1.4em;\r\n      margin: 0 0 10px;\r\n      font-weight: bold;\r\n      color: #000;\r\n    }\r\n\r\n    .product-card p {\r\n      font-size: 0.95em;\r\n      color: #333;\r\n      margin: 0 0 10px;\r\n    }\r\n\r\n    .product-card span {\r\n      display: block;\r\n      color: #28a745;\r\n      font-weight: bold;\r\n      font-size: 1em;\r\n    }\r\n  </style>\r\n</head>\r\n<body>\r\n  <div class=\"product-card\">\r\n    <img src=\"/assets/images/product.jpg\" alt=\"Wireless Headphones\">\r\n    <h2>Wireless Headphones</h2>\r\n    <p>High-quality wireless sound with long battery life.</p>\r\n    <span>$59.99</span>\r\n  </div>\r\n</body>\r\n</html>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-11T06:12:50.861Z",
+    "evaluatedAt": "2025-11-11T06:12:53.598Z",
+    "result": {
+      "submissionId": "d36e01ce-13a8-4038-b999-ddea84d1ec40",
+      "timestamp": "2025-11-11T06:12:51.900Z",
+      "contentScore": 65,
+      "structureScore": 88,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 82,
+      "passed": false,
+      "thresholds": {
+        "structure": 70,
+        "visual": 80,
+        "overall": 75
+      },
+      "content": {
+        "score": 65,
+        "passed": false,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 3/3 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 100,
+            "weight": 20,
+            "details": "✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Found 0/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/7 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Matched 1/1 class names"
+          }
+        ],
+        "feedback": "Overall Score: 65%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✓ Required text content: 100%\n   Found 3/3 required texts. All texts found!\n✓ Required HTML elements: 100%\n   ✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)\n✗ Required images: 0%\n   Found 0/1 required images\n✗ Required CSS styles: 0%\n   Found 0/7 required CSS properties\n✓ CSS class names: 100%\n   Matched 1/1 class names\n\n⚠️ 2 requirement(s) need attention",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "wireless headphones",
+              "high-quality wireless sound with long battery life.",
+              "$59.99"
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "link": 1,
+              "div": 1,
+              "img": 1,
+              "h2": 1,
+              "p": 1,
+              "span": 1
+            },
+            "weight": 20
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "required": [
+              {
+                "src": "https://via.placeholder.com/200",
+                "alt": "Product"
+              }
+            ],
+            "weight": 15
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "required": [
+              "border-radius",
+              "box-shadow",
+              "width",
+              "padding",
+              "display",
+              "color",
+              "font"
+            ],
+            "weight": 20
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "required": [
+              "product-card"
+            ],
+            "weight": 15
+          }
+        ]
+      },
+      "structure": {
+        "score": 88,
+        "passed": true,
+        "rolesFound": [
+          {
+            "role": "productImage",
+            "confidence": "high",
+            "element": {
+              "tag": "img",
+              "classes": "",
+              "text": ""
+            },
+            "matches": {
+              "tag": "img",
+              "src": "/assets/images/product.jpg",
+              "alt": "Wireless Headphones"
+            }
+          },
+          {
+            "role": "productTitle",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "product-card",
+              "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "product-card",
+              "text": "Wireless Headphones\n    High-quality wireless soun"
+            }
+          },
+          {
+            "role": "productPrice",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "product-card",
+              "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+            },
+            "matches": {
+              "tag": "div",
+              "text": "Wireless Headphones\n    High-quality wireless soun"
+            }
+          }
+        ],
+        "rolesPartial": [
+          {
+            "role": "productButton",
+            "confidence": "medium",
+            "element": {
+              "tag": "html",
+              "classes": "",
+              "text": "Product Card\n  \n  \n  \n    body {\n      background-color: #f8f8f8;\n      display: flex;\n      justify"
+            },
+            "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+          }
+        ],
+        "rolesMissing": [],
+        "totalRoles": 4,
+        "foundRoles": 3.5
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 6488,
+        "totalPixels": 921600,
+        "diffPercentage": "0.70",
+        "screenshots": {
+          "candidate": "/screenshots/d36e01ce-13a8-4038-b999-ddea84d1ec40-candidate.png",
+          "expected": "/screenshots/d36e01ce-13a8-4038-b999-ddea84d1ec40-expected.png",
+          "diff": "/screenshots/d36e01ce-13a8-4038-b999-ddea84d1ec40-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "🌟 Great job! You're on the right track!",
+          "Your design looks good with just a few small improvements needed."
+        ],
+        "improvements": [
+          "Refine your semantic HTML structure with more descriptive classes"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [
+              {
+                "role": "productImage",
+                "confidence": "high",
+                "element": {
+                  "tag": "img",
+                  "classes": "",
+                  "text": ""
+                },
+                "matches": {
+                  "tag": "img",
+                  "src": "/assets/images/product.jpg",
+                  "alt": "Wireless Headphones"
+                }
+              },
+              {
+                "role": "productTitle",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "product-card",
+                  "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "product-card",
+                  "text": "Wireless Headphones\n    High-quality wireless soun"
+                }
+              },
+              {
+                "role": "productPrice",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "product-card",
+                  "text": "Wireless Headphones\n    High-quality wireless sound with long battery life.\n    $59.99"
+                },
+                "matches": {
+                  "tag": "div",
+                  "text": "Wireless Headphones\n    High-quality wireless soun"
+                }
+              }
+            ],
+            "rolesMissing": [],
+            "rolesPartial": [
+              {
+                "role": "productButton",
+                "confidence": "medium",
+                "element": {
+                  "tag": "html",
+                  "classes": "",
+                  "text": "Product Card\n  \n  \n  \n    body {\n      background-color: #f8f8f8;\n      display: flex;\n      justify"
+                },
+                "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+              }
+            ],
+            "totalRoles": 4,
+            "foundRoles": 3.5,
+            "score": 88
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [
+            {
+              "icon": "✅",
+              "message": "Product Image detected successfully",
+              "details": "Found as <img>"
+            },
+            {
+              "icon": "✅",
+              "message": "Product Title detected successfully",
+              "details": "Found as <div> with class \"product-card\""
+            },
+            {
+              "icon": "✅",
+              "message": "Product Price detected successfully",
+              "details": "Found as <div> with class \"product-card\""
+            }
+          ],
+          "minorDifferences": [
+            {
+              "icon": "⚠️",
+              "message": "Product Button partially matches",
+              "suggestion": "Consider adding a class like \"button\". Try using a more semantic tag like <button>"
+            }
+          ],
+          "missing": []
+        },
+        "contentValidation": "Overall Score: 65%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✓ Required text content: 100%\n   Found 3/3 required texts. All texts found!\n✓ Required HTML elements: 100%\n   ✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)\n✗ Required images: 0%\n   Found 0/1 required images\n✗ Required CSS styles: 0%\n   Found 0/7 required CSS properties\n✓ CSS class names: 100%\n   Matched 1/1 class names\n\n⚠️ 2 requirement(s) need attention",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 3/3 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 100,
+            "weight": 20,
+            "details": "✓ link: 1 (required: 1), ✓ div: 1 (required: 1), ✓ img: 1 (required: 1), ✓ h2: 1 (required: 1), ✓ p: 1 (required: 1), ✓ span: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": false,
+            "score": 0,
+            "weight": 15,
+            "details": "Found 0/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/7 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Matched 1/1 class names"
+          }
+        ]
+      }
+    }
   }
 ]
