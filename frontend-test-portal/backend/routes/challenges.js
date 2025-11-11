@@ -5,8 +5,26 @@
 
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 const ChallengeModel = require('../models/Challenge');
 const { query } = require('../database/connection');
+
+const challengesPath = path.join(__dirname, '../data/challenges-new.json');
+
+// Helper to load JSON files
+const loadJSON = (filePath) => {
+  try {
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      return JSON.parse(data);
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error loading ${filePath}:`, error.message);
+    return [];
+  }
+};
 
 /**
  * GET /api/challenges
@@ -14,24 +32,31 @@ const { query } = require('../database/connection');
  */
 router.get('/', async (req, res) => {
   try {
-    const challenges = await ChallengeModel.findAll();
+    let challenges;
+    try {
+      challenges = await ChallengeModel.findAll();
+    } catch (dbError) {
+      console.log('Database error, using JSON file:', dbError.message);
+      challenges = loadJSON(challengesPath);
+    }
     
-    // Remove expected solutions for candidate view and convert snake_case
+    // Remove expected solutions for candidate view
     const publicChallenges = challenges.map(challenge => ({
       id: challenge.id,
       title: challenge.title,
       difficulty: challenge.difficulty,
       description: challenge.description,
       instructions: challenge.instructions,
-      tags: JSON.parse(challenge.tags || '[]'),
-      timeLimit: challenge.time_limit,
-      passingThreshold: JSON.parse(challenge.passing_threshold || '{}'),
-      courseId: challenge.course_id,
+      tags: challenge.tags || [],
+      timeLimit: challenge.timeLimit || challenge.time_limit,
+      passingThreshold: challenge.passingThreshold || {},
+      courseId: challenge.courseId || challenge.course_id,
       level: challenge.level
     }));
     
     res.json(publicChallenges);
   } catch (error) {
+    console.error('Error fetching challenges:', error);
     res.status(500).json({ error: 'Failed to fetch challenges' });
   }
 });

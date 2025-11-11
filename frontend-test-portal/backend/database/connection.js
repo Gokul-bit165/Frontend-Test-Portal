@@ -1,9 +1,13 @@
 /**
  * MySQL Database Configuration
  * Connection pool for database operations
+ * Falls back to JSON files if MySQL is not available
  */
 
 const mysql = require('mysql2/promise');
+
+// Check if we should use JSON files instead of MySQL
+const USE_JSON = process.env.USE_JSON === 'true' || !process.env.DB_HOST;
 
 // Database configuration
 const dbConfig = {
@@ -21,15 +25,19 @@ const dbConfig = {
 // Create connection pool
 const pool = mysql.createPool(dbConfig);
 
+let isConnected = false;
+
 // Test connection
 pool.getConnection()
   .then(connection => {
     console.log('✅ MySQL Database connected successfully');
+    isConnected = true;
     connection.release();
   })
   .catch(err => {
     console.error('❌ MySQL connection error:', err.message);
-    console.error('Please ensure MySQL is running and database is created');
+    console.log('📁 Using JSON file storage as fallback');
+    isConnected = false;
   });
 
 // Helper function to execute queries
@@ -69,5 +77,7 @@ module.exports = {
   pool,
   query,
   queryOne,
-  transaction
+  transaction,
+  isConnected: () => isConnected,
+  USE_JSON
 };

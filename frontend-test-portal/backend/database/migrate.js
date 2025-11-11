@@ -295,11 +295,11 @@ async function migrateAssets() {
        path = VALUES(path),
        url = VALUES(url)`,
       [
-        asset.filename,
-        asset.originalName || asset.filename,
-        asset.path,
-        asset.url,
-        asset.type,
+        asset.filename || '',
+        asset.originalName || asset.filename || '',
+        asset.relativePath || asset.path || '',
+        asset.url || '',
+        asset.type || 'application/octet-stream',
         asset.size || 0,
         asset.category || 'general',
         formatDate(asset.uploadedAt) || formatDate(new Date())

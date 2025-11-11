@@ -82,12 +82,6 @@ export default function CourseManager() {
                 ← Back to Dashboard
               </button>
               <button
-                onClick={() => navigate('/admin/challenges')}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-              >
-                Old Challenge Manager
-              </button>
-              <button
                 onClick={handleLogout}
                 className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
               >

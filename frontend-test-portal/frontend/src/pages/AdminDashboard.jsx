@@ -86,12 +86,6 @@ export default function AdminDashboard() {
               👥 Manage Users
             </button>
             <button
-              onClick={() => navigate('/admin/challenges')}
-              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              Old Challenges
-            </button>
-            <button
               onClick={handleLogout}
               className="btn-secondary"
             >

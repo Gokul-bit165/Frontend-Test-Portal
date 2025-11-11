@@ -30,6 +30,75 @@ export default function LevelChallengeNew() {
     }
   }, [courseId, level]);
 
+  // Exam restriction state
+  const [violations, setViolations] = useState(0);
+  const [showViolationWarning, setShowViolationWarning] = useState(false);
+
+  useEffect(() => {
+    // Request fullscreen on mount
+    const requestFullscreen = async () => {
+      try {
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
+      } catch (err) {
+        console.warn('Could not enter fullscreen:', err.message);
+      }
+    };
+
+    requestFullscreen();
+
+    const onFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        // Exited fullscreen
+        handleViolation('exit-fullscreen');
+      }
+    };
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        handleViolation('visibilitychange');
+      }
+    };
+
+    const onKeyDown = (e) => {
+      // Catch Escape key
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        handleViolation('escape');
+      }
+      // Block common copy/paste shortcuts (Ctrl/Cmd+C/V/X)
+      if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'a'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        handleViolation('copy-paste-shortcut');
+      }
+    };
+
+    const onCopy = (e) => {
+      e.preventDefault();
+      handleViolation('copy');
+    };
+
+    const onPaste = (e) => {
+      e.preventDefault();
+      handleViolation('paste');
+    };
+
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.addEventListener('keydown', onKeyDown, true);
+    window.addEventListener('copy', onCopy);
+    window.addEventListener('paste', onPaste);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener('keydown', onKeyDown, true);
+      window.removeEventListener('copy', onCopy);
+      window.removeEventListener('paste', onPaste);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (assignedQuestions.length > 0) {
       loadCurrentQuestion();
@@ -38,11 +107,12 @@ export default function LevelChallengeNew() {
 
   const loadLevelQuestions = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/challenges/level-questions`, {
-        params: { userId, courseId, level: parseInt(level) }
+      // Use course-based endpoint which assigns 2 random questions per user/level
+      const response = await axios.get(`http://localhost:5000/api/courses/${courseId}/levels/${level}/questions`, {
+        params: { userId }
       });
-      
-      const questions = response.data.assignedQuestions || [];
+
+      const questions = Array.isArray(response.data) ? response.data : response.data.assignedQuestions || [];
       
       if (questions.length === 0) {
         setError('No questions assigned for this level');
@@ -70,6 +140,24 @@ export default function LevelChallengeNew() {
       setError('Failed to load questions: ' + error.message);
       setLoading(false);
     }
+  };
+
+  const handleViolation = (reason) => {
+    setViolations((v) => {
+      const next = v + 1;
+      // show temporary warning
+      setShowViolationWarning(true);
+      setTimeout(() => setShowViolationWarning(false), 3500);
+
+      if (next > 3) {
+        // Finish the test and exit
+        alert('Too many violations detected. The test will finish now.');
+        // Optionally send an event to server here (not implemented)
+        handleFinishLevel();
+      }
+
+      return next;
+    });
   };
 
   const loadCurrentQuestion = async () => {

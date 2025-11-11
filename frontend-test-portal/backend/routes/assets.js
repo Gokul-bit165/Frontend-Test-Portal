@@ -120,16 +120,18 @@ router.post('/upload', upload.single('asset'), (req, res) => {
     const metadata = getMetadata();
     
     // Determine the relative path for frontend access
+    // Store relative path (inside assets directory) without leading slash
     const relativePath = path.relative(
-      path.join(__dirname, '../assets'),
+      assetsDir,
       req.file.path
     ).replace(/\\/g, '/');
 
     const assetInfo = {
       filename: req.file.filename,
       originalName: req.file.originalname,
-      path: `/assets/${relativePath}`,
-      url: `http://localhost:5000/assets/${relativePath}`,
+      // relativePath is used server-side to locate file. url is what front-end should use.
+      relativePath: relativePath,
+      url: `/assets/${relativePath}`,
       type: req.file.mimetype,
       size: req.file.size,
       category: req.body.category || 'general',
@@ -153,18 +155,24 @@ router.post('/upload', upload.single('asset'), (req, res) => {
 router.delete('/:filename', (req, res) => {
   try {
     const metadata = getMetadata();
-    const assetIndex = metadata.findIndex(a => a.filename === req.params.filename);
+  const assetIndex = metadata.findIndex(a => a.filename === req.params.filename);
 
     if (assetIndex === -1) {
       return res.status(404).json({ error: 'Asset not found' });
     }
 
     const asset = metadata[assetIndex];
-    
-    // Delete the actual file
-    const filePath = path.join(__dirname, '..', asset.path);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+
+    // Delete the actual file using stored relativePath
+    try {
+      const rel = asset.relativePath || asset.path || '';
+      const filePath = path.join(assetsDir, rel);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    } catch (err) {
+      console.warn('Failed to delete asset file:', err.message);
+      // continue to remove metadata even if file delete fails
     }
 
     // Remove from metadata

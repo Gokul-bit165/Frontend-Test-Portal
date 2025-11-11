@@ -1,1 +1,102 @@
-[]
+[
+  {
+    "filename": "fullstack-thumb.png",
+    "originalName": "fullstack-thumb.png",
+    "relativePath": "courses/fullstack-thumb.png",
+    "url": "/assets/courses/fullstack-thumb.png",
+    "type": "image/png",
+    "size": 4783,
+    "category": "courses",
+    "uploadedAt": "2025-11-08T08:37:40.025Z"
+  },
+  {
+    "filename": "html-css-thumb.png",
+    "originalName": "html-css-thumb.png",
+    "relativePath": "courses/html-css-thumb.png",
+    "url": "/assets/courses/html-css-thumb.png",
+    "type": "image/png",
+    "size": 4201,
+    "category": "courses",
+    "uploadedAt": "2025-11-08T08:37:38.546Z"
+  },
+  {
+    "filename": "javascript-thumb.png",
+    "originalName": "javascript-thumb.png",
+    "relativePath": "courses/javascript-thumb.png",
+    "url": "/assets/courses/javascript-thumb.png",
+    "type": "image/png",
+    "size": 5561,
+    "category": "courses",
+    "uploadedAt": "2025-11-08T08:37:39.302Z"
+  },
+  {
+    "filename": "responsive-thumb.png",
+    "originalName": "responsive-thumb.png",
+    "relativePath": "courses/responsive-thumb.png",
+    "url": "/assets/courses/responsive-thumb.png",
+    "type": "image/png",
+    "size": 4285,
+    "category": "courses",
+    "uploadedAt": "2025-11-08T08:37:39.697Z"
+  },
+  {
+    "filename": "form-icon.png",
+    "originalName": "form-icon.png",
+    "relativePath": "images/form-icon.png",
+    "url": "/assets/images/form-icon.png",
+    "type": "image/png",
+    "size": 964,
+    "category": "images",
+    "uploadedAt": "2025-11-08T08:45:31.871Z"
+  },
+  {
+    "filename": "hero-bg-1.jpg",
+    "originalName": "hero-bg-1.jpg",
+    "relativePath": "images/hero-bg-1.jpg",
+    "url": "/assets/images/hero-bg-1.jpg",
+    "type": "image/jpeg",
+    "size": 32390,
+    "category": "images",
+    "uploadedAt": "2025-11-08T08:45:30.605Z"
+  },
+  {
+    "filename": "minus-icon.png",
+    "originalName": "minus-icon.png",
+    "relativePath": "images/minus-icon.png",
+    "url": "/assets/images/minus-icon.png",
+    "type": "image/png",
+    "size": 232,
+    "category": "images",
+    "uploadedAt": "2025-11-08T08:45:31.475Z"
+  },
+  {
+    "filename": "plus-icon.png",
+    "originalName": "plus-icon.png",
+    "relativePath": "images/plus-icon.png",
+    "url": "/assets/images/plus-icon.png",
+    "type": "image/png",
+    "size": 300,
+    "category": "images",
+    "uploadedAt": "2025-11-08T08:45:31.137Z"
+  },
+  {
+    "filename": "product-1.png",
+    "originalName": "product-1.png",
+    "relativePath": "images/product-1.png",
+    "url": "/assets/images/product-1.png",
+    "type": "image/png",
+    "size": 4165,
+    "category": "images",
+    "uploadedAt": "2025-11-08T08:45:30.209Z"
+  },
+  {
+    "filename": "avatar-1-1762835540238.png",
+    "originalName": "avatar-1.png",
+    "relativePath": "images/avatar-1-1762835540238.png",
+    "url": "/assets/images/avatar-1-1762835540238.png",
+    "type": "image/png",
+    "size": 138346,
+    "category": "general",
+    "uploadedAt": "2025-11-11T04:32:20.250Z"
+  }
+]

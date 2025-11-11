@@ -50,6 +50,20 @@ export const deleteQuestion = (questionId) => api.delete(`/courses/questions/${q
 export const bulkUploadQuestions = (courseId, questions) => api.post(`/courses/${courseId}/questions/bulk`, { questions });
 export const getRandomQuestions = (courseId, level, count = 2) => api.get(`/courses/${courseId}/levels/${level}/randomize?count=${count}`);
 
+// Level-specific question bank management
+export const downloadLevelTemplate = (courseId, level) => 
+  api.get(`/courses/${courseId}/levels/${level}/template`, { responseType: 'blob' });
+export const uploadLevelQuestionBank = (courseId, level, questions, randomizeCount) =>
+  api.post(`/courses/${courseId}/levels/${level}/questions/bulk`, { questions, randomizeCount });
+
+// Course restrictions management
+export const updateCourseRestrictions = (courseId, restrictions) =>
+  api.put(`/courses/${courseId}/restrictions`, restrictions);
+export const getCourseRestrictions = (courseId) =>
+  api.get(`/courses/${courseId}/restrictions`);
+export const getLevelSettings = (courseId) =>
+  api.get(`/courses/${courseId}/level-settings`);
+
 // Submissions
 export const submitSolution = (data) => api.post('/submissions', data);
 export const getSubmission = (id) => api.get(`/submissions/${id}`);

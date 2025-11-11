@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import QuestionManagerModal from '../components/QuestionManagerModal';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -27,6 +28,10 @@ export default function AdminDashboard() {
   const [courses, setCourses] = useState([]);
   const [editingCourse, setEditingCourse] = useState(null);
   const [showCourseModal, setShowCourseModal] = useState(false);
+  
+  // Question Manager
+  const [showQuestionManager, setShowQuestionManager] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
   // Challenges data
   const [challenges, setChallenges] = useState([]);
@@ -301,7 +306,6 @@ export default function AdminDashboard() {
               { id: 'overview', label: '📊 Overview', icon: '📊' },
               { id: 'users', label: '👥 Users', icon: '👥' },
               { id: 'courses', label: '📚 Courses', icon: '📚' },
-              { id: 'challenges', label: '🎯 Challenges', icon: '🎯' },
               { id: 'submissions', label: '📝 Submissions', icon: '📝' },
               { id: 'progress', label: '📈 Progress', icon: '📈' },
               { id: 'assets', label: '📁 Assets', icon: '📁' }
@@ -335,7 +339,7 @@ export default function AdminDashboard() {
             {activeTab === 'overview' && (
               <div>
                 <h2 className="text-2xl font-bold mb-6">Platform Overview</h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                   <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
                     <div className="text-sm opacity-90 mb-2">Total Users</div>
                     <div className="text-4xl font-bold">{stats.totalUsers}</div>
@@ -345,11 +349,6 @@ export default function AdminDashboard() {
                     <div className="text-sm opacity-90 mb-2">Total Courses</div>
                     <div className="text-4xl font-bold">{stats.totalCourses}</div>
                     <div className="mt-2 text-xs opacity-75">Available courses</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-                    <div className="text-sm opacity-90 mb-2">Total Challenges</div>
-                    <div className="text-4xl font-bold">{stats.totalChallenges}</div>
-                    <div className="mt-2 text-xs opacity-75">Active challenges</div>
                   </div>
                   <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
                     <div className="text-sm opacity-90 mb-2">Submissions</div>
@@ -361,7 +360,7 @@ export default function AdminDashboard() {
                 {/* Quick Actions */}
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
                   <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <button
                       onClick={() => {
                         setEditingCourse(null);
@@ -371,16 +370,6 @@ export default function AdminDashboard() {
                     >
                       <div className="text-3xl mb-2">➕</div>
                       <div className="font-semibold">Add Course</div>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingChallenge(null);
-                        setShowChallengeModal(true);
-                      }}
-                      className="p-4 border-2 border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
-                    >
-                      <div className="text-3xl mb-2">🎯</div>
-                      <div className="font-semibold">Add Challenge</div>
                     </button>
                     <button
                       onClick={() => setActiveTab('users')}
@@ -498,86 +487,37 @@ export default function AdminDashboard() {
                           <span>{course.totalLevels || 0} Levels</span>
                           <span>{course.difficulty || 'N/A'}</span>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col gap-2">
                           <button
                             onClick={() => {
-                              setEditingCourse(course);
-                              setShowCourseModal(true);
+                              setSelectedCourse(course);
+                              setShowQuestionManager(true);
                             }}
-                            className="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
+                            className="w-full px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
                           >
-                            Edit
+                            📝 Manage Questions
                           </button>
-                          <button
-                            onClick={() => handleDeleteCourse(course.id)}
-                            className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
-                          >
-                            Delete
-                          </button>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => {
+                                setEditingCourse(course);
+                                setShowCourseModal(true);
+                              }}
+                              className="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
+                            >
+                              ✏️ Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCourse(course.id)}
+                              className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-            )}
-
-            {/* Challenges Tab */}
-            {activeTab === 'challenges' && (
-              <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold">Challenges Management</h2>
-                  <button
-                    onClick={() => {
-                      setEditingChallenge(null);
-                      setShowChallengeModal(true);
-                    }}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                  >
-                    + Add New Challenge
-                  </button>
-                </div>
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Title</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Course</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Level</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Difficulty</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                      {challenges.map(challenge => (
-                        <tr key={challenge.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 text-sm font-mono">{challenge.id}</td>
-                          <td className="px-6 py-4 text-sm font-semibold">{challenge.title}</td>
-                          <td className="px-6 py-4 text-sm">{challenge.courseId}</td>
-                          <td className="px-6 py-4 text-sm">{challenge.level || 'N/A'}</td>
-                          <td className="px-6 py-4 text-sm">{challenge.difficulty || 'N/A'}</td>
-                          <td className="px-6 py-4 text-right space-x-2">
-                            <button
-                              onClick={() => {
-                                setEditingChallenge(challenge);
-                                setShowChallengeModal(true);
-                              }}
-                              className="text-blue-600 hover:text-blue-800 text-sm font-semibold"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDeleteChallenge(challenge.id)}
-                              className="text-red-600 hover:text-red-800 text-sm font-semibold"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
                 </div>
               </div>
             )}
@@ -806,6 +746,18 @@ export default function AdminDashboard() {
           onClose={() => {
             setShowCourseModal(false);
             setEditingCourse(null);
+          }}
+        />
+      )}
+
+      {/* Question Manager Modal */}
+      {showQuestionManager && selectedCourse && (
+        <QuestionManagerModal
+          courseId={selectedCourse.id}
+          courseName={selectedCourse.title}
+          onClose={() => {
+            setShowQuestionManager(false);
+            setSelectedCourse(null);
           }}
         />
       )}

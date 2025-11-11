@@ -14,6 +14,32 @@ const { query } = require('../database/connection');
 const challengesPath = path.join(__dirname, '../data/challenges-new.json');
 const progressPath = path.join(__dirname, '../data/user-progress.json');
 const assignmentsPath = path.join(__dirname, '../data/user-assignments.json');
+const coursesPath = path.join(__dirname, '../data/courses.json');
+
+// Helper to load JSON files
+const loadJSON = (filePath) => {
+  try {
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      return JSON.parse(data);
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error loading ${filePath}:`, error.message);
+    return [];
+  }
+};
+
+// Helper to save JSON files
+const saveJSON = (filePath, data) => {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    return true;
+  } catch (error) {
+    console.error(`Error saving ${filePath}:`, error.message);
+    return false;
+  }
+};
 
 /**
  * GET /api/courses
@@ -21,16 +47,22 @@ const assignmentsPath = path.join(__dirname, '../data/user-assignments.json');
  */
 router.get('/', async (req, res) => {
   try {
-    const courses = await CourseModel.findAll();
+    let courses;
+    try {
+      courses = await CourseModel.findAll();
+    } catch (dbError) {
+      console.log('Database error, using JSON file:', dbError.message);
+      courses = loadJSON(coursesPath);
+    }
     
     // Convert snake_case to camelCase for frontend
     const formattedCourses = courses.map(course => ({
       ...course,
-      imageUrl: course.image_url,
-      totalLevels: course.total_levels,
-      totalPoints: course.total_points,
-      estimatedTime: course.estimated_time,
-      createdAt: course.created_at
+      imageUrl: course.image_url || course.imageUrl,
+      totalLevels: course.total_levels || course.totalLevels,
+      totalPoints: course.total_points || course.totalPoints,
+      estimatedTime: course.estimated_time || course.estimatedTime,
+      createdAt: course.created_at || course.createdAt
     }));
     
     res.json(formattedCourses);
@@ -46,7 +78,14 @@ router.get('/', async (req, res) => {
  */
 router.get('/:courseId', async (req, res) => {
   try {
-    const course = await CourseModel.findById(req.params.courseId);
+    let course;
+    try {
+      course = await CourseModel.findById(req.params.courseId);
+    } catch (dbError) {
+      console.log('Database error, using JSON file:', dbError.message);
+      const courses = loadJSON(coursesPath);
+      course = courses.find(c => c.id === req.params.courseId);
+    }
     
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
@@ -55,11 +94,11 @@ router.get('/:courseId', async (req, res) => {
     // Convert snake_case to camelCase
     const formattedCourse = {
       ...course,
-      imageUrl: course.image_url,
-      totalLevels: course.total_levels,
-      totalPoints: course.total_points,
-      estimatedTime: course.estimated_time,
-      createdAt: course.created_at
+      imageUrl: course.image_url || course.imageUrl,
+      totalLevels: course.total_levels || course.totalLevels,
+      totalPoints: course.total_points || course.totalPoints,
+      estimatedTime: course.estimated_time || course.estimatedTime,
+      createdAt: course.created_at || course.createdAt
     };
     
     res.json(formattedCourse);
@@ -775,6 +814,266 @@ For expectedSolution HTML/CSS/JS use the JSON format or add them via the web int
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename=sample-questions.csv');
   res.send(csvContent);
+});
+
+/**
+ * GET /api/courses/:courseId/levels/:level/template
+ * Download question bank template for a specific level
+ */
+router.get('/:courseId/levels/:level/template', (req, res) => {
+  const { courseId, level } = req.params;
+  
+  const sampleQuestions = [
+    {
+      id: `${courseId}-l${level}-q1`,
+      courseId: courseId,
+      level: parseInt(level),
+      questionNumber: 1,
+      title: `Level ${level} - Question 1`,
+      description: "Brief description of what students need to build",
+      instructions: "Detailed step-by-step instructions:\n- Step 1: Create HTML structure\n- Step 2: Apply CSS styling\n- Step 3: Add interactivity",
+      assets: {
+        images: [],
+        reference: ""
+      },
+      hints: [
+        "Hint 1: Use semantic HTML tags",
+        "Hint 2: Apply modern CSS techniques",
+        "Hint 3: Test in browser"
+      ],
+      tags: ["HTML", "CSS"],
+      timeLimit: 20,
+      points: 100,
+      passingThreshold: {
+        structure: 70,
+        visual: 80,
+        overall: 75
+      },
+      isLocked: false,
+      prerequisite: null,
+      expectedSolution: {
+        html: "<!DOCTYPE html>\n<html>\n<head>\n  <title>Solution</title>\n</head>\n<body>\n  <div class=\"container\">\n    <!-- Your solution here -->\n  </div>\n</body>\n</html>",
+        css: "body {\n  margin: 0;\n  padding: 20px;\n  font-family: Arial, sans-serif;\n}\n\n.container {\n  max-width: 800px;\n  margin: 0 auto;\n}",
+        js: "// Optional JavaScript"
+      }
+    },
+    {
+      id: `${courseId}-l${level}-q2`,
+      courseId: courseId,
+      level: parseInt(level),
+      questionNumber: 2,
+      title: `Level ${level} - Question 2`,
+      description: "Another question for this level",
+      instructions: "Build something based on the requirements",
+      assets: {
+        images: [],
+        reference: ""
+      },
+      hints: ["Apply what you learned in Q1"],
+      tags: ["HTML", "CSS"],
+      timeLimit: 25,
+      points: 120,
+      passingThreshold: {
+        structure: 70,
+        visual: 80,
+        overall: 75
+      },
+      isLocked: false,
+      prerequisite: `${courseId}-l${level}-q1`,
+      expectedSolution: {
+        html: "<!DOCTYPE html>\n<html>\n<body>\n  <h1>Question 2</h1>\n</body>\n</html>",
+        css: "h1 { color: #333; }",
+        js: ""
+      }
+    }
+  ];
+  
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', `attachment; filename=${courseId}-level-${level}-template.json`);
+  res.json(sampleQuestions);
+});
+
+/**
+ * POST /api/courses/:courseId/levels/:level/questions/bulk
+ * Upload question bank for a specific level
+ * Body: { questions: [...], randomizeCount: 2 }
+ */
+router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
+  try {
+    const { courseId, level } = req.params;
+    const { questions, randomizeCount } = req.body;
+    
+    if (!questions || !Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ error: 'Questions array required' });
+    }
+    
+    // Validate course exists
+    const courses = getCourses();
+    const course = courses.find(c => c.id === courseId);
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+
+    // Store randomize count in course level settings
+    if (!course.levelSettings) {
+      course.levelSettings = {};
+    }
+    if (!course.levelSettings[level]) {
+      course.levelSettings[level] = {};
+    }
+    course.levelSettings[level].randomizeCount = randomizeCount || 2;
+    
+    const challenges = getChallenges();
+    let addedCount = 0;
+    let updatedCount = 0;
+    let skippedCount = 0;
+    const errors = [];
+    
+    questions.forEach((question, index) => {
+      try {
+        // Validate required fields
+        if (!question.id || !question.title) {
+          errors.push(`Question ${index + 1}: Missing required fields (id, title)`);
+          skippedCount++;
+          return;
+        }
+        
+        // Force the level to match the URL parameter
+        const questionData = {
+          ...question,
+          courseId: courseId,
+          level: parseInt(level),
+          createdAt: question.createdAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        // Check if question ID already exists
+        const existingIndex = challenges.findIndex(c => c.id === question.id);
+        if (existingIndex !== -1) {
+          // Update existing question
+          challenges[existingIndex] = { ...challenges[existingIndex], ...questionData };
+          updatedCount++;
+        } else {
+          // Add new question
+          challenges.push(questionData);
+          addedCount++;
+        }
+      } catch (err) {
+        errors.push(`Question ${index + 1}: ${err.message}`);
+        skippedCount++;
+      }
+    });
+    
+    // Save challenges
+    if (addedCount > 0 || updatedCount > 0) {
+      fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
+      
+      // Save course with updated level settings
+      const courseIndex = courses.findIndex(c => c.id === courseId);
+      courses[courseIndex] = course;
+      fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
+    }
+    
+    res.json({
+      message: 'Question bank uploaded successfully',
+      added: addedCount,
+      updated: updatedCount,
+      skipped: skippedCount,
+      total: questions.length,
+      randomizeCount: course.levelSettings[level].randomizeCount,
+      errors: errors.length > 0 ? errors : undefined
+    });
+  } catch (error) {
+    console.error('Level bulk upload error:', error);
+    res.status(500).json({ error: 'Failed to upload question bank' });
+  }
+});
+
+/**
+ * PUT /api/courses/:courseId/restrictions
+ * Update exam restrictions for a course
+ * Body: { blockCopy, blockPaste, forceFullscreen, maxViolations }
+ */
+router.put('/:courseId/restrictions', (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { blockCopy, blockPaste, forceFullscreen, maxViolations } = req.body;
+    
+    const courses = getCourses();
+    const courseIndex = courses.findIndex(c => c.id === courseId);
+    
+    if (courseIndex === -1) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+    
+    // Update restrictions
+    courses[courseIndex].restrictions = {
+      blockCopy: blockCopy !== undefined ? blockCopy : true,
+      blockPaste: blockPaste !== undefined ? blockPaste : true,
+      forceFullscreen: forceFullscreen !== undefined ? forceFullscreen : true,
+      maxViolations: maxViolations || 3
+    };
+    
+    fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
+    
+    res.json({
+      message: 'Restrictions updated successfully',
+      restrictions: courses[courseIndex].restrictions
+    });
+  } catch (error) {
+    console.error('Restrictions update error:', error);
+    res.status(500).json({ error: 'Failed to update restrictions' });
+  }
+});
+
+/**
+ * GET /api/courses/:courseId/restrictions
+ * Get exam restrictions for a course
+ */
+router.get('/:courseId/restrictions', (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const courses = getCourses();
+    const course = courses.find(c => c.id === courseId);
+    
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+    
+    // Return restrictions or defaults
+    const restrictions = course.restrictions || {
+      blockCopy: true,
+      blockPaste: true,
+      forceFullscreen: true,
+      maxViolations: 3
+    };
+    
+    res.json(restrictions);
+  } catch (error) {
+    console.error('Get restrictions error:', error);
+    res.status(500).json({ error: 'Failed to fetch restrictions' });
+  }
+});
+
+/**
+ * GET /api/courses/:courseId/level-settings
+ * Get level settings (randomization counts, etc.)
+ */
+router.get('/:courseId/level-settings', (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const courses = getCourses();
+    const course = courses.find(c => c.id === courseId);
+    
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+    
+    res.json(course.levelSettings || {});
+  } catch (error) {
+    console.error('Get level settings error:', error);
+    res.status(500).json({ error: 'Failed to fetch level settings' });
+  }
 });
 
 module.exports = router;

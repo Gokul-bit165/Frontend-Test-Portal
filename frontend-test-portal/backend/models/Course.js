@@ -1,13 +1,42 @@
 /**
  * Course Model
- * Database operations for courses table
+ * Database operations for courses table with JSON fallback
  */
 
-const { query, queryOne } = require('../database/connection');
+const { query, queryOne, isConnected } = require('../database/connection');
+const fs = require('fs').promises;
+const path = require('path');
+
+const COURSES_FILE = path.join(__dirname, '../data/courses.json');
 
 class CourseModel {
+  // Load courses from JSON file
+  static async loadFromJSON() {
+    try {
+      const data = await fs.readFile(COURSES_FILE, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error reading courses.json:', error.message);
+      return [];
+    }
+  }
+
+  // Save courses to JSON file
+  static async saveToJSON(courses) {
+    try {
+      await fs.writeFile(COURSES_FILE, JSON.stringify(courses, null, 2));
+    } catch (error) {
+      console.error('Error writing courses.json:', error.message);
+      throw error;
+    }
+  }
+
   // Get all courses
   static async findAll() {
+    if (!isConnected()) {
+      return await this.loadFromJSON();
+    }
+
     const courses = await query('SELECT * FROM courses ORDER BY created_at DESC');
     // Parse JSON fields
     return courses.map(course => ({
@@ -21,6 +50,11 @@ class CourseModel {
 
   // Get course by ID
   static async findById(id) {
+    if (!isConnected()) {
+      const courses = await this.loadFromJSON();
+      return courses.find(c => c.id === id) || null;
+    }
+
     const course = await queryOne('SELECT * FROM courses WHERE id = ?', [id]);
     if (!course) return null;
     return {
@@ -35,6 +69,30 @@ class CourseModel {
   // Create new course
   static async create(courseData) {
     const id = courseData.id || `course-${Date.now()}`;
+    
+    if (!isConnected()) {
+      const courses = await this.loadFromJSON();
+      const newCourse = {
+        id,
+        title: courseData.title,
+        description: courseData.description,
+        thumbnail: courseData.thumbnail || null,
+        icon: courseData.icon || '📚',
+        color: courseData.color || '#3B82F6',
+        totalLevels: courseData.totalLevels || 1,
+        estimatedTime: courseData.estimatedTime || '1 hour',
+        difficulty: courseData.difficulty || 'Beginner',
+        tags: courseData.tags || [],
+        isLocked: courseData.isLocked || false,
+        restrictions: courseData.restrictions || {},
+        levelSettings: courseData.levelSettings || {},
+        createdAt: new Date().toISOString()
+      };
+      courses.push(newCourse);
+      await this.saveToJSON(courses);
+      return newCourse;
+    }
+
     await query(
       `INSERT INTO courses (id, title, description, thumbnail, icon, color, total_levels, estimated_time, difficulty, tags, is_locked, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -58,6 +116,21 @@ class CourseModel {
 
   // Update course
   static async update(id, courseData) {
+    if (!isConnected()) {
+      const courses = await this.loadFromJSON();
+      const index = courses.findIndex(c => c.id === id);
+      if (index === -1) return null;
+      
+      courses[index] = {
+        ...courses[index],
+        ...courseData,
+        id, // Preserve ID
+        updatedAt: new Date().toISOString()
+      };
+      await this.saveToJSON(courses);
+      return courses[index];
+    }
+
     await query(
       `UPDATE courses SET
        title = COALESCE(?, title),
@@ -91,14 +164,27 @@ class CourseModel {
 
   // Delete course
   static async delete(id) {
+    if (!isConnected()) {
+      const courses = await this.loadFromJSON();
+      const filtered = courses.filter(c => c.id !== id);
+      await this.saveToJSON(filtered);
+      return;
+    }
+
     await query('DELETE FROM courses WHERE id = ?', [id]);
   }
 
   // Get course count
   static async count() {
+    if (!isConnected()) {
+      const courses = await this.loadFromJSON();
+      return courses.length;
+    }
+
     const result = await queryOne('SELECT COUNT(*) as count FROM courses');
     return result.count;
   }
 }
 
 module.exports = CourseModel;
+

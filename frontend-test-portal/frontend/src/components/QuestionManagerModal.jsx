@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react';
-import { getCourseQuestions, deleteQuestion, updateQuestion, createQuestion, bulkUploadQuestions } from '../services/api';
+import { 
+  getCourseQuestions, 
+  deleteQuestion, 
+  updateQuestion, 
+  createQuestion, 
+  downloadLevelTemplate,
+  uploadLevelQuestionBank,
+  updateCourseRestrictions,
+  getCourseRestrictions,
+  getLevelSettings
+} from '../services/api';
 import QuestionEditModal from './QuestionEditModal';
+import axios from 'axios';
 
 export default function QuestionManagerModal({ courseId, courseName, onClose }) {
   const [questions, setQuestions] = useState([]);
@@ -8,12 +19,30 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
   const [filter, setFilter] = useState('all');
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showBulkUpload, setShowBulkUpload] = useState(false);
-  const [bulkData, setBulkData] = useState('');
+  
+  // Level upload modal state
+  const [showLevelUpload, setShowLevelUpload] = useState(false);
+  const [selectedLevel, setSelectedLevel] = useState(1);
+  const [levelQuestionData, setLevelQuestionData] = useState('');
+  const [currentRandomizeCount, setCurrentRandomizeCount] = useState(2);
   const [uploading, setUploading] = useState(false);
+  
+  // Restrictions modal state
+  const [showRestrictions, setShowRestrictions] = useState(false);
+  const [restrictions, setRestrictions] = useState({
+    blockCopy: false,
+    blockPaste: false,
+    forceFullscreen: false,
+    maxViolations: 3
+  });
+  
+  // Level settings
+  const [levelSettings, setLevelSettings] = useState({});
 
   useEffect(() => {
     loadQuestions();
+    loadRestrictions();
+    loadLevelSettings();
   }, [courseId]);
 
   const loadQuestions = async () => {
@@ -24,6 +53,28 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
       console.error('Failed to load questions:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadRestrictions = async () => {
+    try {
+      const response = await getCourseRestrictions(courseId);
+      if (response.data) {
+        setRestrictions(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to load restrictions:', error);
+    }
+  };
+
+  const loadLevelSettings = async () => {
+    try {
+      const response = await getLevelSettings(courseId);
+      if (response.data) {
+        setLevelSettings(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to load level settings:', error);
     }
   };
 
@@ -70,26 +121,61 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
     }
   };
 
-  const handleBulkUpload = async () => {
-    if (!bulkData.trim()) {
+  // Download template for specific level
+  const handleDownloadTemplate = async (level) => {
+    try {
+      const response = await downloadLevelTemplate(courseId, level);
+      const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${courseId}-level-${level}-template.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      alert(`Template for Level ${level} downloaded! Edit it and upload back.`);
+    } catch (error) {
+      alert('Failed to download template: ' + error.message);
+    }
+  };
+
+  // Open upload modal for specific level
+  const handleOpenLevelUpload = (level) => {
+    setSelectedLevel(level);
+    setCurrentRandomizeCount(levelSettings[level]?.randomizeCount || 2);
+    setLevelQuestionData('');
+    setShowLevelUpload(true);
+  };
+
+  // Upload question bank for specific level
+  const handleLevelUpload = async () => {
+    if (!levelQuestionData.trim()) {
       alert('Please paste JSON data');
       return;
     }
 
     try {
       setUploading(true);
-      const questions = JSON.parse(bulkData);
+      const questions = JSON.parse(levelQuestionData);
       
       if (!Array.isArray(questions)) {
         throw new Error('Data must be an array of questions');
       }
 
-      const response = await bulkUploadQuestions(courseId, questions);
-      alert(`Bulk upload complete!\n\nAdded: ${response.data.added}\nSkipped: ${response.data.skipped}\nTotal: ${response.data.total}`);
+      const response = await uploadLevelQuestionBank(courseId, selectedLevel, {
+        questions,
+        randomizeCount: currentRandomizeCount
+      });
       
-      setShowBulkUpload(false);
-      setBulkData('');
+      alert(`Level ${selectedLevel} updated successfully!\n\n` +
+            `Added: ${response.data.added || questions.length} questions\n` +
+            `Randomize Count: ${currentRandomizeCount}`);
+      
+      setShowLevelUpload(false);
+      setLevelQuestionData('');
       await loadQuestions();
+      await loadLevelSettings();
     } catch (error) {
       alert('Failed to upload: ' + (error.response?.data?.error || error.message));
     } finally {
@@ -97,12 +183,15 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
     }
   };
 
-  const downloadSampleJSON = () => {
-    window.open('http://localhost:5000/api/courses/sample/json', '_blank');
-  };
-
-  const downloadSampleCSV = () => {
-    window.open('http://localhost:5000/api/courses/sample/csv', '_blank');
+  // Save restrictions
+  const handleSaveRestrictions = async () => {
+    try {
+      await updateCourseRestrictions(courseId, restrictions);
+      alert('Restrictions updated successfully!');
+      setShowRestrictions(false);
+    } catch (error) {
+      alert('Failed to save restrictions: ' + error.message);
+    }
   };
 
   const filteredQuestions = questions.filter(q => {
@@ -124,7 +213,7 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between z-10">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
-              Manage Questions: {courseName}
+              📚 Manage Questions: {courseName}
             </h2>
             <p className="text-sm text-gray-600">Total: {questions.length} questions</p>
           </div>
@@ -137,9 +226,56 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
         </div>
 
         <div className="p-6">
+          {/* Level-Based Question Management */}
+          <div className="mb-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">📝 Upload Questions by Level</h3>
+              <button
+                onClick={() => setShowRestrictions(true)}
+                className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center gap-2"
+              >
+                🔒 Manage Restrictions
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[1, 2, 3, 4, 5, 6].map(level => (
+                <div key={level} className="bg-white rounded-lg p-4 border-2 border-gray-200 hover:border-indigo-300 transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-bold text-lg text-gray-900">Level {level}</h4>
+                    <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-sm font-semibold">
+                      {questionsByLevel[level]?.length || 0} Q's
+                    </span>
+                  </div>
+                  
+                  {levelSettings[level] && (
+                    <div className="text-xs text-gray-600 mb-3">
+                      🎲 Randomize: {levelSettings[level].randomizeCount} questions
+                    </div>
+                  )}
+                  
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => handleDownloadTemplate(level)}
+                      className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm flex items-center justify-center gap-2"
+                    >
+                      ⬇️ Download Template
+                    </button>
+                    <button
+                      onClick={() => handleOpenLevelUpload(level)}
+                      className="w-full px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm flex items-center justify-center gap-2"
+                    >
+                      ⬆️ Upload Questions
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Filter */}
           <div className="mb-6 flex items-center justify-between">
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setFilter('all')}
                 className={`px-4 py-2 rounded-lg ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'}`}
@@ -152,24 +288,16 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
                   onClick={() => setFilter(level.toString())}
                   className={`px-4 py-2 rounded-lg ${filter === level.toString() ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'}`}
                 >
-                  Level {level} ({questionsByLevel[level]?.length || 0})
+                  L{level} ({questionsByLevel[level]?.length || 0})
                 </button>
               ))}
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowBulkUpload(true)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-              >
-                📦 Bulk Upload
-              </button>
-              <button
-                onClick={handleAddNew}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              >
-                + Add Question
-              </button>
-            </div>
+            <button
+              onClick={handleAddNew}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              + Add Question
+            </button>
           </div>
 
           {/* Questions List */}
@@ -257,27 +385,14 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
 
           {/* Instructions */}
           <div className="mt-6 bg-blue-50 rounded-lg p-4">
-            <h4 className="font-semibold text-blue-900 mb-2">📘 How to Manage Questions</h4>
+            <h4 className="font-semibold text-blue-900 mb-2">📘 How to Use Level-Based Management</h4>
             <ul className="text-sm text-blue-800 space-y-1">
-              <li>• <strong>Add/Edit:</strong> Use the buttons above to create or modify questions</li>
-              <li>• <strong>Bulk Upload:</strong> Import multiple questions from JSON</li>
-              <li>• <strong>Download Samples:</strong> Get template files to create bulk questions</li>
-              <li>• <strong>Assets:</strong> Add images to backend/assets/images/ and reference in question</li>
+              <li>• <strong>Download Template:</strong> Click to get a JSON template for that level with sample questions</li>
+              <li>• <strong>Edit Template:</strong> Open the JSON file and add/edit your questions following the structure</li>
+              <li>• <strong>Upload Questions:</strong> Paste the edited JSON and set how many questions to randomize</li>
+              <li>• <strong>Manage Restrictions:</strong> Set exam security rules (copy/paste blocking, fullscreen mode, violations)</li>
+              <li>• <strong>Individual Edit:</strong> Use Edit button on any question below for detailed editing</li>
             </ul>
-            <div className="mt-3 flex gap-2">
-              <button
-                onClick={downloadSampleJSON}
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-              >
-                ⬇️ Download Sample JSON
-              </button>
-              <button
-                onClick={downloadSampleCSV}
-                className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
-              >
-                ⬇️ Download Sample CSV
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -295,14 +410,14 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
         />
       )}
 
-      {/* Bulk Upload Modal */}
-      {showBulkUpload && (
+      {/* Level Upload Modal */}
+      {showLevelUpload && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
           <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto m-4">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">📦 Bulk Upload Questions</h2>
+              <h2 className="text-2xl font-bold text-gray-900">� Upload Questions for Level {selectedLevel}</h2>
               <button
-                onClick={() => setShowBulkUpload(false)}
+                onClick={() => setShowLevelUpload(false)}
                 className="text-gray-400 hover:text-gray-600 text-2xl"
               >
                 ×
@@ -310,27 +425,33 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
             </div>
             
             <div className="p-6 space-y-4">
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <h3 className="font-semibold text-yellow-900 mb-2">📝 Instructions:</h3>
-                <ol className="text-sm text-yellow-800 space-y-1 list-decimal list-inside">
-                  <li>Download a sample file using the buttons below</li>
-                  <li>Edit the file with your questions (keep the same structure)</li>
-                  <li>Copy the JSON content and paste it in the text area</li>
-                  <li>Click "Upload Questions" to import</li>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h3 className="font-semibold text-green-900 mb-2">✅ Instructions:</h3>
+                <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
+                  <li>Download the template for this level using the button above</li>
+                  <li>Edit the JSON file to add/modify questions (keep the structure)</li>
+                  <li>Copy the entire JSON array and paste it below</li>
+                  <li>Set how many questions should be randomized for students</li>
+                  <li>Click Upload to save all questions for this level</li>
                 </ol>
-                <div className="mt-3 flex gap-2">
-                  <button
-                    onClick={downloadSampleJSON}
-                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                  >
-                    ⬇️ Download JSON Template
-                  </button>
-                  <button
-                    onClick={downloadSampleCSV}
-                    className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
-                  >
-                    ⬇️ Download CSV Info
-                  </button>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Randomize Count for Level {selectedLevel}:
+                </label>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={currentRandomizeCount}
+                    onChange={(e) => setCurrentRandomizeCount(parseInt(e.target.value) || 1)}
+                    className="px-4 py-2 border rounded-lg w-32"
+                  />
+                  <span className="text-sm text-gray-600">
+                    Students will get {currentRandomizeCount} random question(s) from this level
+                  </span>
                 </div>
               </div>
 
@@ -339,19 +460,19 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
                   Paste JSON Array of Questions:
                 </label>
                 <textarea
-                  value={bulkData}
-                  onChange={(e) => setBulkData(e.target.value)}
+                  value={levelQuestionData}
+                  onChange={(e) => setLevelQuestionData(e.target.value)}
                   className="w-full px-4 py-3 border rounded-lg font-mono text-sm"
                   rows="15"
-                  placeholder='[\n  {\n    "id": "course-html-css-l1-q3",\n    "courseId": "course-html-css",\n    "level": 1,\n    "title": "Your Question",\n    ...\n  }\n]'
+                  placeholder={`[\n  {\n    "id": "course-${courseId}-l${selectedLevel}-q1",\n    "courseId": "${courseId}",\n    "level": ${selectedLevel},\n    "title": "Your Question Title",\n    "description": "Description",\n    "instructions": "Instructions...",\n    "tags": ["HTML", "CSS"],\n    "timeLimit": 15,\n    "expectedSolution": {\n      "html": "<div>...</div>",\n      "css": ".class { ... }",\n      "js": ""\n    }\n  }\n]`}
                 />
               </div>
 
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => {
-                    setShowBulkUpload(false);
-                    setBulkData('');
+                    setShowLevelUpload(false);
+                    setLevelQuestionData('');
                   }}
                   className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
                   disabled={uploading}
@@ -359,11 +480,118 @@ export default function QuestionManagerModal({ courseId, courseName, onClose }) 
                   Cancel
                 </button>
                 <button
-                  onClick={handleBulkUpload}
-                  disabled={uploading || !bulkData.trim()}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+                  onClick={handleLevelUpload}
+                  disabled={uploading || !levelQuestionData.trim()}
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
                 >
-                  {uploading ? 'Uploading...' : '📦 Upload Questions'}
+                  {uploading ? 'Uploading...' : '⬆️ Upload Questions'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Restrictions Modal */}
+      {showRestrictions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full m-4">
+            <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900">🔒 Exam Restrictions</h2>
+              <button
+                onClick={() => setShowRestrictions(false)}
+                className="text-gray-400 hover:text-gray-600 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <h3 className="font-semibold text-orange-900 mb-2">⚠️ Security Settings</h3>
+                <p className="text-sm text-orange-800">
+                  Configure exam security restrictions for this course. These settings will apply to all students taking tests.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <label className="font-semibold text-gray-900">Block Copy</label>
+                    <p className="text-sm text-gray-600">Prevent students from copying text from the exam</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={restrictions.blockCopy}
+                      onChange={(e) => setRestrictions({...restrictions, blockCopy: e.target.checked})}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <label className="font-semibold text-gray-900">Block Paste</label>
+                    <p className="text-sm text-gray-600">Prevent students from pasting text into the code editor</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={restrictions.blockPaste}
+                      onChange={(e) => setRestrictions({...restrictions, blockPaste: e.target.checked})}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <label className="font-semibold text-gray-900">Force Fullscreen</label>
+                    <p className="text-sm text-gray-600">Require fullscreen mode throughout the exam</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={restrictions.forceFullscreen}
+                      onChange={(e) => setRestrictions({...restrictions, forceFullscreen: e.target.checked})}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <label className="font-semibold text-gray-900 block mb-2">Max Violations</label>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Number of times a student can exit fullscreen or switch tabs before test auto-finishes
+                  </p>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={restrictions.maxViolations}
+                    onChange={(e) => setRestrictions({...restrictions, maxViolations: parseInt(e.target.value) || 3})}
+                    className="px-4 py-2 border rounded-lg w-32"
+                  />
+                  <span className="ml-3 text-sm text-gray-600">violations allowed</span>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t">
+                <button
+                  onClick={() => setShowRestrictions(false)}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveRestrictions}
+                  className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+                >
+                  💾 Save Restrictions
                 </button>
               </div>
             </div>

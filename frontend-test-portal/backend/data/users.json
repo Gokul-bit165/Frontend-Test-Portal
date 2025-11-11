@@ -7,7 +7,7 @@
     "fullName": "Administrator",
     "role": "admin",
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "lastLogin": null
+    "lastLogin": "2025-11-11T03:28:32.778Z"
   },
   {
     "id": "user-demo-student",
@@ -17,7 +17,7 @@
     "fullName": "Demo Student",
     "role": "student",
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "lastLogin": "2025-11-10T09:10:41.403Z"
+    "lastLogin": "2025-11-11T03:29:42.928Z"
   },
   {
     "id": "user-1762598356412-rwiz1i8vt",

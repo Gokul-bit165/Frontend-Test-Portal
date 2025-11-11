@@ -13,7 +13,6 @@ import ChallengeView from './pages/ChallengeView';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboardNew';
 import CourseManager from './pages/CourseManager';
-import ChallengeManager from './pages/ChallengeManager';
 import UserLogin from './pages/UserLogin';
 import UserManagement from './pages/UserManagement';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -55,10 +54,6 @@ function App() {
           <Route 
             path="/admin/courses" 
             element={isAdmin ? <CourseManager /> : <Navigate to="/admin/login" />} 
-          />
-          <Route 
-            path="/admin/challenges" 
-            element={isAdmin ? <ChallengeManager /> : <Navigate to="/admin/login" />} 
           />
           <Route 
             path="/admin/users" 
