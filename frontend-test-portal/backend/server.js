@@ -62,6 +62,24 @@ app.use('/api/admin', adminRouter);
 app.use('/api/level-completion', levelCompletionRouter);
 app.use('/api/assets', assetsRouter);
 
+// Serve frontend static files in production
+const frontendDistPath = path.join(__dirname, 'frontend/dist');
+if (fs.existsSync(frontendDistPath)) {
+  console.log('✅ Serving frontend from:', frontendDistPath);
+  app.use(express.static(frontendDistPath));
+  
+  // Handle client-side routing - serve index.html for non-API routes
+  app.get('*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api') || req.path.startsWith('/screenshots') || req.path.startsWith('/assets') || req.path === '/health') {
+      return next();
+    }
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+} else {
+  console.log('⚠️  Frontend dist folder not found at:', frontendDistPath);
+}
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
@@ -71,8 +89,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use((req, res) => {
+// 404 handler for API routes only
+app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 

@@ -1,4 +1,14 @@
-# Backend Dockerfile
+# Backend Dockerfile with Frontend
+FROM node:18-alpine AS frontend-builder
+
+# Build frontend first
+WORKDIR /frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+# Backend stage
 FROM node:18-alpine
 
 # Install Chromium for Puppeteer
@@ -27,6 +37,9 @@ RUN npm ci --only=production
 
 # Copy backend code
 COPY backend/ ./
+
+# Copy frontend build from frontend-builder stage
+COPY --from=frontend-builder /frontend/dist ./frontend/dist
 
 # Create necessary directories
 RUN mkdir -p screenshots data

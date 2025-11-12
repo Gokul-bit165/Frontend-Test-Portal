@@ -382,5 +382,89 @@
     "totalPoints": 50,
     "achievements": [],
     "createdAt": "2025-11-11T07:56:19.681Z"
+  },
+  {
+    "userId": "user-1762931727830-0ycxbbf2a",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [],
+        "currentLevel": 1,
+        "totalPoints": 0,
+        "completedQuestions": [
+          {
+            "level": 1,
+            "completedAt": "2025-11-12T07:15:36.619Z",
+            "finalScore": 0,
+            "passed": false,
+            "questionsSubmitted": 0,
+            "questionsPassed": 0,
+            "results": [
+              {
+                "questionId": "html-css-l1-q2",
+                "questionTitle": "Product Card with Image",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              },
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
+          }
+        ]
+      }
+    ],
+    "totalPoints": 0,
+    "achievements": [],
+    "createdAt": "2025-11-12T07:15:36.780Z"
+  },
+  {
+    "userId": "user-1762932137143-ow1nsuuim",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [
+          1
+        ],
+        "currentLevel": 2,
+        "totalPoints": 91,
+        "completedQuestions": [
+          {
+            "level": 1,
+            "completedAt": "2025-11-12T07:26:01.806Z",
+            "finalScore": 91,
+            "passed": true,
+            "questionsSubmitted": 2,
+            "questionsPassed": 2,
+            "results": [
+              {
+                "questionId": "course-html-css-l1-q3",
+                "questionTitle": "Lists in HTML",
+                "submitted": true,
+                "passed": true,
+                "score": 90
+              },
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": true,
+                "passed": true,
+                "score": 92
+              }
+            ],
+            "feedback": "good"
+          }
+        ]
+      }
+    ],
+    "totalPoints": 91,
+    "achievements": [],
+    "createdAt": "2025-11-12T07:26:00.526Z"
   }
 ]
