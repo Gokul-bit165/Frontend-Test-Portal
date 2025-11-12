@@ -1,0 +1,52 @@
+[
+  {
+    "id": "user-admin-1",
+    "username": "admin",
+    "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "email": "admin@example.com",
+    "fullName": "Administrator",
+    "role": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "lastLogin": "2025-11-11T09:07:09.336Z"
+  },
+  {
+  "id": "user-<unique>",
+  "username": "mithileshsp.cs24",
+  "password": null,
+  "email": "mithileshsp.cs24@bitsathy.ac.in",
+  "fullName": "MITHILESH S P",
+  "role": "student",
+  "createdAt": "2025-11-11T00:00:00.000Z",
+  "lastLogin": null
+}
+  {
+    "id": "user-demo-student",
+    "username": "student1",
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "email": "mithileshsp.cs24@bitsathy.ac.in",
+    "fullName": "Demo Student",
+    "role": "student",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "lastLogin": "2025-11-11T09:07:26.539Z"
+  },
+  {
+    "id": "user-1762598356412-rwiz1i8vt",
+    "username": "testuser1",
+    "password": "9b8769a4a742959a2d0298c36fb70623f2dfacda8436237df08d8dfd5b37374c",
+    "email": "test@example.com",
+    "fullName": "Test User",
+    "role": "student",
+    "createdAt": "2025-11-08T10:39:16.412Z",
+    "lastLogin": null
+  },
+  {
+    "id": "user-1762598416289-0p5li3q2w",
+    "username": "gokul",
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "email": "gokul9942786@gmail.com",
+    "fullName": "GOKUL",
+    "role": "student",
+    "createdAt": "2025-11-08T10:40:16.289Z",
+    "lastLogin": "2025-11-08T10:44:29.324Z"
+  }
+]

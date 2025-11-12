@@ -171,7 +171,7 @@ export default function AdminDashboard() {
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
-    navigate('/admin/login');
+    navigate('/login');
   };
 
   const handleDeleteUser = async (userId) => {

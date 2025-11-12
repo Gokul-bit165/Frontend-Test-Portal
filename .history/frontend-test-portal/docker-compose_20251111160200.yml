@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: test-portal-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      # Persist screenshots and data
+      - ./backend/screenshots:/app/screenshots
+      - ./backend/data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - USE_JSON=true
+      - JWT_SECRET=${JWT_SECRET:-frontend-test-portal-secret-key-2025}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    restart: unless-stopped
+    networks:
+      - test-portal-network
+    # Add shared memory for Chromium (prevents crashes)
+    shm_size: "2gb"
+    # Increase memory limit for Puppeteer
+    mem_limit: 2g
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:5000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: test-portal-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - test-portal-network
+
+networks:
+  test-portal-network:
+    driver: bridge
+
+volumes:
+  screenshots:
+  data:
