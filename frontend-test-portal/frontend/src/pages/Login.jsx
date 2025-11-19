@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { clearAdminSession, notifySessionChange } from "../utils/session";
 
 export default function Login({ isAdmin = false, onLogin }) {
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ export default function Login({ isAdmin = false, onLogin }) {
         localStorage.setItem("userToken", token);
         localStorage.setItem("userId", user.id);
         localStorage.setItem("username", user.username);
+        notifySessionChange();
 
         console.log("Admin token stored, calling onLogin");
 
@@ -89,6 +91,7 @@ export default function Login({ isAdmin = false, onLogin }) {
         return;
       }
 
+      clearAdminSession();
       localStorage.setItem("userId", user.id);
       localStorage.setItem("username", user.username);
       localStorage.setItem("userToken", token);
@@ -231,11 +234,13 @@ export default function Login({ isAdmin = false, onLogin }) {
                     if (normalizedRole === "admin") {
                       localStorage.setItem("adminToken", token);
                       localStorage.setItem("adminUser", JSON.stringify(user));
+                      notifySessionChange();
                       if (onLogin) {
                         onLogin({ role: normalizedRole, user, token });
                       }
                       navigate("/admin/dashboard", { replace: true });
                     } else {
+                      clearAdminSession();
                       if (onLogin) {
                         onLogin({ role: normalizedRole, user, token });
                       }

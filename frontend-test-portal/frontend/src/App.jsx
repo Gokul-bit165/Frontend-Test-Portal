@@ -20,15 +20,30 @@ import AdminDashboard from "./pages/AdminDashboardNew";
 import CourseManager from "./pages/CourseManager";
 import UserManagement from "./pages/UserManagement";
 import ProtectedRoute from "./components/ProtectedRoute";
+import {
+  isAdminSessionActive,
+  subscribeToSessionChanges,
+} from "./utils/session";
 
 function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(() => isAdminSessionActive());
 
   useEffect(() => {
-    // Check if admin is logged in
-    const token = localStorage.getItem("adminToken");
-    setIsAdmin(!!token);
+    const unsubscribe = subscribeToSessionChanges(setIsAdmin);
+    return () => {
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
   }, []);
+
+  const handleLogin = (session) => {
+    if (session?.role === "admin") {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(isAdminSessionActive());
+    }
+  };
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -38,9 +53,7 @@ function App() {
           <Route
             path="/login"
             element={
-              <Login
-                onLogin={(session) => setIsAdmin(session?.role === "admin")}
-              />
+              <Login onLogin={handleLogin} />
             }
           />
           <Route
@@ -48,7 +61,7 @@ function App() {
             element={
               <Login
                 isAdmin={true}
-                onLogin={(session) => setIsAdmin(session?.role === "admin")}
+                onLogin={handleLogin}
               />
             }
           />

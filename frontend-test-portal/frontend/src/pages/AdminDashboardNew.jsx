@@ -3,6 +3,78 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import QuestionManagerModal from '../components/QuestionManagerModal';
 import SubmissionList from '../components/SubmissionList';
+import { clearAdminSession } from '../utils/session';
+
+const OPEN_SOURCE_RESOURCES = [
+  {
+    id: 'tailwind',
+    name: 'Tailwind CSS',
+    description: 'Utility-first CSS for rapid UI building',
+    url: 'https://tailwindcss.com/docs'
+  },
+  {
+    id: 'alpine',
+    name: 'Alpine.js',
+    description: 'Lightweight interactivity without heavy frameworks',
+    url: 'https://alpinejs.dev'
+  },
+  {
+    id: 'lucide',
+    name: 'Lucide Icons',
+    description: 'Open-source iconography set',
+    url: 'https://lucide.dev'
+  },
+  {
+    id: 'gsap',
+    name: 'GSAP Animations',
+    description: 'Battle-tested animation toolkit',
+    url: 'https://greensock.com/gsap'
+  }
+];
+
+const buildFallbackAiQuestion = ({ prompt, screenshotName, assets, libraries }) => {
+  const safePrompt = (prompt || '').trim() || 'responsive dashboard hero section';
+  const keywords = safePrompt.split(/\s+/).slice(0, 4).join(' ');
+  const recommendedAssets = assets.map(asset => ({
+    filename: asset.filename,
+    url: asset.url,
+    path: asset.path || asset.relativePath || asset.url,
+    category: asset.category || 'general'
+  }));
+  const resourceDetails = OPEN_SOURCE_RESOURCES.filter(lib => libraries.includes(lib.id));
+
+  return {
+    title: `AI Draft: ${keywords.charAt(0).toUpperCase() + keywords.slice(1)}`,
+    summary: `Generate a coding challenge that recreates "${safePrompt}"${
+      screenshotName ? ` using the screenshot ${screenshotName} as the primary reference.` : '.'
+    }`,
+    instructions: [
+      'Study the uploaded screenshot and outline the semantic sections you observe.',
+      'Use any highlighted assets plus the selected open-source libraries to stay faithful to the reference.',
+      'Deliver both desktop and mobile breakpoints with clear spacing, typography, and interaction states.'
+    ],
+    acceptanceCriteria: [
+      'Structure mirrors the reference layout with semantic HTML landmarks.',
+      'Responsive behavior confirmed at 320px, 768px, and 1280px breakpoints.',
+      'Visual language (colors, spacing, iconography) stays within 5% variance of the reference screenshot.',
+      'Includes validation steps that describe how to evaluate the submission programmatically.'
+    ],
+    htmlOutline: [
+      'Hero wrapper containing headline, subtitle, CTA cluster, and media pane.',
+      'Support section with metric cards or feature grid depending on the screenshot composition.',
+      'Footer or auxiliary strip referencing any badges/assets the designer supplied.'
+    ],
+    cssFocus: [
+      'Use CSS custom properties to centralize palette and spacing.',
+      'Adopt fluid type scales (`clamp`) to keep text legible across breakpoints.',
+      'Add motion/hover affordances for CTAs, icons, and cards.'
+    ],
+    recommendedAssets,
+    libraries: resourceDetails,
+    promptEcho: safePrompt,
+    screenshotName: screenshotName || null
+  };
+};
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -29,23 +101,26 @@ export default function AdminDashboard() {
   const [courses, setCourses] = useState([]);
   const [editingCourse, setEditingCourse] = useState(null);
   const [showCourseModal, setShowCourseModal] = useState(false);
-  
-  // Question Manager
-  const [showQuestionManager, setShowQuestionManager] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedQuestionCourseId, setSelectedQuestionCourseId] = useState(null);
 
   // Challenges data
   const [challenges, setChallenges] = useState([]);
   const [editingChallenge, setEditingChallenge] = useState(null);
   const [showChallengeModal, setShowChallengeModal] = useState(false);
 
-  // Progress data
-  const [progressData, setProgressData] = useState([]);
-
   // Assets data
   const [assets, setAssets] = useState([]);
   const [uploadingAsset, setUploadingAsset] = useState(false);
   const [assetSearch, setAssetSearch] = useState('');
+
+  // AI agent data
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiScreenshot, setAiScreenshot] = useState({ file: null, preview: '' });
+  const [aiSelectedAssets, setAiSelectedAssets] = useState([]);
+  const [aiSelectedLibraries, setAiSelectedLibraries] = useState([]);
+  const [aiGeneratedQuestion, setAiGeneratedQuestion] = useState(null);
+  const [aiError, setAiError] = useState('');
+  const [aiGenerating, setAiGenerating] = useState(false);
 
   useEffect(() => {
     loadAllData();
@@ -59,7 +134,6 @@ export default function AdminDashboard() {
         loadSubmissions(),
         loadCourses(),
         loadChallenges(),
-        loadProgress(),
         loadAssets()
       ]);
     } catch (error) {
@@ -102,6 +176,14 @@ export default function AdminDashboard() {
     }
   };
 
+  useEffect(() => {
+    if (!selectedQuestionCourseId && courses.length) {
+      setSelectedQuestionCourseId(courses[0].id);
+    }
+  }, [courses, selectedQuestionCourseId]);
+
+  const selectedQuestionCourse = courses.find(course => course.id === selectedQuestionCourseId);
+
   const loadChallenges = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/challenges');
@@ -109,18 +191,6 @@ export default function AdminDashboard() {
       setStats(prev => ({ ...prev, totalChallenges: res.data?.length || 0 }));
     } catch (error) {
       console.error('Failed to load challenges:', error);
-    }
-  };
-
-  const loadProgress = async () => {
-    try {
-      const token = localStorage.getItem('adminToken');
-      const res = await axios.get('http://localhost:5000/api/users/progress', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setProgressData(res.data || []);
-    } catch (error) {
-      console.error('Failed to load progress:', error);
     }
   };
 
@@ -174,9 +244,100 @@ export default function AdminDashboard() {
     alert('Path copied to clipboard!');
   };
 
+  const normalizeList = (value) => {
+    if (Array.isArray(value)) {
+      return value;
+    }
+    if (!value && value !== 0) {
+      return [];
+    }
+    return [value];
+  };
+
+  const handleAiScreenshotUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAiScreenshot({ file, preview: reader.result?.toString() || '' });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const clearAiScreenshot = () => {
+    setAiScreenshot({ file: null, preview: '' });
+  };
+
+  const handleAiAssetToggle = (filename) => {
+    setAiSelectedAssets((prev) =>
+      prev.includes(filename)
+        ? prev.filter((item) => item !== filename)
+        : prev.length >= 6
+          ? prev
+          : [...prev, filename]
+    );
+  };
+
+  const handleAiLibraryToggle = (libraryId) => {
+    setAiSelectedLibraries((prev) =>
+      prev.includes(libraryId)
+        ? prev.filter((item) => item !== libraryId)
+        : [...prev, libraryId]
+    );
+  };
+
+  const handleAiReset = () => {
+    setAiPrompt('');
+    setAiScreenshot({ file: null, preview: '' });
+    setAiSelectedAssets([]);
+    setAiSelectedLibraries([]);
+    setAiGeneratedQuestion(null);
+    setAiError('');
+  };
+
+  const generateQuestionWithAgent = async () => {
+    if (!aiPrompt.trim()) {
+      alert('Describe the experience you want before asking the AI agent to generate it.');
+      return;
+    }
+
+    setAiGenerating(true);
+    setAiError('');
+    setAiGeneratedQuestion(null);
+
+    const payload = new FormData();
+    payload.append('prompt', aiPrompt.trim());
+    payload.append('assets', JSON.stringify(aiSelectedAssets));
+    payload.append('libraries', JSON.stringify(aiSelectedLibraries));
+    if (aiScreenshot.file) {
+      payload.append('screenshot', aiScreenshot.file);
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/ai/generate-question', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setAiGeneratedQuestion(response.data);
+    } catch (error) {
+      console.warn('AI endpoint unavailable, using fallback generator', error);
+      setAiError(error.response?.data?.error || 'AI endpoint unavailable. Generated an offline draft instead.');
+      const selectedAssetObjects = assets.filter((asset) => aiSelectedAssets.includes(asset.filename));
+      setAiGeneratedQuestion(
+        buildFallbackAiQuestion({
+          prompt: aiPrompt,
+          screenshotName: aiScreenshot.file?.name,
+          assets: selectedAssetObjects,
+          libraries: aiSelectedLibraries
+        })
+      );
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
+    clearAdminSession();
     navigate('/login');
   };
 
@@ -330,8 +491,9 @@ export default function AdminDashboard() {
               { id: 'overview', label: '📊 Overview', icon: '📊' },
               { id: 'users', label: '👥 Users', icon: '👥' },
               { id: 'courses', label: '📚 Courses', icon: '📚' },
+              { id: 'questions', label: '❓ Questions', icon: '❓' },
               { id: 'submissions', label: '📝 Submissions', icon: '📝' },
-              { id: 'progress', label: '📈 Progress', icon: '📈' },
+              { id: 'ai-agent', label: '🤖 Question AI Agent', icon: '🤖' },
               { id: 'assets', label: '📁 Assets', icon: '📁' }
             ].map(tab => (
               <button
@@ -527,8 +689,8 @@ export default function AdminDashboard() {
                         <div className="flex flex-col gap-2">
                           <button
                             onClick={() => {
-                              setSelectedCourse(course);
-                              setShowQuestionManager(true);
+                              setSelectedQuestionCourseId(course.id);
+                              setActiveTab('questions');
                             }}
                             className="w-full px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
                           >
@@ -559,6 +721,54 @@ export default function AdminDashboard() {
               </div>
             )}
 
+            {/* Questions Tab */}
+            {activeTab === 'questions' && (
+              <div>
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="lg:w-72 bg-white rounded-lg shadow p-4 h-fit">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold">Courses</h3>
+                      <span className="text-xs text-gray-500">{courses.length}</span>
+                    </div>
+                    <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1">
+                      {courses.map(course => (
+                        <button
+                          key={course.id}
+                          onClick={() => setSelectedQuestionCourseId(course.id)}
+                          className={`w-full text-left px-3 py-2 rounded-lg border transition-colors ${
+                            selectedQuestionCourseId === course.id
+                              ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+                              : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          <div className="font-semibold leading-tight">{course.title}</div>
+                          <div className="text-xs text-gray-500">{course.totalLevels || 0} levels</div>
+                        </button>
+                      ))}
+                      {courses.length === 0 && (
+                        <p className="text-sm text-gray-500">No courses available.</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex-1">
+                    {selectedQuestionCourse ? (
+                      <QuestionManagerModal
+                        courseId={selectedQuestionCourse.id}
+                        courseName={selectedQuestionCourse.title}
+                        standalone
+                        onClose={() => {}}
+                      />
+                    ) : (
+                      <div className="bg-white rounded-lg shadow p-6 text-center text-gray-600">
+                        Select a course to start managing questions.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Submissions Tab */}
             {activeTab === 'submissions' && (
               <div>
@@ -580,34 +790,237 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* Progress Tab */}
-            {activeTab === 'progress' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-6">User Progress</h2>
-                <div className="space-y-4">
-                  {progressData.map(user => (
-                    <div key={user.userId} className="bg-white rounded-lg shadow p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-bold">{user.username || user.userId}</h3>
-                          <p className="text-sm text-gray-600">Total Points: {user.totalPoints || 0}</p>
-                        </div>
+            {/* AI Agent Tab */}
+            {activeTab === 'ai-agent' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <section className="bg-white rounded-lg shadow p-6 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold">Question Generation Agent</h2>
+                        <p className="text-sm text-gray-600">Upload a visual reference and feed the agent curated assets.</p>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {user.courses?.map(course => (
-                          <div key={course.courseId} className="border rounded-lg p-4">
-                            <div className="font-semibold mb-2">{course.courseId}</div>
-                            <div className="text-sm text-gray-600 space-y-1">
-                              <div>Current Level: {course.currentLevel || 1}</div>
-                              <div>Completed Levels: {course.completedLevels?.join(', ') || 'None'}</div>
-                              <div>Points: {course.totalPoints || 0}</div>
+                      <button
+                        onClick={handleAiReset}
+                        className="text-sm px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
+                      >
+                        Reset
+                      </button>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-800 mb-2">Screenshot reference</label>
+                      <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                        {aiScreenshot.preview ? (
+                          <div className="space-y-3">
+                            <img src={aiScreenshot.preview} alt="Screenshot preview" className="mx-auto max-h-64 rounded-lg shadow" />
+                            <div className="flex justify-center gap-3">
+                              <span className="text-sm text-gray-600">{aiScreenshot.file?.name}</span>
+                              <button
+                                onClick={clearAiScreenshot}
+                                className="text-sm text-red-600 hover:underline"
+                              >
+                                Remove
+                              </button>
                             </div>
                           </div>
+                        ) : (
+                          <label className="block cursor-pointer">
+                            <div className="text-gray-500">
+                              <p className="text-lg font-semibold">Drop screenshot or browse</p>
+                              <p className="text-sm">PNG, JPG up to 5MB</p>
+                            </div>
+                            <input type="file" accept="image/*" className="hidden" onChange={handleAiScreenshotUpload} />
+                          </label>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <label className="text-sm font-semibold text-gray-800">Attach assets from Asset Manager</label>
+                        <span className="text-xs text-gray-500">Pick up to 6</span>
+                      </div>
+                      {assets.length === 0 ? (
+                        <p className="text-sm text-gray-500">No assets yet. Upload items inside the Asset tab to reference them here.</p>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-1">
+                          {assets.slice(0, 10).map((asset) => (
+                            <label
+                              key={asset.filename}
+                              className={`border rounded-lg p-3 cursor-pointer flex items-start gap-3 transition ${
+                                aiSelectedAssets.includes(asset.filename)
+                                  ? 'border-indigo-500 bg-indigo-50'
+                                  : 'border-gray-200 hover:border-gray-300'
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                className="mt-1"
+                                checked={aiSelectedAssets.includes(asset.filename)}
+                                onChange={() => handleAiAssetToggle(asset.filename)}
+                              />
+                              <div>
+                                <p className="text-sm font-semibold text-gray-900">{asset.filename}</p>
+                                <p className="text-xs text-gray-500 truncate">{asset.path}</p>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </section>
+
+                  <section className="bg-white rounded-lg shadow p-6 space-y-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-800 mb-2">Describe the experience</label>
+                      <textarea
+                        rows={6}
+                        value={aiPrompt}
+                        onChange={(e) => setAiPrompt(e.target.value)}
+                        className="w-full border rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500"
+                        placeholder="Example: Dashboard hero with gradient background, KPI cards, collaboration avatars, and a sticky action bar."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-800 mb-3">Open-source helpers</label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {OPEN_SOURCE_RESOURCES.map((resource) => (
+                          <button
+                            key={resource.id}
+                            onClick={() => handleAiLibraryToggle(resource.id)}
+                            type="button"
+                            className={`text-left border rounded-lg p-3 transition ${
+                              aiSelectedLibraries.includes(resource.id)
+                                ? 'border-green-500 bg-green-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-semibold text-gray-900 text-sm">{resource.name}</span>
+                              <span className="text-xs text-gray-500">{aiSelectedLibraries.includes(resource.id) ? 'Selected' : 'Tap to add'}</span>
+                            </div>
+                            <p className="text-xs text-gray-600">{resource.description}</p>
+                          </button>
                         ))}
                       </div>
                     </div>
-                  ))}
+
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        onClick={generateQuestionWithAgent}
+                        className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+                        disabled={aiGenerating}
+                      >
+                        {aiGenerating ? 'Generating...' : 'Generate Question'}
+                      </button>
+                      {aiScreenshot.file && (
+                        <span className="text-xs text-gray-500">Screenshot attached: {aiScreenshot.file.name}</span>
+                      )}
+                    </div>
+
+                    <p className="text-xs text-gray-500">
+                      The agent tries the backend endpoint first and falls back to an offline draft when AI services are unavailable.
+                    </p>
+                  </section>
                 </div>
+
+                {aiError && (
+                  <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded">
+                    {aiError}
+                  </div>
+                )}
+
+                {aiGeneratedQuestion ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="bg-white rounded-lg shadow p-6 space-y-4">
+                      <div>
+                        <p className="text-xs uppercase text-indigo-500 font-semibold">Challenge Draft</p>
+                        <h3 className="text-xl font-bold">{aiGeneratedQuestion.title || 'AI Draft'}</h3>
+                        <p className="text-sm text-gray-600 mt-2">{aiGeneratedQuestion.summary || aiGeneratedQuestion.description}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900 mb-2">Instructions</p>
+                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                          {normalizeList(aiGeneratedQuestion.instructions).map((item, idx) => (
+                            <li key={idx}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow p-6 space-y-4">
+                      <div>
+                        <p className="text-xs uppercase text-indigo-500 font-semibold">Acceptance criteria</p>
+                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                          {normalizeList(aiGeneratedQuestion.acceptanceCriteria || aiGeneratedQuestion.criteria).map((item, idx) => (
+                            <li key={idx}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase text-indigo-500 font-semibold">HTML Outline</p>
+                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                          {normalizeList(aiGeneratedQuestion.htmlOutline).map((item, idx) => (
+                            <li key={idx}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase text-indigo-500 font-semibold">CSS Focus</p>
+                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                          {normalizeList(aiGeneratedQuestion.cssFocus).map((item, idx) => (
+                            <li key={idx}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow p-6 space-y-4">
+                      <div>
+                        <p className="text-xs uppercase text-indigo-500 font-semibold">Assets referenced</p>
+                        {aiGeneratedQuestion.recommendedAssets?.length ? (
+                          <ul className="space-y-2 text-sm text-gray-700">
+                            {aiGeneratedQuestion.recommendedAssets.map((asset, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <span>📁</span>
+                                <div>
+                                  <p className="font-semibold">{asset.filename}</p>
+                                  <p className="text-xs text-gray-500">{asset.path || asset.url}</p>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-gray-500">No assets were attached.</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <p className="text-xs uppercase text-indigo-500 font-semibold">Open-source resources</p>
+                        {aiGeneratedQuestion.libraries?.length ? (
+                          <ul className="space-y-2 text-sm">
+                            {aiGeneratedQuestion.libraries.map((lib) => (
+                              <li key={lib.id}>
+                                <a href={lib.url} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+                                  {lib.name}
+                                </a>
+                                <p className="text-xs text-gray-500">{lib.description}</p>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-gray-500">No open-source helpers selected.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
+                    The agent output will show here once you generate a draft.
+                  </div>
+                )}
               </div>
             )}
 
@@ -744,16 +1157,6 @@ export default function AdminDashboard() {
       )}
 
       {/* Question Manager Modal */}
-      {showQuestionManager && selectedCourse && (
-        <QuestionManagerModal
-          courseId={selectedCourse.id}
-          courseName={selectedCourse.title}
-          onClose={() => {
-            setShowQuestionManager(false);
-            setSelectedCourse(null);
-          }}
-        />
-      )}
 
       {/* Challenge Modal */}
       {showChallengeModal && (

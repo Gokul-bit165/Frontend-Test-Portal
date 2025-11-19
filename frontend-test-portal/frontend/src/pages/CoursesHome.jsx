@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCourses } from '../services/api';
+import {
+  isAdminSessionActive,
+  subscribeToSessionChanges,
+  clearAdminSession,
+} from '../utils/session';
 
 export default function CoursesHome() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(() => isAdminSessionActive());
   const navigate = useNavigate();
-  const isAdmin =
-    !!localStorage.getItem('adminToken') ||
-    (localStorage.getItem('userRole') || '').toLowerCase() === 'admin';
 
   useEffect(() => {
     loadCourses();
+    const unsubscribe = subscribeToSessionChanges(setIsAdmin);
+    return () => {
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
   }, []);
 
   const loadCourses = async () => {
@@ -30,6 +39,7 @@ export default function CoursesHome() {
     localStorage.removeItem('username');
     localStorage.removeItem('userToken');
     localStorage.removeItem('userRole');
+    clearAdminSession();
     navigate('/login');
   };
 

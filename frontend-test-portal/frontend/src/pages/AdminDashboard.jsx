@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllSubmissions, reEvaluateSubmission, deleteSubmission } from '../services/api';
 import SubmissionList from '../components/SubmissionList';
+import { clearAdminSession } from '../utils/session';
 
 export default function AdminDashboard() {
   const [submissions, setSubmissions] = useState([]);
@@ -58,8 +59,7 @@ export default function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
+    clearAdminSession();
     navigate('/admin/login');
   };
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCourses, updateCourse, createCourse, deleteCourse } from '../services/api';
 import CourseEditModal from '../components/CourseEditModal';
 import QuestionManagerModal from '../components/QuestionManagerModal';
+import { clearAdminSession } from '../utils/session';
 
 export default function CourseManager() {
   const [courses, setCourses] = useState([]);
@@ -59,8 +60,7 @@ export default function CourseManager() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
+    clearAdminSession();
     navigate('/admin/login');
   };
 
