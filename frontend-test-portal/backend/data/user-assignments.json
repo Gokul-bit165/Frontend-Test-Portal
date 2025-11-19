@@ -110,19 +110,6 @@
     "totalAvailable": 1
   },
   {
-    "key": "user-demo-student-course-html-css-1",
-    "userId": "user-demo-student",
-    "courseId": "course-html-css",
-    "level": 1,
-    "assignedQuestions": [
-      "html-css-l1-q1",
-      "course-html-css-l1-q5"
-    ],
-    "completedQuestions": [],
-    "assignedAt": "2025-11-11T14:48:07.216Z",
-    "totalAvailable": 7
-  },
-  {
     "key": "user-demo-student-course-html-css-2",
     "userId": "user-demo-student",
     "courseId": "course-html-css",
@@ -147,19 +134,6 @@
     "completedQuestions": [],
     "assignedAt": "2025-11-11T18:08:39.898Z",
     "totalAvailable": 7
-  },
-  {
-    "key": "user-demo-student-course-html-css-3",
-    "userId": "user-demo-student",
-    "courseId": "course-html-css",
-    "level": 3,
-    "assignedQuestions": [
-      "course-html-css-l3-q2",
-      "course-html-css-l3-q1"
-    ],
-    "completedQuestions": [],
-    "assignedAt": "2025-11-12T06:50:12.425Z",
-    "totalAvailable": 5
   },
   {
     "key": "user-1762931727830-0ycxbbf2a-course-html-css-1",
@@ -211,6 +185,45 @@
     ],
     "completedQuestions": [],
     "assignedAt": "2025-11-12T07:29:16.853Z",
+    "totalAvailable": 7
+  },
+  {
+    "key": "user-demo-student-course-html-css-3",
+    "userId": "user-demo-student",
+    "courseId": "course-html-css",
+    "level": 3,
+    "assignedQuestions": [
+      "course-html-css-l3-q1",
+      "course-html-css-l3-q5"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-14T03:21:32.921Z",
+    "totalAvailable": 5
+  },
+  {
+    "key": "user-demo-student-course-html-css-1",
+    "userId": "user-demo-student",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "html-css-l1-q1",
+      "html-css-l1-q2"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-14T03:26:17.201Z",
+    "totalAvailable": 7
+  },
+  {
+    "key": "user-1763528566331-0k4j6wde6-course-html-css-1",
+    "userId": "user-1763528566331-0k4j6wde6",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "course-html-css-l1-q5",
+      "course-html-css-l1-q4"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-19T05:03:03.114Z",
     "totalAvailable": 7
   }
 ]

@@ -19,9 +19,10 @@ services:
       - DB_USER=${DB_USER:-root}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME:-frontend_test_portal}
-      - USE_JSON=${USE_JSON:-true}
-      - JWT_SECRET=${JWT_SECRET:-frontend-test-portal-secret-key-2025}
+      - USE_JSON=${USE_JSON:-false}
+      - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:80}
     restart: unless-stopped
     networks:
       - test-portal-network

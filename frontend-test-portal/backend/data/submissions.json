@@ -2495,5 +2495,1174 @@
         ]
       }
     }
+  },
+  {
+    "id": "a53b8f1c-7b97-4210-bbea-78a87cd289ee",
+    "challengeId": "html-css-l1-q2",
+    "candidateName": "user-demo-student",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\" />\r\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n  <title>Product Card</title>\r\n  <style>\r\n    body {\r\n      display: flex;\r\n      justify-content: center;\r\n      align-items: center;\r\n      height: 100vh;\r\n      background: #f5f5f5;\r\n      font-family: Arial, sans-serif;\r\n    }\r\n\r\n    .card {\r\n      width: 280px;\r\n      background: #ffffff;\r\n      border-radius: 16px;\r\n      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\r\n      overflow: hidden;\r\n      text-align: center;\r\n      padding: 20px;\r\n    }\r\n\r\n    .card img {\r\n      width: 100%;\r\n      height: auto;\r\n      border-radius: 12px;\r\n    }\r\n\r\n    .product-name {\r\n      font-size: 20px;\r\n      font-weight: bold;\r\n      margin: 15px 0 5px;\r\n      color: #333;\r\n    }\r\n\r\n    .price {\r\n      font-size: 18px;\r\n      color: #555;\r\n      margin-bottom: 15px;\r\n    }\r\n\r\n    .btn {\r\n      display: inline-block;\r\n      padding: 12px 20px;\r\n      background: #3498db;\r\n      color: white;\r\n      border: none;\r\n      border-radius: 8px;\r\n      cursor: pointer;\r\n      transition: background 0.3s ease;\r\n      font-size: 16px;\r\n    }\r\n\r\n    .btn:hover {\r\n      background: #217dbb;\r\n    }\r\n  </style>\r\n</head>\r\n<body>\r\n\r\n  <div class=\"card\">\r\n    <img src=\"/assets/images/product-1.png\" alt=\"Wireless Headphones\" />\r\n    <div class=\"product-name\">Wireless Headphones</div>\r\n    <div class=\"price\">$99.99</div>\r\n    <button class=\"btn\">Add to Cart</button>\r\n  </div>\r\n\r\n</body>\r\n</html>",
+      "css": "",
+      "js": ""
+    },
+    "status": "failed",
+    "submittedAt": "2025-11-14T03:28:00.114Z",
+    "evaluatedAt": "2025-11-14T03:28:06.380Z",
+    "result": {
+      "submissionId": "a53b8f1c-7b97-4210-bbea-78a87cd289ee",
+      "timestamp": "2025-11-14T03:28:01.299Z",
+      "contentScore": 61,
+      "structureScore": 100,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 80,
+      "passed": false,
+      "thresholds": {
+        "structure": 75,
+        "visual": 80,
+        "overall": 77
+      },
+      "content": {
+        "score": 61,
+        "passed": false,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 4/4 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 66.66666666666666,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Found 1/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/11 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": false,
+            "score": 20,
+            "weight": 15,
+            "details": "Matched 1/5 class names"
+          }
+        ],
+        "feedback": "Overall Score: 61%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✓ Required text content: 100%\n   Found 4/4 required texts. All texts found!\n✗ Required HTML elements: 67%\n   ✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)\n✓ Required images: 100%\n   Found 1/1 required images\n✗ Required CSS styles: 0%\n   Found 0/11 required CSS properties\n✗ CSS class names: 20%\n   Matched 1/5 class names\n\n⚠️ 3 requirement(s) need attention",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "product card",
+              "wireless headphones",
+              "$99.99",
+              "add to cart"
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "title": 1,
+              "div": 2,
+              "img": 1,
+              "h3": 1,
+              "p": 1,
+              "button": 1
+            },
+            "weight": 20
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "required": [
+              {
+                "src": "/assets/images/product-1.png",
+                "alt": "Product"
+              }
+            ],
+            "weight": 15
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "required": [
+              "border-radius",
+              "box-shadow",
+              "background",
+              "width",
+              "height",
+              "padding",
+              "margin",
+              "display",
+              "flex",
+              "color",
+              "font"
+            ],
+            "weight": 20
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "required": [
+              "product-card",
+              "product-image",
+              "product-info",
+              "price",
+              "buy-btn"
+            ],
+            "weight": 15
+          }
+        ]
+      },
+      "structure": {
+        "score": 100,
+        "passed": true,
+        "rolesFound": [
+          {
+            "role": "productImage",
+            "confidence": "high",
+            "element": {
+              "tag": "img",
+              "classes": "",
+              "text": ""
+            },
+            "matches": {
+              "tag": "img",
+              "src": "/assets/images/product-1.png",
+              "alt": "Wireless Headphones"
+            }
+          },
+          {
+            "role": "productTitle",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "product-name",
+              "text": "Wireless Headphones"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "product-name",
+              "text": "Wireless Headphones"
+            }
+          },
+          {
+            "role": "productPrice",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "price",
+              "text": "$99.99"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "price",
+              "text": "$99.99"
+            }
+          },
+          {
+            "role": "productButton",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "card",
+              "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "card",
+              "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+            }
+          }
+        ],
+        "rolesPartial": [],
+        "rolesMissing": [],
+        "totalRoles": 4,
+        "foundRoles": 4
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 9418,
+        "totalPixels": 921600,
+        "diffPercentage": "1.02",
+        "screenshots": {
+          "candidate": "/screenshots/a53b8f1c-7b97-4210-bbea-78a87cd289ee-candidate.png",
+          "expected": "/screenshots/a53b8f1c-7b97-4210-bbea-78a87cd289ee-expected.png",
+          "diff": "/screenshots/a53b8f1c-7b97-4210-bbea-78a87cd289ee-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "🎉 Outstanding work! Your solution is nearly perfect!",
+          "Your design matches the expected output beautifully."
+        ],
+        "improvements": [],
+        "technical": {
+          "structure": {
+            "rolesFound": [
+              {
+                "role": "productImage",
+                "confidence": "high",
+                "element": {
+                  "tag": "img",
+                  "classes": "",
+                  "text": ""
+                },
+                "matches": {
+                  "tag": "img",
+                  "src": "/assets/images/product-1.png",
+                  "alt": "Wireless Headphones"
+                }
+              },
+              {
+                "role": "productTitle",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "product-name",
+                  "text": "Wireless Headphones"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "product-name",
+                  "text": "Wireless Headphones"
+                }
+              },
+              {
+                "role": "productPrice",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "price",
+                  "text": "$99.99"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "price",
+                  "text": "$99.99"
+                }
+              },
+              {
+                "role": "productButton",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "card",
+                  "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "card",
+                  "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+                }
+              }
+            ],
+            "rolesMissing": [],
+            "rolesPartial": [],
+            "totalRoles": 4,
+            "foundRoles": 4,
+            "score": 100
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [
+            {
+              "icon": "✅",
+              "message": "Product Image detected successfully",
+              "details": "Found as <img>"
+            },
+            {
+              "icon": "✅",
+              "message": "Product Title detected successfully",
+              "details": "Found as <div> with class \"product-name\""
+            },
+            {
+              "icon": "✅",
+              "message": "Product Price detected successfully",
+              "details": "Found as <div> with class \"price\""
+            },
+            {
+              "icon": "✅",
+              "message": "Product Button detected successfully",
+              "details": "Found as <div> with class \"card\""
+            }
+          ],
+          "minorDifferences": [],
+          "missing": []
+        },
+        "contentValidation": "Overall Score: 61%\n\n✗ FAILED - Needs improvement\n\nRequirements:\n✓ Required text content: 100%\n   Found 4/4 required texts. All texts found!\n✗ Required HTML elements: 67%\n   ✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)\n✓ Required images: 100%\n   Found 1/1 required images\n✗ Required CSS styles: 0%\n   Found 0/11 required CSS properties\n✗ CSS class names: 20%\n   Matched 1/5 class names\n\n⚠️ 3 requirement(s) need attention",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 4/4 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 66.66666666666666,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Found 1/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": false,
+            "score": 0,
+            "weight": 20,
+            "details": "Found 0/11 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": false,
+            "score": 20,
+            "weight": 15,
+            "details": "Matched 1/5 class names"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "89b1843e-9d02-450a-9a53-73222986ac53",
+    "challengeId": "html-css-l1-q2",
+    "candidateName": "user-demo-student",
+    "code": {
+      "html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\" />\r\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n  <title>Product Card</title>\r\n  <link rel=\"stylesheet\" href=\"style.css\" />\r\n</head>\r\n<body>\r\n\r\n  <div class=\"card\">\r\n    <img src=\"/assets/images/product-1.png\" alt=\"Wireless Headphones\" />\r\n    <div class=\"product-name\">Wireless Headphones</div>\r\n    <div class=\"price\">$99.99</div>\r\n    <button class=\"btn\">Add to Cart</button>\r\n  </div>\r\n\r\n</body>\r\n</html>\r\n",
+      "css": "body {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  height: 100vh;\r\n  background: #f5f5f5;\r\n  font-family: Arial, sans-serif;\r\n}\r\n\r\n.card {\r\n  width: 280px;\r\n  background: #ffffff;\r\n  border-radius: 16px;\r\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\r\n  overflow: hidden;\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\n.card img {\r\n  width: 100%;\r\n  height: auto;\r\n  border-radius: 12px;\r\n}\r\n\r\n.product-name {\r\n  font-size: 20px;\r\n  font-weight: bold;\r\n  margin: 15px 0 5px;\r\n  color: #333;\r\n}\r\n\r\n.price {\r\n  font-size: 18px;\r\n  color: #555;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.btn {\r\n  display: inline-block;\r\n  padding: 12px 20px;\r\n  background: #3498db;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 8px;\r\n  cursor: pointer;\r\n  transition: background 0.3s ease;\r\n  font-size: 16px;\r\n}\r\n\r\n.btn:hover {\r\n  background: #217dbb;\r\n}\r\n",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-14T03:29:08.511Z",
+    "evaluatedAt": "2025-11-14T03:29:11.498Z",
+    "result": {
+      "submissionId": "89b1843e-9d02-450a-9a53-73222986ac53",
+      "timestamp": "2025-11-14T03:29:09.639Z",
+      "contentScore": 81,
+      "structureScore": 100,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 90,
+      "passed": true,
+      "thresholds": {
+        "structure": 75,
+        "visual": 80,
+        "overall": 77
+      },
+      "content": {
+        "score": 81,
+        "passed": true,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 4/4 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 66.66666666666666,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Found 1/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": true,
+            "score": 100,
+            "weight": 20,
+            "details": "Found 11/11 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": false,
+            "score": 20,
+            "weight": 15,
+            "details": "Matched 1/5 class names"
+          }
+        ],
+        "feedback": "Overall Score: 81%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 100%\n   Found 4/4 required texts. All texts found!\n✗ Required HTML elements: 67%\n   ✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)\n✓ Required images: 100%\n   Found 1/1 required images\n✓ Required CSS styles: 100%\n   Found 11/11 required CSS properties\n✗ CSS class names: 20%\n   Matched 1/5 class names\n\n⚠️ 2 requirement(s) need attention",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "product card",
+              "wireless headphones",
+              "$99.99",
+              "add to cart"
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "title": 1,
+              "div": 2,
+              "img": 1,
+              "h3": 1,
+              "p": 1,
+              "button": 1
+            },
+            "weight": 20
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "required": [
+              {
+                "src": "/assets/images/product-1.png",
+                "alt": "Product"
+              }
+            ],
+            "weight": 15
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "required": [
+              "border-radius",
+              "box-shadow",
+              "background",
+              "width",
+              "height",
+              "padding",
+              "margin",
+              "display",
+              "flex",
+              "color",
+              "font"
+            ],
+            "weight": 20
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "required": [
+              "product-card",
+              "product-image",
+              "product-info",
+              "price",
+              "buy-btn"
+            ],
+            "weight": 15
+          }
+        ]
+      },
+      "structure": {
+        "score": 100,
+        "passed": true,
+        "rolesFound": [
+          {
+            "role": "productImage",
+            "confidence": "high",
+            "element": {
+              "tag": "img",
+              "classes": "",
+              "text": ""
+            },
+            "matches": {
+              "tag": "img",
+              "src": "/assets/images/product-1.png",
+              "alt": "Wireless Headphones"
+            }
+          },
+          {
+            "role": "productTitle",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "product-name",
+              "text": "Wireless Headphones"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "product-name",
+              "text": "Wireless Headphones"
+            }
+          },
+          {
+            "role": "productPrice",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "price",
+              "text": "$99.99"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "price",
+              "text": "$99.99"
+            }
+          },
+          {
+            "role": "productButton",
+            "confidence": "high",
+            "element": {
+              "tag": "div",
+              "classes": "card",
+              "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+            },
+            "matches": {
+              "tag": "div",
+              "class": "card",
+              "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+            }
+          }
+        ],
+        "rolesPartial": [],
+        "rolesMissing": [],
+        "totalRoles": 4,
+        "foundRoles": 4
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 9418,
+        "totalPixels": 921600,
+        "diffPercentage": "1.02",
+        "screenshots": {
+          "candidate": "/screenshots/89b1843e-9d02-450a-9a53-73222986ac53-candidate.png",
+          "expected": "/screenshots/89b1843e-9d02-450a-9a53-73222986ac53-expected.png",
+          "diff": "/screenshots/89b1843e-9d02-450a-9a53-73222986ac53-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "🎉 Outstanding work! Your solution is nearly perfect!",
+          "Your design matches the expected output beautifully."
+        ],
+        "improvements": [],
+        "technical": {
+          "structure": {
+            "rolesFound": [
+              {
+                "role": "productImage",
+                "confidence": "high",
+                "element": {
+                  "tag": "img",
+                  "classes": "",
+                  "text": ""
+                },
+                "matches": {
+                  "tag": "img",
+                  "src": "/assets/images/product-1.png",
+                  "alt": "Wireless Headphones"
+                }
+              },
+              {
+                "role": "productTitle",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "product-name",
+                  "text": "Wireless Headphones"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "product-name",
+                  "text": "Wireless Headphones"
+                }
+              },
+              {
+                "role": "productPrice",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "price",
+                  "text": "$99.99"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "price",
+                  "text": "$99.99"
+                }
+              },
+              {
+                "role": "productButton",
+                "confidence": "high",
+                "element": {
+                  "tag": "div",
+                  "classes": "card",
+                  "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+                },
+                "matches": {
+                  "tag": "div",
+                  "class": "card",
+                  "text": "Wireless Headphones\n    $99.99\n    Add to Cart"
+                }
+              }
+            ],
+            "rolesMissing": [],
+            "rolesPartial": [],
+            "totalRoles": 4,
+            "foundRoles": 4,
+            "score": 100
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [
+            {
+              "icon": "✅",
+              "message": "Product Image detected successfully",
+              "details": "Found as <img>"
+            },
+            {
+              "icon": "✅",
+              "message": "Product Title detected successfully",
+              "details": "Found as <div> with class \"product-name\""
+            },
+            {
+              "icon": "✅",
+              "message": "Product Price detected successfully",
+              "details": "Found as <div> with class \"price\""
+            },
+            {
+              "icon": "✅",
+              "message": "Product Button detected successfully",
+              "details": "Found as <div> with class \"card\""
+            }
+          ],
+          "minorDifferences": [],
+          "missing": []
+        },
+        "contentValidation": "Overall Score: 81%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 100%\n   Found 4/4 required texts. All texts found!\n✗ Required HTML elements: 67%\n   ✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)\n✓ Required images: 100%\n   Found 1/1 required images\n✓ Required CSS styles: 100%\n   Found 11/11 required CSS properties\n✗ CSS class names: 20%\n   Matched 1/5 class names\n\n⚠️ 2 requirement(s) need attention",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 4/4 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 66.66666666666666,
+            "weight": 20,
+            "details": "✓ title: 1 (required: 1), ✓ div: 3 (required: 2), ✓ img: 1 (required: 1), ✗ h3: 0 (required: 1), ✗ p: 0 (required: 1), ✓ button: 1 (required: 1)"
+          },
+          {
+            "type": "images",
+            "description": "Required images",
+            "passed": true,
+            "score": 100,
+            "weight": 15,
+            "details": "Found 1/1 required images"
+          },
+          {
+            "type": "css_properties",
+            "description": "Required CSS styles",
+            "passed": true,
+            "score": 100,
+            "weight": 20,
+            "details": "Found 11/11 required CSS properties"
+          },
+          {
+            "type": "class_names",
+            "description": "CSS class names",
+            "passed": false,
+            "score": 20,
+            "weight": 15,
+            "details": "Matched 1/5 class names"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "890ed708-1c7c-4fc7-b2bf-fc390833d3cf",
+    "challengeId": "course-html-css-l1-q5",
+    "candidateName": "user-1763528566331-0k4j6wde6",
+    "code": {
+      "html": "<table border=\"1\">\r\n  <caption>My Weekly Schedule</caption>\r\n  <tr>\r\n    <th>Time</th>\r\n    <th>Monday</th>\r\n    <th>Wednesday</th>\r\n    <th>Friday</th>\r\n  </tr>\r\n  <tr>\r\n    <td>Morning</td>\r\n    <td>Gym</td>\r\n    <td>Team Meeting</td>\r\n    <td>Reading</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Afternoon</td>\r\n    <td>Project Work</td>\r\n    <td>Client Calls</td>\r\n    <td>Study</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Evening</td>\r\n    <td>Walk</td>\r\n    <td>Cooking</td>\r\n    <td>Relax</td>\r\n  </tr>\r\n</table>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-19T05:03:47.400Z",
+    "evaluatedAt": "2025-11-19T05:03:55.307Z",
+    "result": {
+      "submissionId": "890ed708-1c7c-4fc7-b2bf-fc390833d3cf",
+      "timestamp": "2025-11-19T05:03:48.553Z",
+      "contentScore": 94,
+      "structureScore": 0,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 97,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 60,
+        "overall": 65
+      },
+      "content": {
+        "score": 94,
+        "passed": true,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 5/5 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 85.71428571428571,
+            "weight": 20,
+            "details": "✗ title: 0 (required: 1), ✓ table: 1 (required: 1), ✓ caption: 1 (required: 1), ✓ tbody: 1 (required: 1), ✓ tr: 4 (required: 4), ✓ th: 4 (required: 4), ✓ td: 12 (required: 12)"
+          }
+        ],
+        "feedback": "Overall Score: 94%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 100%\n   Found 5/5 required texts. All texts found!\n✓ Required HTML elements: 86%\n   ✗ title: 0 (required: 1), ✓ table: 1 (required: 1), ✓ caption: 1 (required: 1), ✓ tbody: 1 (required: 1), ✓ tr: 4 (required: 4), ✓ th: 4 (required: 4), ✓ td: 12 (required: 12)\n",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "weekly schedule",
+              "my weekly schedule",
+              "time",
+              "monday",
+              "wednesday"
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "title": 1,
+              "table": 1,
+              "caption": 1,
+              "tbody": 1,
+              "tr": 4,
+              "th": 4,
+              "td": 12
+            },
+            "weight": 20
+          }
+        ]
+      },
+      "structure": {
+        "score": 0,
+        "passed": false,
+        "rolesFound": [],
+        "rolesPartial": [],
+        "rolesMissing": [
+          {
+            "role": "productImage",
+            "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+            "suggestion": "Add a <img> element with class \"image\""
+          },
+          {
+            "role": "productTitle",
+            "expected": "Element with tag h1/h2/h3/div/span/p and class matching title/name/heading/product",
+            "suggestion": "Add a <h1> element with class \"title\""
+          },
+          {
+            "role": "productPrice",
+            "expected": "Element with tag span/div/p/strong and class matching price/cost/amount",
+            "suggestion": "Add a <span> element with class \"price\""
+          },
+          {
+            "role": "productButton",
+            "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+            "suggestion": "Add a <button> element with class \"button\""
+          }
+        ],
+        "totalRoles": 4,
+        "foundRoles": 0
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 6464,
+        "totalPixels": 921600,
+        "diffPercentage": "0.70",
+        "screenshots": {
+          "candidate": "/screenshots/890ed708-1c7c-4fc7-b2bf-fc390833d3cf-candidate.png",
+          "expected": "/screenshots/890ed708-1c7c-4fc7-b2bf-fc390833d3cf-expected.png",
+          "diff": "/screenshots/890ed708-1c7c-4fc7-b2bf-fc390833d3cf-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "💪 Good effort! You've got the basics down.",
+          "With a few adjustments, your solution will be even better!"
+        ],
+        "improvements": [
+          "Add missing elements: Product Image, Product Title, Product Price, Product Button"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [],
+            "rolesMissing": [
+              {
+                "role": "productImage",
+                "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+                "suggestion": "Add a <img> element with class \"image\""
+              },
+              {
+                "role": "productTitle",
+                "expected": "Element with tag h1/h2/h3/div/span/p and class matching title/name/heading/product",
+                "suggestion": "Add a <h1> element with class \"title\""
+              },
+              {
+                "role": "productPrice",
+                "expected": "Element with tag span/div/p/strong and class matching price/cost/amount",
+                "suggestion": "Add a <span> element with class \"price\""
+              },
+              {
+                "role": "productButton",
+                "expected": "Element with tag button/a/div/span and class matching button/btn/cta/add/cart",
+                "suggestion": "Add a <button> element with class \"button\""
+              }
+            ],
+            "rolesPartial": [],
+            "totalRoles": 4,
+            "foundRoles": 0,
+            "score": 0
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [],
+          "minorDifferences": [],
+          "missing": [
+            {
+              "icon": "❌",
+              "message": "Product Image not found",
+              "suggestion": "Add a <img> element with class \"image\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Title not found",
+              "suggestion": "Add a <h1> element with class \"title\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Price not found",
+              "suggestion": "Add a <span> element with class \"price\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Button not found",
+              "suggestion": "Add a <button> element with class \"button\""
+            }
+          ]
+        },
+        "contentValidation": "Overall Score: 94%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 100%\n   Found 5/5 required texts. All texts found!\n✓ Required HTML elements: 86%\n   ✗ title: 0 (required: 1), ✓ table: 1 (required: 1), ✓ caption: 1 (required: 1), ✓ tbody: 1 (required: 1), ✓ tr: 4 (required: 4), ✓ th: 4 (required: 4), ✓ td: 12 (required: 12)\n",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 100,
+            "weight": 30,
+            "details": "Found 5/5 required texts. All texts found!"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": true,
+            "score": 85.71428571428571,
+            "weight": 20,
+            "details": "✗ title: 0 (required: 1), ✓ table: 1 (required: 1), ✓ caption: 1 (required: 1), ✓ tbody: 1 (required: 1), ✓ tr: 4 (required: 4), ✓ th: 4 (required: 4), ✓ td: 12 (required: 12)"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "069d5401-775d-4b70-a665-a38cced63898",
+    "challengeId": "course-html-css-l1-q4",
+    "candidateName": "user-1763528566331-0k4j6wde6",
+    "code": {
+      "html": "<h2>My Favorite Websites</h2>\r\n\r\n<nav>\r\n  <ul>\r\n    <li>\r\n      <a href=\"https://www.google.com\" target=\"_blank\">\r\n        Google – Search Engine\r\n      </a>\r\n    </li>\r\n    <li>\r\n      <a href=\"https://www.youtube.com\" target=\"_blank\">\r\n        YouTube – Video Platform\r\n      </a>\r\n    </li>\r\n    <li>\r\n      <a href=\"https://www.wikipedia.org\" target=\"_blank\">\r\n        Wikipedia – Free Encyclopedia\r\n      </a>\r\n    </li>\r\n  </ul>\r\n</nav>\r\n",
+      "css": "",
+      "js": ""
+    },
+    "status": "passed",
+    "submittedAt": "2025-11-19T05:04:51.603Z",
+    "evaluatedAt": "2025-11-19T05:04:54.694Z",
+    "result": {
+      "submissionId": "069d5401-775d-4b70-a665-a38cced63898",
+      "timestamp": "2025-11-19T05:04:52.596Z",
+      "contentScore": 75,
+      "structureScore": 25,
+      "visualScore": 99,
+      "behaviorScore": 0,
+      "finalScore": 87,
+      "passed": true,
+      "thresholds": {
+        "structure": 70,
+        "visual": 60,
+        "overall": 65
+      },
+      "content": {
+        "score": 75,
+        "passed": true,
+        "details": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 80,
+            "weight": 30,
+            "details": "Found 4/5 required texts. Missing: my links"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 66.66666666666666,
+            "weight": 20,
+            "details": "✗ title: 0 (required: 1), ✗ h1: 0 (required: 1), ✓ nav: 1 (required: 1), ✓ ul: 1 (required: 1), ✓ li: 3 (required: 3), ✓ a: 3 (required: 3)"
+          }
+        ],
+        "feedback": "Overall Score: 75%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 80%\n   Found 4/5 required texts. Missing: my links\n✗ Required HTML elements: 67%\n   ✗ title: 0 (required: 1), ✗ h1: 0 (required: 1), ✓ nav: 1 (required: 1), ✓ ul: 1 (required: 1), ✓ li: 3 (required: 3), ✓ a: 3 (required: 3)\n\n⚠️ 1 requirement(s) need attention",
+        "requirements": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "required": [
+              "my links",
+              "my favorite websites",
+              "google - search engine",
+              "youtube - video platform",
+              "wikipedia - free encyclopedia"
+            ],
+            "weight": 30
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "required": {
+              "title": 1,
+              "h1": 1,
+              "nav": 1,
+              "ul": 1,
+              "li": 3,
+              "a": 3
+            },
+            "weight": 20
+          }
+        ]
+      },
+      "structure": {
+        "score": 25,
+        "passed": false,
+        "rolesFound": [],
+        "rolesPartial": [
+          {
+            "role": "productTitle",
+            "confidence": "medium",
+            "element": {
+              "tag": "h2",
+              "classes": "",
+              "text": "My Favorite Websites"
+            },
+            "suggestion": "Consider adding a class like \"title\""
+          },
+          {
+            "role": "productButton",
+            "confidence": "medium",
+            "element": {
+              "tag": "a",
+              "classes": "",
+              "text": "Google – Search Engine"
+            },
+            "suggestion": "Consider adding a class like \"button\""
+          }
+        ],
+        "rolesMissing": [
+          {
+            "role": "productImage",
+            "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+            "suggestion": "Add a <img> element with class \"image\""
+          },
+          {
+            "role": "productPrice",
+            "expected": "Element with tag span/div/p/strong and class matching price/cost/amount",
+            "suggestion": "Add a <span> element with class \"price\""
+          }
+        ],
+        "totalRoles": 4,
+        "foundRoles": 1
+      },
+      "visual": {
+        "score": 99,
+        "passed": true,
+        "diffPixels": 5993,
+        "totalPixels": 921600,
+        "diffPercentage": "0.65",
+        "screenshots": {
+          "candidate": "/screenshots/069d5401-775d-4b70-a665-a38cced63898-candidate.png",
+          "expected": "/screenshots/069d5401-775d-4b70-a665-a38cced63898-expected.png",
+          "diff": "/screenshots/069d5401-775d-4b70-a665-a38cced63898-diff.png"
+        }
+      },
+      "feedback": {
+        "encouragement": [
+          "💪 Good effort! You've got the basics down.",
+          "With a few adjustments, your solution will be even better!"
+        ],
+        "improvements": [
+          "Add missing elements: Product Image, Product Price",
+          "Refine your semantic HTML structure with more descriptive classes"
+        ],
+        "technical": {
+          "structure": {
+            "rolesFound": [],
+            "rolesMissing": [
+              {
+                "role": "productImage",
+                "expected": "Element with tag img/picture/figure and class matching image/img/photo/picture/product",
+                "suggestion": "Add a <img> element with class \"image\""
+              },
+              {
+                "role": "productPrice",
+                "expected": "Element with tag span/div/p/strong and class matching price/cost/amount",
+                "suggestion": "Add a <span> element with class \"price\""
+              }
+            ],
+            "rolesPartial": [
+              {
+                "role": "productTitle",
+                "confidence": "medium",
+                "element": {
+                  "tag": "h2",
+                  "classes": "",
+                  "text": "My Favorite Websites"
+                },
+                "suggestion": "Consider adding a class like \"title\""
+              },
+              {
+                "role": "productButton",
+                "confidence": "medium",
+                "element": {
+                  "tag": "a",
+                  "classes": "",
+                  "text": "Google – Search Engine"
+                },
+                "suggestion": "Consider adding a class like \"button\""
+              }
+            ],
+            "totalRoles": 4,
+            "foundRoles": 1,
+            "score": 25
+          },
+          "visual": 99,
+          "behavior": 0
+        },
+        "categories": {
+          "matching": [],
+          "minorDifferences": [
+            {
+              "icon": "⚠️",
+              "message": "Product Title partially matches",
+              "suggestion": "Consider adding a class like \"title\""
+            },
+            {
+              "icon": "⚠️",
+              "message": "Product Button partially matches",
+              "suggestion": "Consider adding a class like \"button\""
+            }
+          ],
+          "missing": [
+            {
+              "icon": "❌",
+              "message": "Product Image not found",
+              "suggestion": "Add a <img> element with class \"image\""
+            },
+            {
+              "icon": "❌",
+              "message": "Product Price not found",
+              "suggestion": "Add a <span> element with class \"price\""
+            }
+          ]
+        },
+        "contentValidation": "Overall Score: 75%\n\n✓ PASSED - Well done!\n\nRequirements:\n✓ Required text content: 80%\n   Found 4/5 required texts. Missing: my links\n✗ Required HTML elements: 67%\n   ✗ title: 0 (required: 1), ✗ h1: 0 (required: 1), ✓ nav: 1 (required: 1), ✓ ul: 1 (required: 1), ✓ li: 3 (required: 3), ✓ a: 3 (required: 3)\n\n⚠️ 1 requirement(s) need attention",
+        "contentDetails": [
+          {
+            "type": "text_content",
+            "description": "Required text content",
+            "passed": true,
+            "score": 80,
+            "weight": 30,
+            "details": "Found 4/5 required texts. Missing: my links"
+          },
+          {
+            "type": "html_structure",
+            "description": "Required HTML elements",
+            "passed": false,
+            "score": 66.66666666666666,
+            "weight": 20,
+            "details": "✗ title: 0 (required: 1), ✗ h1: 0 (required: 1), ✓ nav: 1 (required: 1), ✓ ul: 1 (required: 1), ✓ li: 3 (required: 3), ✓ a: 3 (required: 3)"
+          }
+        ]
+      }
+    }
   }
 ]

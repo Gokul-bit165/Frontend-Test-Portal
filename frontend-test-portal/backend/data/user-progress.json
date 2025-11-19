@@ -83,7 +83,7 @@
           2
         ],
         "currentLevel": 3,
-        "totalPoints": 383,
+        "totalPoints": 428,
         "completedQuestions": [
           {
             "level": 1,
@@ -334,11 +334,36 @@
               }
             ],
             "feedback": ""
+          },
+          {
+            "level": 1,
+            "completedAt": "2025-11-14T03:29:41.505Z",
+            "finalScore": 45,
+            "passed": false,
+            "questionsSubmitted": 1,
+            "questionsPassed": 1,
+            "results": [
+              {
+                "questionId": "html-css-l1-q2",
+                "questionTitle": "Product Card with Image",
+                "submitted": true,
+                "passed": true,
+                "score": 90
+              },
+              {
+                "questionId": "html-css-l1-q1",
+                "questionTitle": "Simple Profile Card",
+                "submitted": false,
+                "passed": false,
+                "score": 0
+              }
+            ],
+            "feedback": ""
           }
         ]
       }
     ],
-    "totalPoints": 383,
+    "totalPoints": 428,
     "achievements": [],
     "createdAt": "2025-11-11T07:49:10.425Z"
   },
@@ -466,5 +491,48 @@
     "totalPoints": 91,
     "achievements": [],
     "createdAt": "2025-11-12T07:26:00.526Z"
+  },
+  {
+    "userId": "user-1763528566331-0k4j6wde6",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [
+          1
+        ],
+        "currentLevel": 2,
+        "totalPoints": 92,
+        "completedQuestions": [
+          {
+            "level": 1,
+            "completedAt": "2025-11-19T05:05:09.227Z",
+            "finalScore": 92,
+            "passed": true,
+            "questionsSubmitted": 2,
+            "questionsPassed": 2,
+            "results": [
+              {
+                "questionId": "course-html-css-l1-q5",
+                "questionTitle": "Basic HTML Table",
+                "submitted": true,
+                "passed": true,
+                "score": 97
+              },
+              {
+                "questionId": "course-html-css-l1-q4",
+                "questionTitle": "Links and Navigation",
+                "submitted": true,
+                "passed": true,
+                "score": 87
+              }
+            ],
+            "feedback": "good"
+          }
+        ]
+      }
+    ],
+    "totalPoints": 92,
+    "achievements": [],
+    "createdAt": "2025-11-19T05:05:11.415Z"
   }
 ]

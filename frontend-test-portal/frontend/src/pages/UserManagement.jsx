@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 
 export default function UserManagement() {
   const navigate = useNavigate();
@@ -26,11 +26,7 @@ export default function UserManagement() {
 
   const loadUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-        }
-      });
+      const response = await api.get('/users');
       setUsers(response.data);
     } catch (error) {
       console.error('Failed to load users:', error);
@@ -43,11 +39,7 @@ export default function UserManagement() {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/users', formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-        }
-      });
+      await api.post('/users', formData);
       alert('User added successfully!');
       setShowAddModal(false);
       setFormData({ username: '', password: '', email: '', fullName: '', role: 'student' });
@@ -60,11 +52,7 @@ export default function UserManagement() {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/users/${editingUser.id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-        }
-      });
+      await api.put(`/users/${editingUser.id}`, formData);
       alert('User updated successfully!');
       setEditingUser(null);
       setFormData({ username: '', password: '', email: '', fullName: '', role: 'student' });
@@ -78,11 +66,7 @@ export default function UserManagement() {
     if (!confirm('Are you sure you want to delete this user?')) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-        }
-      });
+      await api.delete(`/users/${userId}`);
       alert('User deleted successfully!');
       loadUsers();
     } catch (error) {
@@ -100,9 +84,8 @@ export default function UserManagement() {
     formData.append('file', csvFile);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/upload-csv', formData, {
+      const response = await api.post('/users/upload-csv', formData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
           'Content-Type': 'multipart/form-data'
         }
       });
@@ -115,7 +98,7 @@ export default function UserManagement() {
   };
 
   const downloadSampleCsv = () => {
-    window.open('http://localhost:5000/api/users/sample-csv', '_blank');
+    window.open(`${api.defaults.baseURL}/users/sample-csv`, '_blank');
   };
 
   const openEditModal = (user) => {

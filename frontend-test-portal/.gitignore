@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Build outputs
+dist/
+build/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Uploads and screenshots
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/screenshots/*
+!backend/screenshots/.gitkeep
+
+# History files
+.history/
+
+# Docker
+docker-compose.override.yml
+
+# Sensitive data
+backend/data/users.json
+backend/data/*.json
+!backend/data/.gitkeep

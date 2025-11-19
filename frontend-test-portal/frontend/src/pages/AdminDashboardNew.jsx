@@ -71,7 +71,10 @@ export default function AdminDashboard() {
 
   const loadUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/users');
+      const token = localStorage.getItem('adminToken');
+      const res = await axios.get('http://localhost:5000/api/users', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setUsers(res.data || []);
       setStats(prev => ({ ...prev, totalUsers: res.data?.length || 0 }));
     } catch (error) {
@@ -111,7 +114,10 @@ export default function AdminDashboard() {
 
   const loadProgress = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/users/progress');
+      const token = localStorage.getItem('adminToken');
+      const res = await axios.get('http://localhost:5000/api/users/progress', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setProgressData(res.data || []);
     } catch (error) {
       console.error('Failed to load progress:', error);
@@ -174,10 +180,27 @@ export default function AdminDashboard() {
     navigate('/login');
   };
 
+  const handleChangeUserRole = async (userId, newRole) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      await axios.put(`http://localhost:5000/api/users/${userId}`, 
+        { role: newRole },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      await loadUsers();
+      alert('User role updated successfully');
+    } catch (error) {
+      alert('Failed to update user role: ' + error.message);
+    }
+  };
+
   const handleDeleteUser = async (userId) => {
     if (!confirm('Delete this user? This will remove all their progress.')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userId}`);
+      const token = localStorage.getItem('adminToken');
+      await axios.delete(`http://localhost:5000/api/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       await loadUsers();
       alert('User deleted successfully');
     } catch (error) {
@@ -432,23 +455,36 @@ export default function AdminDashboard() {
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">User ID</th>
                         <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Username</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Courses</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Points</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Role</th>
                         <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Created</th>
                         <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
                       {filteredUsers.map(user => (
-                        <tr key={user.userId} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 text-sm">{user.userId}</td>
+                        <tr key={user.id || user.userId} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 text-sm text-gray-600">{user.id || user.userId}</td>
                           <td className="px-6 py-4 text-sm font-semibold">{user.username || 'N/A'}</td>
-                          <td className="px-6 py-4 text-sm">{user.courses?.length || 0}</td>
-                          <td className="px-6 py-4 text-sm">{user.totalPoints || 0}</td>
-                          <td className="px-6 py-4 text-sm">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
+                          <td className="px-6 py-4 text-sm text-gray-600">{user.email || 'N/A'}</td>
+                          <td className="px-6 py-4 text-sm">
+                            <select
+                              value={user.role || 'student'}
+                              onChange={(e) => handleChangeUserRole(user.id || user.userId, e.target.value)}
+                              className={`px-3 py-1 rounded-full text-xs font-semibold border-2 ${
+                                user.role === 'admin' 
+                                  ? 'bg-purple-100 text-purple-800 border-purple-300' 
+                                  : 'bg-blue-100 text-blue-800 border-blue-300'
+                              }`}
+                            >
+                              <option value="student">Student</option>
+                              <option value="admin">Admin</option>
+                            </select>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
                           <td className="px-6 py-4 text-right">
                             <button
-                              onClick={() => handleDeleteUser(user.userId)}
+                              onClick={() => handleDeleteUser(user.id || user.userId)}
                               className="text-red-600 hover:text-red-800 text-sm font-semibold"
                             >
                               Delete

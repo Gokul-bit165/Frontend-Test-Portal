@@ -25,8 +25,29 @@ const assetsRouter = require('./routes/assets');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// CORS Configuration for production
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:80'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/api/auth', usersRouter);
@@ -62,22 +83,31 @@ app.use('/api/admin', adminRouter);
 app.use('/api/level-completion', levelCompletionRouter);
 app.use('/api/assets', assetsRouter);
 
-// Serve frontend static files in production
-const frontendDistPath = path.join(__dirname, 'frontend/dist');
+// Serve frontend static files
+// In Docker, frontend/dist is copied to the same directory as server.js
+// In development, it's in ../frontend/dist
+const frontendDistPath = fs.existsSync(path.join(__dirname, 'frontend/dist')) 
+  ? path.join(__dirname, 'frontend/dist')
+  : path.resolve(__dirname, '../frontend/dist');
+
 if (fs.existsSync(frontendDistPath)) {
   console.log('✅ Serving frontend from:', frontendDistPath);
   app.use(express.static(frontendDistPath));
-  
+
   // Handle client-side routing - serve index.html for non-API routes
   app.get('*', (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api') || req.path.startsWith('/screenshots') || req.path.startsWith('/assets') || req.path === '/health') {
+    // Skip API routes, screenshots, assets, and health check
+    if (req.path.startsWith('/api') || 
+        req.path.startsWith('/screenshots') || 
+        req.path.startsWith('/assets') || 
+        req.path === '/health') {
       return next();
     }
     res.sendFile(path.join(frontendDistPath, 'index.html'));
   });
 } else {
-  console.log('⚠️  Frontend dist folder not found at:', frontendDistPath);
+  console.warn('⚠️ Frontend dist folder not found. API will run, but the frontend will not be served.');
+  console.warn('   To build the frontend, run `npm install && npm run build` in the `frontend` directory.');
 }
 
 // Error handling middleware
@@ -89,7 +119,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler for API routes only
+// 404 handler for API routes
 app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
