@@ -6,6 +6,9 @@ export default function CoursesHome() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const isAdmin =
+    !!localStorage.getItem('adminToken') ||
+    (localStorage.getItem('userRole') || '').toLowerCase() === 'admin';
 
   useEffect(() => {
     loadCourses();
@@ -63,6 +66,14 @@ export default function CoursesHome() {
               </p>
             </div>
             <div className="flex gap-3">
+              {isAdmin && (
+                <button
+                  onClick={() => navigate('/admin/dashboard')}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
+                >
+                  Admin Dashboard
+                </button>
+              )}
               {/* <button
                 onClick={() => navigate('/admin/login')}
                 className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"

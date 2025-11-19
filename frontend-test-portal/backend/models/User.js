@@ -4,6 +4,16 @@
  */
 
 const { query, queryOne } = require('../database/connection');
+const crypto = require('crypto');
+
+function ensurePasswordValue(rawPassword, seed) {
+  if (rawPassword !== undefined && rawPassword !== null) {
+    return rawPassword;
+  }
+
+  const fallbackSeed = seed || `oauth-user-${Date.now()}`;
+  return crypto.createHash('sha256').update(String(fallbackSeed)).digest('hex');
+}
 
 class UserModel {
   // Get all users
@@ -34,7 +44,7 @@ class UserModel {
       [
         userData.id,
         userData.username,
-        userData.password,
+        ensurePasswordValue(userData.password, userData.email || userData.username),
         userData.email,
         userData.fullName || userData.full_name,
         userData.role || 'student',
@@ -54,10 +64,10 @@ class UserModel {
        role = COALESCE(?, role)
        WHERE id = ?`,
       [
-        userData.username,
-        userData.email,
-        userData.fullName || userData.full_name,
-        userData.role,
+        userData.username ?? null,
+        userData.email ?? null,
+        (userData.fullName ?? userData.full_name) ?? null,
+        userData.role ?? null,
         id
       ]
     );
