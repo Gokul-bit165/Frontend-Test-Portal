@@ -20,6 +20,20 @@ COPY backend/ .
 # --- Final Production Stage ---
 FROM node:18-alpine
 WORKDIR /app
+
+# Install Chromium and dependencies for Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Tell Puppeteer to use installed Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
 COPY --from=backend-builder /app .
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 EXPOSE 5000

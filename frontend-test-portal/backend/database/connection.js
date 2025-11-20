@@ -129,10 +129,13 @@ const dbConfig = {
   database:
     process.env.DB_NAME || process.env.DB_DATABASE || "frontend_test_portal",
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 50, // Increased from 10 for better concurrency (1000+ users)
   queueLimit: 0,
+  maxIdle: 10, // Maximum idle connections
+  idleTimeout: 60000, // Close idle connections after 60 seconds
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
+  connectTimeout: 10000, // 10 second connection timeout
   ...(sslConfig ? { ssl: sslConfig } : {}),
 };
 

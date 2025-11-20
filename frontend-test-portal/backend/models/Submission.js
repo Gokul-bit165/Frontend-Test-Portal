@@ -130,7 +130,11 @@ class SubmissionModel {
       user_screenshot: submission.user_screenshot,
       expected_screenshot: submission.expected_screenshot,
       total_score: submission.final_score,
-      result: submission.evaluation_result ? JSON.parse(submission.evaluation_result) : {
+      result: submission.evaluation_result ? (
+        typeof submission.evaluation_result === 'string' 
+          ? JSON.parse(submission.evaluation_result) 
+          : submission.evaluation_result
+      ) : {
         structureScore: submission.structure_score,
         visualScore: submission.visual_score,
         contentScore: submission.content_score,

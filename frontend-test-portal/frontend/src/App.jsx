@@ -13,6 +13,7 @@ import LevelChallengeNew from "./pages/LevelChallengeNew";
 import LevelChallengeOld from "./pages/LevelChallengeOld";
 import LevelChallengeTest from "./pages/LevelChallengeTest";
 import LevelResults from "./pages/LevelResults";
+import TestResultsPage from "./pages/TestResultsPage";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import ChallengeView from "./pages/ChallengeView";
 import Login from "./pages/Login";
@@ -104,6 +105,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <LevelResults />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/test-results/:sessionId"
+            element={
+              <ProtectedRoute>
+                <TestResultsPage />
               </ProtectedRoute>
             }
           />

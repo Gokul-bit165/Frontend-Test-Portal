@@ -55,17 +55,16 @@ const saveSubmissions = (submissions) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const { challengeId, candidateName, code } = req.body;
+    const { challengeId, candidateName, code, userId } = req.body;
     
     if (!challengeId || !code || !code.html) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
-    const submissions = getSubmissions();
-    
-    const submission = {
+    const submissionData = {
       id: uuidv4(),
       challengeId,
+      userId: userId || 'user-demo-student', // Use demo student as default
       candidateName: candidateName || 'Anonymous',
       code: {
         html: code.html,
@@ -73,19 +72,35 @@ router.post('/', async (req, res) => {
         js: code.js || ''
       },
       status: 'pending',
-      submittedAt: new Date().toISOString(),
-      evaluatedAt: null,
-      result: null
+      submittedAt: new Date().toISOString()
     };
     
-    submissions.push(submission);
-    saveSubmissions(submissions);
-    
-    res.status(201).json({
-      message: 'Submission received',
-      submissionId: submission.id,
-      submission
-    });
+    // Try to save to database first
+    try {
+      const dbSubmission = await SubmissionModel.create(submissionData);
+      return res.status(201).json({
+        message: 'Submission received',
+        submissionId: dbSubmission.id,
+        submission: dbSubmission
+      });
+    } catch (dbError) {
+      console.log('Database save failed, using JSON fallback:', dbError.message);
+      // Fallback to JSON file
+      const submissions = getSubmissions();
+      const submission = {
+        ...submissionData,
+        evaluatedAt: null,
+        result: null
+      };
+      submissions.push(submission);
+      saveSubmissions(submissions);
+      
+      return res.status(201).json({
+        message: 'Submission received',
+        submissionId: submission.id,
+        submission
+      });
+    }
   } catch (error) {
     console.error('Submission error:', error);
     res.status(500).json({ error: 'Failed to save submission' });
@@ -145,10 +160,18 @@ router.get('/:id/result', (req, res) => {
  * GET /api/submissions
  * Get all submissions (for admin)
  */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const submissions = getSubmissions();
-    res.json(submissions);
+    // Try database first
+    try {
+      const submissions = await SubmissionModel.findAll();
+      return res.json(submissions);
+    } catch (dbError) {
+      console.log('Database error, using JSON file:', dbError.message);
+      // Fallback to JSON file
+      const submissions = getSubmissions();
+      return res.json(submissions);
+    }
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch submissions' });
   }

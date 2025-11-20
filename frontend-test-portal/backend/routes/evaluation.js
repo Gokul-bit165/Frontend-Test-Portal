@@ -8,6 +8,7 @@ const router = express.Router();
 const evaluator = require('../services/evaluator');
 const fs = require('fs');
 const path = require('path');
+const SubmissionModel = require('../models/Submission');
 
 const submissionsPath = path.join(__dirname, '../data/submissions.json');
 const challengesPath = path.join(__dirname, '../data/challenges.json');
@@ -72,9 +73,19 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Submission ID required' });
     }
     
-    // Get submission
-    const submissions = getSubmissions();
-    const submission = submissions.find(s => s.id === submissionId);
+    // Get submission - try database first, then JSON fallback
+    let submission;
+    try {
+      submission = await SubmissionModel.findById(submissionId);
+    } catch (dbError) {
+      console.log('Database lookup failed, using JSON:', dbError.message);
+    }
+    
+    // Fallback to JSON if not found in database
+    if (!submission) {
+      const submissions = getSubmissions();
+      submission = submissions.find(s => s.id === submissionId);
+    }
     
     if (!submission) {
       return res.status(404).json({ error: 'Submission not found' });
@@ -100,15 +111,24 @@ router.post('/', async (req, res) => {
       submission.challengeId // Pass challengeId for content-specific validation
     );
     
-    // Update submission with result
-    submission.status = evaluationResult.passed ? 'passed' : 'failed';
-    submission.result = evaluationResult;
-    submission.evaluatedAt = new Date().toISOString();
-    
-    // Save updated submission
-    const submissionIndex = submissions.findIndex(s => s.id === submissionId);
-    submissions[submissionIndex] = submission;
-    saveSubmissions(submissions);
+    // Update submission with result - try database first
+    try {
+      await SubmissionModel.updateEvaluation(submissionId, evaluationResult);
+      console.log('✅ Saved evaluation to database');
+    } catch (dbError) {
+      console.log('Database save failed, using JSON fallback:', dbError.message);
+      // Fallback to JSON
+      submission.status = evaluationResult.passed ? 'passed' : 'failed';
+      submission.result = evaluationResult;
+      submission.evaluatedAt = new Date().toISOString();
+      
+      const submissions = getSubmissions();
+      const submissionIndex = submissions.findIndex(s => s.id === submissionId);
+      if (submissionIndex >= 0) {
+        submissions[submissionIndex] = submission;
+        saveSubmissions(submissions);
+      }
+    }
     
     console.log(`✅ Evaluation complete: ${evaluationResult.passed ? 'PASSED' : 'FAILED'}`);
     console.log(`   Content: ${evaluationResult.contentScore}%`);

@@ -88,5 +88,15 @@
     "size": 138346,
     "category": "general",
     "uploadedAt": "2025-11-11T16:39:04.804Z"
+  },
+  {
+    "filename": "ex1-example.png",
+    "originalName": "ex1-example.png",
+    "relativePath": "images/ex1-example.png",
+    "url": "/assets/images/ex1-example.png",
+    "type": "image/png",
+    "size": 196965,
+    "category": "general",
+    "uploadedAt": "2025-11-20T06:32:43.317Z"
   }
 ]

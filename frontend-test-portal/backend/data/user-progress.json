@@ -534,5 +534,48 @@
     "totalPoints": 92,
     "achievements": [],
     "createdAt": "2025-11-19T05:05:11.415Z"
+  },
+  {
+    "userId": "user-1763615052008-rk1dydqbl",
+    "courses": [
+      {
+        "courseId": "course-html-css",
+        "completedLevels": [
+          1
+        ],
+        "currentLevel": 2,
+        "totalPoints": 90,
+        "completedQuestions": [
+          {
+            "level": 1,
+            "completedAt": "2025-11-20T09:58:17.600Z",
+            "finalScore": 90,
+            "passed": true,
+            "questionsSubmitted": 2,
+            "questionsPassed": 2,
+            "results": [
+              {
+                "questionId": "course-html-css-l1-q2",
+                "questionTitle": "Text Formatting Elements",
+                "submitted": true,
+                "passed": true,
+                "score": 86
+              },
+              {
+                "questionId": "course-html-css-l1-q4",
+                "questionTitle": "Links and Navigation",
+                "submitted": true,
+                "passed": true,
+                "score": 94
+              }
+            ],
+            "feedback": ""
+          }
+        ]
+      }
+    ],
+    "totalPoints": 90,
+    "achievements": [],
+    "createdAt": "2025-11-20T09:58:19.501Z"
   }
 ]

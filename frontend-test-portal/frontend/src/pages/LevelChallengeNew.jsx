@@ -20,6 +20,7 @@ export default function LevelChallengeNew() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [evaluating, setEvaluating] = useState(false);
+  const [testSessionId, setTestSessionId] = useState(null);
 
   useEffect(() => {
     if (courseId && level) {
@@ -134,11 +135,31 @@ export default function LevelChallengeNew() {
         };
       });
       setUserAnswers(initialAnswers);
+      
+      // Create test session
+      await createTestSession();
+      
       setLoading(false);
     } catch (error) {
       console.error('Failed to load level questions:', error);
       setError('Failed to load questions: ' + error.message);
       setLoading(false);
+    }
+  };
+
+  const createTestSession = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/test-sessions', {
+        user_id: userId,
+        course_id: courseId,
+        level: parseInt(level)
+      });
+      
+      console.log('Test session created:', response.data.id);
+      setTestSessionId(response.data.id);
+    } catch (error) {
+      console.error('Failed to create test session:', error);
+      // Don't block the test if session creation fails
     }
   };
 
@@ -219,7 +240,31 @@ export default function LevelChallengeNew() {
         }
       }));
 
+      // Add submission to test session
+      if (testSessionId && result.submissionId) {
+        try {
+          await axios.post(`http://localhost:5000/api/test-sessions/${testSessionId}/submissions`, {
+            submission_id: result.submissionId
+          });
+          console.log('Added submission to test session');
+        } catch (err) {
+          console.error('Failed to add submission to session:', err);
+        }
+      }
+
       setEvaluating(false);
+      
+      // Check if all questions are submitted
+      const allSubmitted = assignedQuestions.every(q => 
+        q.id === questionId ? true : userAnswers[q.id]?.submitted
+      );
+      
+      if (allSubmitted && testSessionId) {
+        // Navigate to results page
+        setTimeout(() => {
+          navigate(`/test-results/${testSessionId}`);
+        }, 1000);
+      }
     } catch (error) {
       console.error('Submission failed:', error);
       alert('Failed to submit. Please try again.');
@@ -228,9 +273,15 @@ export default function LevelChallengeNew() {
   };
 
   const handleFinishLevel = () => {
-    navigate(`/level-results/${courseId}/${level}`, {
-      state: { userAnswers, assignedQuestions }
-    });
+    if (testSessionId) {
+      // Navigate to new test session results page
+      navigate(`/test-results/${testSessionId}`);
+    } else {
+      // Fallback to old results page if no session
+      navigate(`/level-results/${courseId}/${level}`, {
+        state: { userAnswers, assignedQuestions }
+      });
+    }
   };
 
   const navigateToQuestion = (index) => {

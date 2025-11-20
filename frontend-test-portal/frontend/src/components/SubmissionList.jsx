@@ -504,6 +504,16 @@ export default function SubmissionList({ submissions, onReEvaluate, onDelete }) 
                   </ul>
                 </div>
               )}
+
+              {/* User Feedback Section */}
+              {submission.user_feedback && (
+                <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+                  <h4 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    💬 User Feedback
+                  </h4>
+                  <p className="text-gray-700 whitespace-pre-wrap">{submission.user_feedback}</p>
+                </div>
+              )}
             </div>
           )}
         </div>

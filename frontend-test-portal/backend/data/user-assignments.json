@@ -213,19 +213,6 @@
     "totalAvailable": 1
   },
   {
-    "key": "user-admin-1-course-html-css-1",
-    "userId": "user-admin-1",
-    "courseId": "course-html-css",
-    "level": 1,
-    "assignedQuestions": [
-      "html-css-l1-q1",
-      "course-html-css-l1-q5"
-    ],
-    "completedQuestions": [],
-    "assignedAt": "2025-11-19T13:08:44.481Z",
-    "totalAvailable": 7
-  },
-  {
     "key": "user-admin-1-course-javascript-1",
     "userId": "user-admin-1",
     "courseId": "course-javascript",
@@ -273,6 +260,58 @@
     ],
     "completedQuestions": [],
     "assignedAt": "2025-11-20T03:50:12.616Z",
+    "totalAvailable": 6
+  },
+  {
+    "key": "user-admin-1-course-html-css-1",
+    "userId": "user-admin-1",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "course-html-css-l1-q1",
+      "course-html-css-l1-q3"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-20T09:11:32.535Z",
+    "totalAvailable": 6
+  },
+  {
+    "key": "user-1763624344870-riq16a0rp-course-html-css-1",
+    "userId": "user-1763624344870-riq16a0rp",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "html-css-l1-q2",
+      "course-html-css-l1-q1"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-20T09:44:35.921Z",
+    "totalAvailable": 6
+  },
+  {
+    "key": "user-1763615052008-rk1dydqbl-course-html-css-2",
+    "userId": "user-1763615052008-rk1dydqbl",
+    "courseId": "course-html-css",
+    "level": 2,
+    "assignedQuestions": [
+      "course-html-css-l2-q4",
+      "course-html-css-l2-q2"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-20T10:04:12.843Z",
+    "totalAvailable": 6
+  },
+  {
+    "key": "user-1763615052008-rk1dydqbl-course-html-css-1",
+    "userId": "user-1763615052008-rk1dydqbl",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "course-html-css-l1-q5",
+      "course-html-css-l1-q2"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-20T10:45:09.034Z",
     "totalAvailable": 6
   }
 ]

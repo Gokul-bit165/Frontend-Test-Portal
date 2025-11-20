@@ -25,6 +25,8 @@ export default function LevelChallenge() {
   const [showFinishModal, setShowFinishModal] = useState(false);
   const [finalScore, setFinalScore] = useState(null);
   const [feedback, setFeedback] = useState('');
+  const [testSessionId, setTestSessionId] = useState(null);
+  const [finishingLevel, setFinishingLevel] = useState(false);
   
   // Restrictions and Timer State
   const [restrictions, setRestrictions] = useState({
@@ -91,11 +93,31 @@ export default function LevelChallenge() {
         };
       });
       setUserAnswers(initialAnswers);
+      
+      // Create test session
+      await createTestSession();
+      
       setLoading(false);
     } catch (error) {
       console.error('Failed to load level questions:', error);
       alert('Failed to load questions');
       setLoading(false);
+    }
+  };
+
+  const createTestSession = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/test-sessions', {
+        user_id: userId,
+        course_id: courseId,
+        level: parseInt(level)
+      });
+      
+      console.log('Test session created:', response.data.id);
+      setTestSessionId(response.data.id);
+    } catch (error) {
+      console.error('Failed to create test session:', error);
+      // Don't block the test if session creation fails
     }
   };
 
@@ -352,6 +374,18 @@ export default function LevelChallenge() {
           result: evalResult
         }
       }));
+
+      // Add submission to test session
+      if (testSessionId && submissionId) {
+        try {
+          await axios.post(`http://localhost:5000/api/test-sessions/${testSessionId}/submissions`, {
+            submission_id: submissionId
+          });
+          console.log('Added submission to test session');
+        } catch (err) {
+          console.error('Failed to add submission to session:', err);
+        }
+      }
       
       setEvaluationStep('');
     } catch (error) {
@@ -365,10 +399,31 @@ export default function LevelChallenge() {
     }
   };
 
-  const handleFinishLevel = () => {
-    navigate(`/level-results/${courseId}/${level}`, {
-      state: { userAnswers, assignedQuestions }
-    });
+  const handleFinishLevel = async () => {
+    if (finishingLevel) return;
+
+    setFinishingLevel(true);
+
+    try {
+      if (testSessionId) {
+        try {
+          await axios.put(`http://localhost:5000/api/test-sessions/${testSessionId}/complete`, {
+            user_feedback: null
+          });
+        } catch (error) {
+          console.error('Failed to mark test session complete before navigating:', error);
+        }
+
+        navigate(`/test-results/${testSessionId}`);
+      } else {
+        // Fallback to old results page if no session
+        navigate(`/level-results/${courseId}/${level}`, {
+          state: { userAnswers, assignedQuestions }
+        });
+      }
+    } finally {
+      setFinishingLevel(false);
+    }
   };
 
   const handleFinishTest = () => {
@@ -528,19 +583,13 @@ export default function LevelChallenge() {
 
           {/* Action Buttons */}
           <div className="flex gap-3">
-            <button
-              onClick={handleFinishTest}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
-              title="Finish test and submit feedback"
-            >
-              🏁 Finish Test
-            </button>
             {allQuestionsSubmitted() && (
               <button
                 onClick={handleFinishLevel}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold"
+                disabled={finishingLevel}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                ✓ Finish Level & See Results
+                {finishingLevel ? 'Finishing...' : '✓ Finish & View Results'}
               </button>
             )}
             {assignedQuestions.length > 1 && (

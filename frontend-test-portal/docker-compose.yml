@@ -27,14 +27,25 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:80}
     restart: unless-stopped
-    network_mode: "bridge"
+    networks:
+      - test-portal-network
     dns:
       - 8.8.8.8
       - 8.8.4.4
     # Add shared memory for Chromium (prevents crashes)
     shm_size: "2gb"
-    # Increase memory limit for Puppeteer
-    mem_limit: 2g
+    # Resource limits for production
+    mem_limit: 4g
+    mem_reservation: 2g
+    cpus: '2.0'
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
     healthcheck:
       test:
         [
@@ -52,14 +63,28 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      args:
+        - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID:-563618874909-386bpe7ig2keme4o0gvc6arsp5mh2anu.apps.googleusercontent.com}
+        - VITE_API_URL=${VITE_API_URL:-/api}
     container_name: test-portal-frontend
     ports:
       - "80:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - test-portal-network
+    mem_limit: 512m
+    cpus: '0.5'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
 networks:
   test-portal-network:

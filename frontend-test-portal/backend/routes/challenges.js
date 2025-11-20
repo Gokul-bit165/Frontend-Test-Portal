@@ -113,14 +113,24 @@ router.get('/level-questions', (req, res) => {
       c.courseId === courseId && c.level === parseInt(level)
     );
 
-    if (levelQuestions.length === 0) {
+    // Ensure we never assign the same challenge twice
+    const uniqueLevelQuestions = [];
+    const seenIds = new Set();
+    for (const question of levelQuestions) {
+      if (question?.id && !seenIds.has(question.id)) {
+        seenIds.add(question.id);
+        uniqueLevelQuestions.push(question);
+      }
+    }
+
+    if (uniqueLevelQuestions.length === 0) {
       return res.status(404).json({ error: 'No questions found for this level' });
     }
 
     // If forceNew=true or no assignment exists, create a new random assignment
     if (forceNew === 'true' || !userAssignment) {
       // Select 2 random questions (or all if less than 2)
-      const shuffled = [...levelQuestions].sort(() => 0.5 - Math.random());
+      const shuffled = [...uniqueLevelQuestions].sort(() => 0.5 - Math.random());
       const selectedQuestions = shuffled.slice(0, Math.min(2, shuffled.length));
       
       // Remove old assignment if it exists and forceNew is true
