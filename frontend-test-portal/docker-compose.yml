@@ -21,13 +21,16 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME:-frontend_test_portal}
       - DB_CA_CERT=${DB_CA_CERT}
+      - DB_SSL_REJECT_UNAUTHORIZED=${DB_SSL_REJECT_UNAUTHORIZED:-false}
       - USE_JSON=${USE_JSON:-false}
       - JWT_SECRET=${JWT_SECRET:-CHANGE_THIS_IN_PRODUCTION}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:80}
     restart: unless-stopped
-    networks:
-      - test-portal-network
+    network_mode: "bridge"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     # Add shared memory for Chromium (prevents crashes)
     shm_size: "2gb"
     # Increase memory limit for Puppeteer
