@@ -105,9 +105,7 @@ function loadCertificate(certValue) {
   try {
     return fs.readFileSync(trimmed, "utf8");
   } catch (error) {
-    console.warn(
-      `⚠️ Unable to read DB_CA_CERT file at ${trimmed}: ${error.message}`
-    );
+    console.warn(`⚠️ Unable to read DB_CA_CERT file at ${trimmed}: ${error.message}`);
     return undefined;
   }
 }
@@ -125,9 +123,8 @@ const dbConfig = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database:
-    process.env.DB_NAME || process.env.DB_DATABASE || "frontend_test_portal",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || process.env.DB_DATABASE || "frontend_test_portal",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

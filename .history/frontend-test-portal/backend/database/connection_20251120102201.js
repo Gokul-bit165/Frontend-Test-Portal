@@ -93,31 +93,14 @@ const mysql = require("mysql2/promise");
 // Check if we should use JSON files instead of MySQL
 const USE_JSON = process.env.USE_JSON === "true" || !process.env.DB_HOST;
 
-// Helper: normalize inline certificates ("\n" -> newline) or load from file
-function loadCertificate(certValue) {
-  if (!certValue) return undefined;
-  const trimmed = certValue.trim();
-
-  if (trimmed.includes("BEGIN CERTIFICATE")) {
-    return trimmed.replace(/\\n/g, "\n");
-  }
-
-  try {
-    return fs.readFileSync(trimmed, "utf8");
-  } catch (error) {
-    console.warn(
-      `⚠️ Unable to read DB_CA_CERT file at ${trimmed}: ${error.message}`
-    );
-    return undefined;
-  }
-}
-
 // Database configuration
-const sslCertificate = loadCertificate(process.env.DB_CA_CERT);
-const sslConfig = sslCertificate
+// Support both file path and direct certificate content
+const sslConfig = process.env.DB_CA_CERT
   ? {
-      ca: sslCertificate,
-      rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === "true",
+      ca: process.env.DB_CA_CERT.includes("BEGIN CERTIFICATE")
+        ? process.env.DB_CA_CERT // Direct certificate content
+        : fs.readFileSync(process.env.DB_CA_CERT), // File path
+      rejectUnauthorized: false, // Accept self-signed certificates
     }
   : undefined;
 
@@ -126,8 +109,7 @@ const dbConfig = {
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database:
-    process.env.DB_NAME || process.env.DB_DATABASE || "frontend_test_portal",
+  database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

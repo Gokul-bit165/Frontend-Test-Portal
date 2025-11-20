@@ -7,7 +7,7 @@
     "fullName": "Administrator",
     "role": "admin",
     "createdAt": "2024-01-01T00:00:00.000Z",
-    "lastLogin": "2025-11-19T12:10:44.905Z"
+    "lastLogin": "2025-11-20T04:37:50.235Z"
   },
   {
     "id": "user-<unique>",
@@ -500,5 +500,27 @@
     "created_at": "2025-11-20T03:58:27.318Z",
     "last_login": "2025-11-20T03:58:27.318Z",
     "picture": "https://lh3.googleusercontent.com/a/ACg8ocKkR4AmCJm1nGFwITngTBY6q5n47vmrCN_Tio68YNzcJpXX9Q=s96-c"
+  },
+  {
+    "id": "user-1763614950619-ehj36fz5y",
+    "username": "mithileshsp.cs24",
+    "password": null,
+    "email": "mithileshsp.cs24@bitsathy.ac.in",
+    "full_name": "MITHILESH S P",
+    "role": "student",
+    "created_at": "2025-11-20T05:02:30.619Z",
+    "last_login": "2025-11-20T05:02:30.619Z",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocKAqiZ9GfT4DMgOQs949dTMgne1XCICcOOp8fepoEt-UZRdXA=s96-c"
+  },
+  {
+    "id": "user-1763615052008-rk1dydqbl",
+    "username": "ashwins.cs24",
+    "password": null,
+    "email": "ashwins.cs24@bitsathy.ac.in",
+    "full_name": "ASHWIN S",
+    "role": "student",
+    "created_at": "2025-11-20T05:04:12.008Z",
+    "last_login": "2025-11-20T05:04:12.008Z",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocKnfTTsHh1prXp71gzOdTvNHKV8KVYYANQcf01-NSJO_DbSjpY=s96-c"
   }
 ]
