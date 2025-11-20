@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import QuestionManagerModal from '../components/QuestionManagerModal';
 import SubmissionList from '../components/SubmissionList';
-import { clearAdminSession } from '../utils/session';
+import { clearAdminSession, notifySessionChange } from '../utils/session';
 
 const OPEN_SOURCE_RESOURCES = [
   {
@@ -344,11 +344,37 @@ export default function AdminDashboard() {
   const handleChangeUserRole = async (userId, newRole) => {
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.put(`http://localhost:5000/api/users/${userId}`, 
+      const response = await axios.put(
+        `http://localhost:5000/api/users/${userId}`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       await loadUsers();
+
+      const currentUserId = (localStorage.getItem('userId') || '').toString();
+      if (currentUserId && currentUserId === (userId || '').toString()) {
+        localStorage.setItem('userRole', newRole);
+
+        if (newRole === 'admin') {
+          const userToken = localStorage.getItem('userToken');
+          if (userToken) {
+            localStorage.setItem('adminToken', userToken);
+          }
+          if (response?.data) {
+            localStorage.setItem('adminUser', JSON.stringify(response.data));
+          }
+          notifySessionChange();
+          navigate('/admin/dashboard');
+        } else {
+          clearAdminSession();
+          notifySessionChange();
+          if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+            navigate('/');
+          }
+        }
+      }
+
       alert('User role updated successfully');
     } catch (error) {
       alert('Failed to update user role: ' + error.message);
@@ -493,7 +519,7 @@ export default function AdminDashboard() {
               { id: 'courses', label: '📚 Courses', icon: '📚' },
               { id: 'questions', label: '❓ Questions', icon: '❓' },
               { id: 'submissions', label: '📝 Submissions', icon: '📝' },
-              { id: 'ai-agent', label: '🤖 Question AI Agent', icon: '🤖' },
+              // { id: 'ai-agent', label: '🤖 Question AI Agent', icon: '🤖' },
               { id: 'assets', label: '📁 Assets', icon: '📁' }
             ].map(tab => (
               <button
@@ -790,8 +816,8 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* AI Agent Tab */}
-            {activeTab === 'ai-agent' && (
+            {/* AI Agent Tab - Hidden for now */}
+            {false && activeTab === 'ai-agent' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <section className="bg-white rounded-lg shadow p-6 space-y-6">

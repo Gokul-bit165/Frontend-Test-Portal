@@ -90,7 +90,15 @@ router.post("/google", async (req, res) => {
         dbLookupError.message
       );
       const users = loadJSON(usersPath);
-      user = users.find((u) => u.username === username);
+      // Find the MOST RECENT entry for this username (latest created_at)
+      const userMatches = users.filter((u) => u.username === username);
+      if (userMatches.length > 0) {
+        user = userMatches.reduce((latest, current) => {
+          const latestTime = new Date(latest.created_at || 0).getTime();
+          const currentTime = new Date(current.created_at || 0).getTime();
+          return currentTime > latestTime ? current : latest;
+        });
+      }
     }
 
     if (!user) {

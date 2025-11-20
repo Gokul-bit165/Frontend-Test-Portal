@@ -20,6 +20,7 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
   const [filter, setFilter] = useState('all');
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [expandedLevels, setExpandedLevels] = useState({});
 
   const [showLevelUpload, setShowLevelUpload] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(1);
@@ -214,140 +215,175 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
     </div>
   );
 
+  const toggleLevel = (level) => {
+    setExpandedLevels(prev => ({ ...prev, [level]: !prev[level] }));
+  };
+
   const body = (
-    <div className="p-6 space-y-8">
-      <section className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="p-6 space-y-6">
+      {/* Quick Actions Bar */}
+      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h3 className="text-xl font-bold text-gray-900">📝 Upload Questions by Level</h3>
-            <p className="text-sm text-gray-600">
-              Download a template, update the JSON, and upload the entire level in one go.
+            <h3 className="text-xl font-bold">⚡ Quick Actions</h3>
+            <p className="text-indigo-100 text-sm mt-1">
+              Manage all questions, upload in bulk, or configure restrictions
             </p>
           </div>
-          <button
-            onClick={() => setShowRestrictions(true)}
-            className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center gap-2"
-          >
-            🔒 Manage Restrictions
-          </button>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={handleAddNew}
+              className="px-5 py-2.5 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50 font-semibold shadow-md transition-all"
+            >
+              ➕ Add Single Question
+            </button>
+            <button
+              onClick={() => setShowRestrictions(true)}
+              className="px-5 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-semibold shadow-md transition-all"
+            >
+              🔒 Restrictions
+            </button>
+          </div>
         </div>
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {LEVELS.map((level) => (
-            <div key={level} className="bg-white rounded-lg p-4 border-2 border-gray-100 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="font-bold text-gray-900">Level {level}</h4>
-                <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-semibold">
-                  {questionsByLevel[level]?.length || 0} Qs
-                </span>
-              </div>
-              {levelSettings[level] && (
-                <p className="text-xs text-gray-600 mb-3">
-                  🎲 Randomize: {levelSettings[level].randomizeCount} questions
-                </p>
-              )}
-              <div className="flex flex-col gap-2">
-                <button
-                  onClick={() => handleDownloadTemplate(level)}
-                  className="w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                >
-                  ⬇️ Download Template
-                </button>
-                <button
-                  onClick={() => handleOpenLevelUpload(level)}
-                  className="w-full px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
-                >
-                  📤 Upload Questions
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      </div>
 
-      <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
-          <label htmlFor="level-filter" className="text-sm font-medium text-gray-700">
-            Filter by level:
-          </label>
-          <select
-            id="level-filter"
-            value={filter}
-            onChange={(event) => setFilter(event.target.value)}
-            className="px-3 py-2 border rounded-lg"
-          >
-            <option value="all">All</option>
-            {LEVELS.map((level) => (
-              <option key={level} value={level}>
-                Level {level}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button
-          onClick={handleAddNew}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-        >
-          ➕ Add Question
-        </button>
-      </section>
+      {/* Level-by-Level Organization */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <span>📚</span> Questions by Level
+          <span className="text-sm font-normal text-gray-500 ml-2">
+            ({questions.length} total)
+          </span>
+        </h3>
 
-      <section className="bg-white border rounded-xl p-4">
         {loading ? (
-          <div className="text-center py-12 text-gray-500">Loading questions…</div>
-        ) : filteredQuestions.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">No questions found for this level.</div>
+          <div className="text-center py-12 bg-gray-50 rounded-xl">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading questions…</p>
+          </div>
         ) : (
-          <div className="space-y-4">
-            {filteredQuestions.map((question) => (
-              <div key={question.id} className="border rounded-lg p-4 shadow-sm">
-                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-wider text-gray-500">
-                      Level {question.level}
-                    </p>
-                    <h4 className="text-lg font-semibold text-gray-900">{question.title}</h4>
-                    <p className="text-sm text-gray-600 mt-1">{question.description}</p>
-                    {question.tags?.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {question.tags.map((tag) => (
-                          <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
-                            {tag}
+          <div className="space-y-3">
+            {LEVELS.map((level) => {
+              const levelQuestions = questionsByLevel[level] || [];
+              const isExpanded = expandedLevels[level];
+              
+              return (
+                <div key={level} className="border-2 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                  {/* Level Header */}
+                  <div 
+                    className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 cursor-pointer hover:from-indigo-50 hover:to-purple-50 transition-colors"
+                    onClick={() => toggleLevel(level)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">{isExpanded ? '📂' : '📁'}</span>
+                          <h4 className="text-lg font-bold text-gray-900">Level {level}</h4>
+                        </div>
+                        <span className="px-3 py-1 bg-indigo-600 text-white rounded-full text-sm font-semibold">
+                          {levelQuestions.length} Question{levelQuestions.length !== 1 ? 's' : ''}
+                        </span>
+                        {levelSettings[level] && (
+                          <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-semibold">
+                            🎲 Randomize: {levelSettings[level].randomizeCount}
                           </span>
-                        ))}
+                        )}
                       </div>
-                    )}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleDownloadTemplate(level); }}
+                          className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+                          title="Download template"
+                        >
+                          ⬇️ Template
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleOpenLevelUpload(level); }}
+                          className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium"
+                          title="Upload questions"
+                        >
+                          📤 Upload
+                        </button>
+                        <button className="text-gray-400 text-2xl font-bold px-2">
+                          {isExpanded ? '−' : '+'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(question)}
-                      className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(question.id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                    >
-                      🗑 Delete
-                    </button>
-                  </div>
-                </div>
 
-                <div className="mt-4 grid gap-4 md:grid-cols-2 text-sm text-gray-600">
-                  <div>
-                    <p className="font-semibold text-gray-900">Instructions</p>
-                    <p>{question.instructions}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Time Limit</p>
-                    <p>{question.timeLimit ? `${question.timeLimit} min` : 'None'}</p>
-                  </div>
+                  {/* Expanded Level Content */}
+                  {isExpanded && (
+                    <div className="p-4 bg-white">
+                      {levelQuestions.length === 0 ? (
+                        <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                          <p className="text-lg mb-2">📭 No questions yet</p>
+                          <p className="text-sm">Add a question or upload questions for this level</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          {levelQuestions.map((question, idx) => (
+                            <div key={question.id} className="border rounded-lg p-4 hover:border-indigo-300 hover:shadow-sm transition-all bg-gray-50">
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs font-bold">
+                                      Q{question.questionNumber || idx + 1}
+                                    </span>
+                                    <h5 className="font-semibold text-gray-900">{question.title}</h5>
+                                    {question.isLocked && <span className="text-sm">🔒</span>}
+                                  </div>
+                                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">{question.description}</p>
+                                  <div className="flex flex-wrap gap-2 items-center text-xs text-gray-500">
+                                    <span className="flex items-center gap-1">
+                                      ⏱️ {question.timeLimit || 15} min
+                                    </span>
+                                    <span>•</span>
+                                    <span className="flex items-center gap-1">
+                                      ⭐ {question.points || 100} pts
+                                    </span>
+                                    {question.tags?.length > 0 && (
+                                      <>
+                                        <span>•</span>
+                                        <div className="flex gap-1">
+                                          {question.tags.slice(0, 3).map((tag) => (
+                                            <span key={tag} className="px-2 py-0.5 bg-gray-200 text-gray-700 rounded">
+                                              {tag}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex gap-2 flex-shrink-0">
+                                  <button
+                                    onClick={() => handleEdit(question)}
+                                    className="px-3 py-1.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 text-sm font-medium"
+                                    title="Edit question"
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(question.id)}
+                                    className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium"
+                                    title="Delete question"
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
-      </section>
+      </div>
     </div>
   );
 

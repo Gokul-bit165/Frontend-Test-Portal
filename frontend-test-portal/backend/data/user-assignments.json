@@ -175,19 +175,6 @@
     "totalAvailable": 7
   },
   {
-    "key": "user-demo-student-course-html-css-3",
-    "userId": "user-demo-student",
-    "courseId": "course-html-css",
-    "level": 3,
-    "assignedQuestions": [
-      "course-html-css-l3-q1",
-      "course-html-css-l3-q5"
-    ],
-    "completedQuestions": [],
-    "assignedAt": "2025-11-14T03:21:32.921Z",
-    "totalAvailable": 5
-  },
-  {
     "key": "user-demo-student-course-html-css-1",
     "userId": "user-demo-student",
     "courseId": "course-html-css",
@@ -261,5 +248,31 @@
     "completedQuestions": [],
     "assignedAt": "2025-11-19T13:09:33.869Z",
     "totalAvailable": 1
+  },
+  {
+    "key": "user-demo-student-course-html-css-3",
+    "userId": "user-demo-student",
+    "courseId": "course-html-css",
+    "level": 3,
+    "assignedQuestions": [
+      "course-html-css-l3-q5",
+      "course-html-css-l3-q4"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-20T03:19:08.294Z",
+    "totalAvailable": 5
+  },
+  {
+    "key": "user-1763610495485-9qydyqg0r-course-html-css-1",
+    "userId": "user-1763610495485-9qydyqg0r",
+    "courseId": "course-html-css",
+    "level": 1,
+    "assignedQuestions": [
+      "course-html-css-l1-q5",
+      "course-html-css-l1-q2"
+    ],
+    "completedQuestions": [],
+    "assignedAt": "2025-11-20T03:50:12.616Z",
+    "totalAvailable": 6
   }
 ]

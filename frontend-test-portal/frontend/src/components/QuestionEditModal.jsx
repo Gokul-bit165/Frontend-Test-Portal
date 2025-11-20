@@ -17,7 +17,10 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
     assetReference: '',
     expectedSolutionHtml: '',
     expectedSolutionCss: '',
-    expectedSolutionJs: ''
+    expectedSolutionJs: '',
+    thresholdStructure: 70,
+    thresholdVisual: 80,
+    thresholdOverall: 75
   });
 
   useEffect(() => {
@@ -42,7 +45,10 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
         assetReference: referencePath,
         expectedSolutionHtml: question.expectedSolution?.html || '',
         expectedSolutionCss: question.expectedSolution?.css || '',
-        expectedSolutionJs: question.expectedSolution?.js || ''
+        expectedSolutionJs: question.expectedSolution?.js || '',
+        thresholdStructure: question.passingThreshold?.structure || 70,
+        thresholdVisual: question.passingThreshold?.visual || 80,
+        thresholdOverall: question.passingThreshold?.overall || 75
       });
     } else {
       // New question - generate ID
@@ -84,9 +90,9 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
       hints: formData.hints.split('\n').filter(h => h.trim()),
       isLocked: formData.isLocked,
       passingThreshold: {
-        structure: 70,
-        visual: 80,
-        overall: 75
+        structure: parseInt(formData.thresholdStructure) || 70,
+        visual: parseInt(formData.thresholdVisual) || 80,
+        overall: parseInt(formData.thresholdOverall) || 75
       },
       expectedSolution: {
         html: formData.expectedSolutionHtml,
@@ -210,6 +216,54 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
                 className="w-full px-4 py-2 border rounded-lg"
                 required
               />
+            </div>
+          </div>
+
+          {/* Passing Thresholds */}
+          <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+            <h4 className="text-sm font-semibold text-amber-900 mb-3 flex items-center gap-2">
+              <span>🎯</span> Passing Thresholds (Scoring)
+            </h4>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Structure %</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={formData.thresholdStructure}
+                  onChange={(e) => setFormData({ ...formData, thresholdStructure: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  placeholder="70"
+                />
+                <p className="text-xs text-gray-500 mt-1">HTML structure match</p>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Visual %</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={formData.thresholdVisual}
+                  onChange={(e) => setFormData({ ...formData, thresholdVisual: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  placeholder="80"
+                />
+                <p className="text-xs text-gray-500 mt-1">Visual appearance</p>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Overall %</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={formData.thresholdOverall}
+                  onChange={(e) => setFormData({ ...formData, thresholdOverall: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  placeholder="75"
+                />
+                <p className="text-xs text-gray-500 mt-1">Combined score</p>
+              </div>
             </div>
           </div>
 
