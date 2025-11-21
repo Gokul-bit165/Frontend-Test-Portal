@@ -1,76 +1,90 @@
-# 🎯 Frontend Test Portal - LeetCode for HTML/CSS/JS
+# 🎯 Frontend Test Portal
 
-A full-stack web platform for evaluating frontend coding skills using hybrid DOM comparison and pixel-matching technology.
+A comprehensive web-based platform for evaluating HTML/CSS/JavaScript skills through interactive coding challenges with automated visual and semantic evaluation.
 
-## 🚀 Quick Start (Docker - Recommended)
+## 🚀 Quick Start
 
-```powershell
-# One command setup!
-.\docker-setup.ps1
+### Prerequisites
+- Docker & Docker Compose
+- TiDB Cloud account (or MySQL 8.0+)
 
-# Open browser
-http://localhost
+### Deployment
+
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd frontend-test-portal
 ```
 
-**That's it!** Docker handles everything: backend, frontend, Puppeteer, Nginx.
+2. **Configure environment variables**
+```bash
+cp .env.example .env
+# Edit .env with your database credentials
+```
 
-📚 **Full Docker Guide**: [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)
-📋 **Quick Reference**: [DOCKER_QUICK_START.md](./DOCKER_QUICK_START.md)
+3. **Start the application**
+```bash
+docker compose up -d
+```
 
----
+4. **Access the application**
+- Frontend: http://localhost
+- Backend API: http://localhost:5000
 
-## ✨ Latest Updates
+## 📋 Environment Configuration
 
-### 🐳 Docker Implementation
-- **One-command setup** - No manual configuration needed
-- **Production-ready** - Nginx reverse proxy, health checks
-- **Puppeteer included** - Chromium pre-installed
-- **Persistent volumes** - Data and screenshots saved
+Create a `.env` file in the root directory:
 
-### 🖼️ Expected Screenshot Feature
-- **Toggle button** on challenge page
-- **See expected result** before coding
-- **Side-by-side comparison** with your preview
-- **Evaluation tips** - Understand how scoring works
+```env
+# Database Configuration (TiDB Cloud)
+DB_HOST=gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+DB_PORT=4000
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_NAME=test
+DB_CA_CERT=your_ssl_certificate
 
-### 🔧 Performance Improvements
-- **6-12x faster evaluation** (60s → 10s)
-- **No network errors** - Fixed timeout issues
-- **Better error handling** - Graceful failures
-- **Progress indicators** - Real-time feedback
+# Application Settings
+PORT=5000
+USE_JSON=false
 
-📖 **Complete Update Summary**: [UPDATE_SUMMARY.md](./UPDATE_SUMMARY.md)
+# JWT Configuration
+JWT_SECRET=your_jwt_secret_key_here
+```
 
----
-
-## 🏗️ Architecture Overview
+## 🏗️ Architecture
 
 ### Tech Stack
-- **Frontend**: React 18 + Vite, Monaco Editor, Tailwind CSS
-- **Backend**: Node.js + Express, Puppeteer (screenshot), jsdom (DOM parsing)
-- **Evaluation**: Hybrid DOM Tree Comparison + Pixel-level Visual Matching
+- **Frontend**: React 18, Vite, Tailwind CSS, Monaco Editor
+- **Backend**: Node.js, Express.js, Puppeteer
+- **Database**: TiDB Cloud (MySQL-compatible)
+- **Deployment**: Docker, Nginx
 
-### Evaluation Method Explained
+### Key Features
 
-#### 1. **DOM Comparison (Structure)**
-- Parses candidate and reference HTML using jsdom
-- Compares DOM tree structure (tags, hierarchy, depth)
-- Validates attributes, classes, and IDs
-- Generates structural similarity score (0-100%)
+#### 1. **Multi-Evaluation System**
+- **DOM Comparison**: Semantic HTML structure matching
+- **Visual Evaluation**: Pixel-perfect screenshot comparison
+- **Content Evaluation**: Text content and formatting validation
+- **Strict Mode**: Tag-specific evaluation for precision
 
-#### 2. **Pixel Matching (Visual)**
-- Uses Puppeteer to render both candidate and reference solutions
-- Captures screenshots of rendered output
-- Performs pixel-by-pixel comparison using pixelmatch library
-- Calculates visual similarity percentage
-- Highlights differences visually
+#### 2. **Test Management**
+- Session-based testing with time tracking
+- Randomized question assignment
+- Progress persistence across sessions
+- Comprehensive admin dashboard
 
-#### 3. **Hybrid Score**
-- Final Score = (DOM Score × 0.4) + (Visual Score × 0.6)
-- Both metrics must pass threshold for challenge completion
-- Detailed breakdown provided to candidates
+#### 3. **User Authentication**
+- Role-based access (Admin/Student)
+- JWT token authentication
+- Secure password hashing
+- Session management
 
----
+#### 4. **Asset Management**
+- Image upload and categorization
+- Reference file storage
+- Course thumbnail management
+- Automatic metadata tracking
 
 ## 📁 Project Structure
 
@@ -78,270 +92,210 @@ http://localhost
 frontend-test-portal/
 ├── backend/
 │   ├── server.js              # Express server entry point
-│   ├── package.json
+│   ├── database/
+│   │   ├── connection.js      # TiDB connection pool
+│   │   ├── schema.sql         # Database schema
+│   │   └── migrate.js         # Migration scripts
 │   ├── routes/
-│   │   ├── challenges.js      # Challenge CRUD operations
+│   │   ├── admin.js           # Admin endpoints
+│   │   ├── challenges.js      # Challenge management
 │   │   ├── submissions.js     # Submission handling
-│   │   ├── evaluation.js      # Evaluation API
-│   │   └── admin.js           # Admin authentication
+│   │   ├── users.js           # User authentication
+│   │   └── assets.js          # Asset management
 │   ├── services/
-│   │   ├── domCompare.js      # DOM tree comparison logic
-│   │   ├── pixelMatch.js      # Screenshot & pixel comparison
-│   │   └── evaluator.js       # Main evaluation orchestrator
-│   ├── data/
-│   │   ├── challenges.json    # Sample challenges (replace with DB)
-│   │   ├── users.json         # Admin users (replace with DB)
-│   │   └── submissions.json   # Submission records (replace with DB)
-│   └── screenshots/           # Temporary screenshot storage
-│
+│   │   ├── evaluator.js       # Main evaluation logic
+│   │   ├── semanticEvaluator.js
+│   │   ├── pixelMatch.js      # Screenshot comparison
+│   │   └── domCompare.js      # DOM structure comparison
+│   ├── models/                # Data models
+│   ├── assets/                # Static assets storage
+│   └── screenshots/           # Generated screenshots
 ├── frontend/
-│   ├── package.json
-│   ├── vite.config.js
-│   ├── tailwind.config.js
-│   ├── index.html
 │   ├── src/
-│   │   ├── main.jsx           # React entry point
-│   │   ├── App.jsx            # Main app component
-│   │   ├── pages/
-│   │   │   ├── CandidateDashboard.jsx
-│   │   │   ├── ChallengeView.jsx
-│   │   │   ├── AdminLogin.jsx
-│   │   │   ├── AdminDashboard.jsx
-│   │   │   └── ChallengeManager.jsx
-│   │   ├── components/
-│   │   │   ├── CodeEditor.jsx     # Monaco editor wrapper
-│   │   │   ├── PreviewFrame.jsx   # Sandboxed iframe
-│   │   │   ├── ResultsPanel.jsx   # Evaluation results display
-│   │   │   ├── ChallengeCard.jsx
-│   │   │   └── SubmissionList.jsx
-│   │   ├── services/
-│   │   │   └── api.js         # API client functions
-│   │   └── styles/
-│   │       └── index.css      # Tailwind imports
-│
-└── README.md (this file)
+│   │   ├── App.jsx            # Main React component
+│   │   ├── pages/             # Page components
+│   │   ├── components/        # Reusable components
+│   │   └── services/
+│   │       └── api.js         # API client
+│   └── index.html
+├── docker-compose.yml         # Docker orchestration
+├── Dockerfile.backend         # Backend container
+├── Dockerfile.frontend        # Frontend container
+├── nginx.conf                 # Nginx reverse proxy
+└── .env                       # Environment variables
 ```
 
----
+## 🗄️ Database Schema
 
-## 🚀 Setup Instructions
+### Core Tables
+- **users** - User accounts and authentication
+- **courses** - Course definitions and metadata
+- **challenges** - Individual coding challenges
+- **submissions** - User submission records with evaluation results
+- **test_sessions** - Test session tracking and completion data
 
-### Option 1: Docker (Recommended)
+### Data Storage
+- **Transactional Data**: TiDB Cloud database
+- **Static Assets**: Filesystem (`/app/assets/`)
+- **Screenshots**: Filesystem (`/app/screenshots/`) with DB references
 
-**Prerequisites**: Docker Desktop ([Download](https://www.docker.com/products/docker-desktop))
+## 🔧 Admin Features
 
-```powershell
-# First time setup
-.\docker-setup.ps1
+### Default Admin Account
+- Username: `admin`
+- Password: `admin123`
+- **⚠️ Change immediately after first login**
 
-# Access application
-http://localhost              # Frontend
-http://localhost:5000         # Backend API
+### Admin Dashboard
+- View all user submissions
+- Group submissions by test session
+- Manage courses and challenges
+- Upload and organize assets
+- Monitor system usage
 
-# Useful commands
-docker-compose logs -f        # View logs
-docker-compose restart        # Restart
-docker-compose down           # Stop & remove
-.\docker-rebuild.ps1         # Rebuild after code changes
+## 🎓 User Flow
+
+1. **Registration/Login** - Create account or sign in
+2. **Course Selection** - Choose from available courses
+3. **Level Selection** - Pick difficulty level
+4. **Take Test** - Answer randomized questions
+5. **View Results** - See detailed evaluation with screenshots
+6. **Track Progress** - Monitor completion across sessions
+
+## 📊 Evaluation Scoring
+
+Each submission is evaluated across multiple dimensions:
+
+- **DOM Score** (25%): HTML structure correctness
+- **Visual Score** (25%): Pixel-perfect matching
+- **Content Score** (25%): Text and formatting accuracy
+- **Tag Score** (25%): Specific element validation
+
+**Passing Criteria**: ≥70% overall score
+
+## 🔒 Security
+
+- JWT-based authentication
+- Password hashing with bcrypt
+- Role-based authorization
+- SQL injection prevention (parameterized queries)
+- XSS protection (input sanitization)
+- CORS configuration
+
+## 🚢 Production Deployment
+
+### Pre-deployment Checklist
+- [ ] Update `.env` with production credentials
+- [ ] Change default admin password
+- [ ] Configure SSL certificates
+- [ ] Set up database backups
+- [ ] Configure volume persistence
+- [ ] Review security settings
+- [ ] Test all endpoints
+
+### Docker Deployment
+```bash
+# Build and start
+docker compose up -d --build
+
+# View logs
+docker compose logs -f
+
+# Stop services
+docker compose down
+
+# Restart services
+docker compose restart
 ```
 
-**Full documentation**: [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)
+### Health Checks
+- Backend health: http://localhost:5000/health
+- Frontend: http://localhost
 
----
+## 📈 Monitoring
 
-### Option 2: Manual Setup (Development)
+### Key Metrics
+- User registration count
+- Submission success rate
+- Average test completion time
+- System resource usage
 
-### Prerequisites
-- Node.js 18+ and npm
-- Chrome/Chromium (for Puppeteer screenshots)
+### Logs Location
+- Backend: `docker logs test-portal-backend`
+- Frontend: `docker logs test-portal-frontend`
 
-### Backend Setup
+## 🛠️ Development
 
+### Local Setup (without Docker)
+
+**Backend:**
 ```bash
 cd backend
 npm install
-npm run dev
+node server.js
 ```
 
-Backend runs on `http://localhost:5000`
-
-### Frontend Setup
-
+**Frontend:**
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Frontend runs on `http://localhost:5173`
+### API Documentation
 
----
+**Authentication:**
+- `POST /api/users/register` - Create new user
+- `POST /api/users/login` - User login
+- `GET /api/users/profile` - Get user profile
 
-## 🔐 Demo Credentials
+**Challenges:**
+- `GET /api/challenges` - List all challenges
+- `GET /api/challenges/:id` - Get specific challenge
+- `POST /api/challenges` - Create challenge (Admin)
 
-### Admin Login
-- **Username**: `admin`
-- **Password**: `admin123`
+**Submissions:**
+- `POST /api/submissions` - Submit code for evaluation
+- `GET /api/submissions/:userId` - Get user submissions
 
----
+**Admin:**
+- `GET /api/admin/users` - List all users
+- `GET /api/admin/submissions/grouped` - Grouped submissions by session
 
-## 🎮 How to Use
+## 🐛 Troubleshooting
 
-### For Candidates
-
-1. **Browse Challenges**: View available coding challenges
-2. **Select Challenge**: Click to open editor view
-3. **Write Code**: Use Monaco editor for HTML, CSS, JS
-4. **Run Code**: Preview output in sandboxed iframe
-5. **Submit**: Click submit to trigger auto-evaluation
-6. **View Results**: See DOM match, pixel match, and final score
-
-### For Admins
-
-1. **Login**: Use admin credentials
-2. **Create Challenge**: Add new challenges with expected solutions
-3. **View Submissions**: See all candidate submissions with scores
-4. **Re-evaluate**: Manually trigger re-evaluation if needed
-5. **Edit Challenges**: Update challenge descriptions or solutions
-
----
-
-## 🧪 Evaluation Logic Deep Dive
-
-### DOM Comparison Algorithm
-
-```javascript
-1. Parse both HTMLs using jsdom
-2. Build normalized DOM trees
-3. Compare:
-   - Tag names at each level
-   - Hierarchy and nesting depth
-   - Attribute presence and values
-   - Class and ID matching
-   - Child count and order
-4. Calculate similarity ratio
+### Database Connection Issues
+```bash
+# Test database connection
+docker exec test-portal-backend node -e "const db = require('./database/connection'); db.query('SELECT 1').then(() => console.log('Connected')).catch(e => console.error(e));"
 ```
 
-### Pixel Matching Algorithm
+### Screenshot Generation Errors
+- Ensure Puppeteer is installed correctly
+- Check Docker memory allocation (≥2GB recommended)
+- Verify `/app/screenshots/` directory permissions
 
-```javascript
-1. Inject HTML/CSS/JS into temporary pages
-2. Launch headless Chrome via Puppeteer
-3. Navigate to both pages
-4. Capture screenshots at same viewport size
-5. Use pixelmatch library for comparison:
-   - Pixel-by-pixel color difference
-   - Anti-aliasing detection
-   - Diff image generation
-6. Calculate match percentage
+### Frontend Build Errors
+```bash
+# Clear cache and rebuild
+docker compose down
+docker compose up -d --build --force-recreate
 ```
 
-### Scoring Formula
+## 📝 License
 
-```
-Structure Score = (Matching Nodes / Total Expected Nodes) × 100
-Visual Score = ((Total Pixels - Diff Pixels) / Total Pixels) × 100
-Final Score = (Structure × 0.4) + (Visual × 0.6)
+This project is licensed under the MIT License.
 
-Pass Threshold:
-- Structure Score ≥ 70%
-- Visual Score ≥ 80%
-- Final Score ≥ 75%
-```
+## 🤝 Support
+
+For issues and questions:
+- Check logs: `docker compose logs`
+- Verify database connection
+- Review environment variables
+- Check Docker resource allocation
 
 ---
 
-## 🔌 API Endpoints
-
-### Public Endpoints
-
-```
-GET    /api/challenges              # List all challenges
-GET    /api/challenges/:id          # Get specific challenge
-POST   /api/submissions             # Submit solution
-GET    /api/submissions/:id/result  # Get evaluation result
-```
-
-### Admin Endpoints (Protected)
-
-```
-POST   /api/admin/login             # Admin authentication
-POST   /api/admin/challenges        # Create challenge
-PUT    /api/admin/challenges/:id    # Update challenge
-DELETE /api/admin/challenges/:id    # Delete challenge
-GET    /api/admin/submissions       # List all submissions
-POST   /api/admin/evaluate/:id      # Re-run evaluation
-```
-
----
-
-## 📦 Dependencies
-
-### Backend
-- `express` - Web framework
-- `cors` - Cross-origin support
-- `jsdom` - DOM parsing and manipulation
-- `puppeteer` - Headless browser for screenshots
-- `pixelmatch` - Pixel comparison
-- `pngjs` - PNG image processing
-
-### Frontend
-- `react` & `react-dom` - UI library
-- `@monaco-editor/react` - Code editor
-- `react-router-dom` - Routing
-- `axios` - HTTP client
-- `tailwindcss` - Utility-first CSS
-
----
-
-## 🔮 Future Enhancements (Production Readiness)
-
-### Database Integration
-- Replace JSON files with PostgreSQL/MongoDB
-- Add proper user authentication (JWT)
-- Store screenshots in S3/Cloudinary
-
-### Security
-- Input sanitization and validation
-- Rate limiting on API endpoints
-- Secure sandbox environment for code execution
-- CSRF protection
-
-### Features
-- Real-time collaboration
-- Code version history
-- Hints and tutorials
-- Leaderboards and badges
-- Multi-language support
-- Test case editor for admins
-
-### Performance
-- Queue system for evaluation (Bull/Redis)
-- Caching for frequently accessed challenges
-- CDN for static assets
-- WebSocket for real-time updates
-
----
-
-## 🐛 Known Limitations (Prototype)
-
-- No persistent database (uses JSON files)
-- Simple auth (no JWT/sessions)
-- Screenshots stored locally (not scalable)
-- No concurrent evaluation handling
-- Limited error handling
-- No rate limiting
-
----
-
-## 📄 License
-
-MIT License - Feel free to modify and use for your projects
-
----
-
-## 👨‍💻 Author
-
-Built as a prototype for frontend skill evaluation platform.
-
-For questions or contributions, please reach out!
+**Version**: 1.0.0  
+**Last Updated**: November 2025  
+**Status**: Production Ready ✅
