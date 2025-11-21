@@ -307,11 +307,11 @@
     "courseId": "course-html-css",
     "level": 1,
     "assignedQuestions": [
-      "html-css-l1-q2",
-      "course-html-css-l1-q1"
+      "course-html-css-l1-q4",
+      "html-css-l1-q2"
     ],
     "completedQuestions": [],
-    "assignedAt": "2025-11-21T04:38:52.090Z",
+    "assignedAt": "2025-11-21T04:48:00.195Z",
     "totalAvailable": 6
   }
 ]

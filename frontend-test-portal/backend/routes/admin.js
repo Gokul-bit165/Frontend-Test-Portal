@@ -249,6 +249,102 @@ router.post('/evaluate/:submissionId', async (req, res) => {
 });
 
 /**
+ * GET /api/admin/submissions/grouped
+ * Get submissions grouped by test session with user details
+ */
+router.get('/submissions/grouped', async (req, res) => {
+  try {
+    const db = require('../database/connection');
+    
+    // Query to get test sessions with user info and submission details
+    const query = `
+      SELECT 
+        ts.id as session_id,
+        ts.user_id,
+        ts.course_id,
+        ts.level,
+        ts.started_at,
+        ts.completed_at,
+        ts.total_questions,
+        ts.passed_count,
+        ts.overall_status,
+        ts.user_feedback,
+        COALESCE(u.full_name, u.username, ts.user_id) as user_name,
+        u.email as user_email,
+        ts.submission_ids
+      FROM test_sessions ts
+      LEFT JOIN users u ON ts.user_id = u.id
+      ORDER BY ts.started_at DESC
+    `;
+    
+    const sessions = await db.query(query);
+    
+    // For each session, get the detailed submissions
+    const groupedSessions = await Promise.all(sessions.map(async (session) => {
+      let submissions = [];
+      
+      if (session.submission_ids) {
+        // Parse submission IDs
+        let submissionIds = [];
+        try {
+          submissionIds = JSON.parse(session.submission_ids);
+        } catch (e) {
+          console.error('Error parsing submission_ids:', e);
+        }
+        
+        if (submissionIds.length > 0) {
+          const placeholders = submissionIds.map(() => '?').join(',');
+          const submissionsQuery = `
+            SELECT 
+              id, 
+              challenge_id, 
+              status, 
+              passed,
+              final_score,
+              submitted_at
+            FROM submissions
+            WHERE id IN (${placeholders})
+            ORDER BY submitted_at ASC
+          `;
+          
+          submissions = await db.query(submissionsQuery, submissionIds);
+        }
+      }
+      
+      return {
+        session_id: session.session_id,
+        user: {
+          id: session.user_id,
+          name: session.user_name,
+          email: session.user_email || 'N/A'
+        },
+        course_id: session.course_id,
+        level: session.level,
+        started_at: session.started_at,
+        completed_at: session.completed_at,
+        total_questions: session.total_questions || 0,
+        passed_count: session.passed_count || 0,
+        overall_status: session.overall_status,
+        user_feedback: session.user_feedback,
+        submissions: submissions.map(s => ({
+          id: s.id,
+          challenge_id: s.challenge_id,
+          status: s.status,
+          passed: s.passed === 1,
+          final_score: s.final_score || 0,
+          submitted_at: s.submitted_at
+        }))
+      };
+    }));
+    
+    res.json(groupedSessions);
+  } catch (error) {
+    console.error('Failed to fetch grouped submissions:', error);
+    res.status(500).json({ error: 'Failed to fetch grouped submissions', details: error.message });
+  }
+});
+
+/**
  * DELETE /api/admin/submissions/:id
  * Delete a submission
  */
