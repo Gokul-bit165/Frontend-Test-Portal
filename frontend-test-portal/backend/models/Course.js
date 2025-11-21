@@ -33,37 +33,39 @@ class CourseModel {
 
   // Get all courses
   static async findAll() {
-    if (!isConnected()) {
+    try {
+      const courses = await query('SELECT * FROM courses ORDER BY created_at DESC');
+      // Parse JSON fields (mysql2 may auto-parse JSON columns, handle both cases)
+      return courses.map(course => ({
+        ...course,
+        tags: Array.isArray(course.tags) ? course.tags : JSON.parse(course.tags || '[]'),
+        isLocked: Boolean(course.is_locked),
+        totalLevels: course.total_levels,
+        estimatedTime: course.estimated_time
+      }));
+    } catch (error) {
+      console.log('Database error, falling back to JSON:', error.message);
       return await this.loadFromJSON();
     }
-
-    const courses = await query('SELECT * FROM courses ORDER BY created_at DESC');
-    // Parse JSON fields
-    return courses.map(course => ({
-      ...course,
-      tags: JSON.parse(course.tags || '[]'),
-      isLocked: Boolean(course.is_locked),
-      totalLevels: course.total_levels,
-      estimatedTime: course.estimated_time
-    }));
   }
 
   // Get course by ID
   static async findById(id) {
-    if (!isConnected()) {
+    try {
+      const course = await queryOne('SELECT * FROM courses WHERE id = ?', [id]);
+      if (!course) return null;
+      return {
+        ...course,
+        tags: Array.isArray(course.tags) ? course.tags : JSON.parse(course.tags || '[]'),
+        isLocked: Boolean(course.is_locked),
+        totalLevels: course.total_levels,
+        estimatedTime: course.estimated_time
+      };
+    } catch (error) {
+      console.log('Database error, falling back to JSON:', error.message);
       const courses = await this.loadFromJSON();
       return courses.find(c => c.id === id) || null;
     }
-
-    const course = await queryOne('SELECT * FROM courses WHERE id = ?', [id]);
-    if (!course) return null;
-    return {
-      ...course,
-      tags: JSON.parse(course.tags || '[]'),
-      isLocked: Boolean(course.is_locked),
-      totalLevels: course.total_levels,
-      estimatedTime: course.estimated_time
-    };
   }
 
   // Create new course

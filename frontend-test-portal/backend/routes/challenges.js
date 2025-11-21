@@ -92,7 +92,7 @@ router.get('/', async (req, res) => {
  * GET /api/challenges/level-questions
  * Get assigned questions for a user's level with random assignment
  */
-router.get('/level-questions', (req, res) => {
+router.get('/level-questions', async (req, res) => {
   try {
     const { userId, courseId, level, forceNew } = req.query;
     
@@ -107,11 +107,17 @@ router.get('/level-questions', (req, res) => {
     const assignmentKey = `${userId}-${courseId}-${level}`;
     let userAssignment = assignments.find(a => a.key === assignmentKey);
 
-    // Get all questions for this course and level
-    const allChallenges = getAllChallenges();
-    const levelQuestions = allChallenges.filter(c => 
-      c.courseId === courseId && c.level === parseInt(level)
-    );
+    // Get all questions for this course and level from database
+    let levelQuestions;
+    try {
+      levelQuestions = await ChallengeModel.findByCourseLevel(courseId, parseInt(level));
+    } catch (dbError) {
+      console.log('Database error, using JSON file:', dbError.message);
+      const allChallenges = getAllChallenges();
+      levelQuestions = allChallenges.filter(c => 
+        c.courseId === courseId && c.level === parseInt(level)
+      );
+    }
 
     // Ensure we never assign the same challenge twice
     const uniqueLevelQuestions = [];
@@ -160,12 +166,12 @@ router.get('/level-questions', (req, res) => {
 
     // Get the full question details for assigned questions
     const assignedFullQuestions = userAssignment.assignedQuestions.map(qId => {
-      const question = allChallenges.find(c => c.id === qId);
+      const question = levelQuestions.find(c => c.id === qId);
       return question ? {
         id: question.id,
         title: question.title,
         description: question.description,
-        points: question.points,
+        points: question.points || 0,
         level: question.level
       } : null;
     }).filter(q => q !== null);
@@ -187,48 +193,35 @@ router.get('/level-questions', (req, res) => {
  * GET /api/challenges/:id
  * Get specific challenge by ID (supports both old and new format)
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const allChallenges = getAllChallenges();
-    const challenge = allChallenges.find(c => c.id === req.params.id);
+    let challenge;
+    try {
+      challenge = await ChallengeModel.findById(req.params.id);
+    } catch (dbError) {
+      console.log('Database error, using JSON file:', dbError.message);
+      const allChallenges = getAllChallenges();
+      challenge = allChallenges.find(c => c.id === req.params.id);
+    }
     
     if (!challenge) {
       return res.status(404).json({ error: 'Challenge not found' });
     }
     
-    // Check if it's a new format challenge (course-based)
-    if (challenge.courseId) {
-      // New format - return with assets
-      const publicChallenge = {
-        id: challenge.id,
-        title: challenge.title,
-        courseId: challenge.courseId,
-        level: challenge.level,
-        questionNumber: challenge.questionNumber,
-        description: challenge.description,
-        instructions: challenge.instructions || challenge.description,
-        points: challenge.points,
-        hints: challenge.hints,
-        assets: challenge.assets,
-        tags: challenge.tags || [],
-        timeLimit: challenge.timeLimit || 60,
-        passingThreshold: challenge.passingThreshold || 80,
-        expectedSolution: challenge.expectedSolution
-      };
-      return res.json(publicChallenge);
-    }
-    
-    // Old format - return as before
+    // Return challenge without expected solution (for candidate view)
     const publicChallenge = {
       id: challenge.id,
       title: challenge.title,
+      courseId: challenge.courseId,
+      level: challenge.level,
       difficulty: challenge.difficulty,
       description: challenge.description,
       instructions: challenge.instructions,
-      tags: challenge.tags,
-      timeLimit: challenge.timeLimit,
-      passingThreshold: challenge.passingThreshold,
-      expectedSolution: challenge.expectedSolution
+      points: challenge.points || 0,
+      hints: challenge.hints,
+      tags: challenge.tags || [],
+      timeLimit: challenge.timeLimit || 60,
+      passingThreshold: challenge.passingThreshold || {}
     };
     
     res.json(publicChallenge);

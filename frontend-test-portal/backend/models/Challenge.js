@@ -8,8 +8,13 @@ const { query, queryOne } = require('../database/connection');
 class ChallengeModel {
   // Get all challenges
   static async findAll() {
-    const challenges = await query('SELECT * FROM challenges ORDER BY created_at DESC');
-    return challenges.map(this._formatChallenge);
+    try {
+      const challenges = await query('SELECT * FROM challenges ORDER BY created_at DESC');
+      return challenges.map(c => this._formatChallenge(c));
+    } catch (error) {
+      console.error('Error in findAll:', error.message);
+      throw error;
+    }
   }
 
   // Get challenge by ID
@@ -112,9 +117,11 @@ class ChallengeModel {
       difficulty: challenge.difficulty,
       description: challenge.description,
       instructions: challenge.instructions,
-      tags: JSON.parse(challenge.tags || '[]'),
+      tags: Array.isArray(challenge.tags) ? challenge.tags : JSON.parse(challenge.tags || '[]'),
       timeLimit: challenge.time_limit,
-      passingThreshold: JSON.parse(challenge.passing_threshold || '{}'),
+      passingThreshold: (typeof challenge.passing_threshold === 'object' && challenge.passing_threshold !== null) 
+        ? challenge.passing_threshold 
+        : JSON.parse(challenge.passing_threshold || '{}'),
       expectedSolution: {
         html: challenge.expected_html,
         css: challenge.expected_css,
