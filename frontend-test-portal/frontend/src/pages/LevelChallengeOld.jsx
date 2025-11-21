@@ -400,13 +400,17 @@ export default function LevelChallengeOld() {
 
     try {
       if (testSessionId) {
-        try {
-          await axios.put(`http://localhost:5000/api/test-sessions/${testSessionId}/complete`, {
-            user_feedback: null
-          });
-        } catch (error) {
-          console.error('Failed to complete test session before navigation:', error);
-        }
+        console.log('Completing test session:', testSessionId);
+        
+        // MUST wait for completion before navigating
+        await axios.put(`http://localhost:5000/api/test-sessions/${testSessionId}/complete`, {
+          user_feedback: null
+        });
+        
+        console.log('Test session completed successfully');
+        
+        // Small delay to ensure database write is committed
+        await new Promise(resolve => setTimeout(resolve, 300));
 
         navigate(`/test-results/${testSessionId}`);
       } else {
@@ -414,7 +418,9 @@ export default function LevelChallengeOld() {
           state: { userAnswers, assignedQuestions }
         });
       }
-    } finally {
+    } catch (error) {
+      console.error('Error finishing level:', error);
+      alert('Failed to finalize test results. Please try again.');
       setFinishingLevel(false);
     }
   };
