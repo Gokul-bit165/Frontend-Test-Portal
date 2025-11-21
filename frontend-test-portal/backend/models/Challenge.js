@@ -122,6 +122,8 @@ class ChallengeModel {
       passingThreshold: (typeof challenge.passing_threshold === 'object' && challenge.passing_threshold !== null) 
         ? challenge.passing_threshold 
         : JSON.parse(challenge.passing_threshold || '{}'),
+      hints: Array.isArray(challenge.hints) ? challenge.hints : JSON.parse(challenge.hints || '[]'),
+      points: challenge.points || 100,
       expectedSolution: {
         html: challenge.expected_html,
         css: challenge.expected_css,

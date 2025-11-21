@@ -284,13 +284,34 @@ router.get('/submissions/grouped', async (req, res) => {
       let submissions = [];
       
       if (session.submission_ids) {
-        // Parse submission IDs
+        // Normalize submission_ids returned by MySQL2 (could be string, array, Buffer, or object)
         let submissionIds = [];
-        try {
-          submissionIds = JSON.parse(session.submission_ids);
-        } catch (e) {
-          console.error('Error parsing submission_ids:', e);
+        const rawSubmissionIds = session.submission_ids;
+
+        if (Array.isArray(rawSubmissionIds)) {
+          submissionIds = rawSubmissionIds;
+        } else if (typeof rawSubmissionIds === 'string') {
+          try {
+            submissionIds = JSON.parse(rawSubmissionIds);
+          } catch (e) {
+            console.error('Error parsing submission_ids string:', e);
+          }
+        } else if (Buffer.isBuffer(rawSubmissionIds)) {
+          try {
+            submissionIds = JSON.parse(rawSubmissionIds.toString('utf8'));
+          } catch (e) {
+            console.error('Error parsing submission_ids buffer:', e);
+          }
+        } else if (typeof rawSubmissionIds === 'object') {
+          // Already parsed JSON from MySQL2 - ensure it is an array
+          if (Array.isArray(rawSubmissionIds)) {
+            submissionIds = rawSubmissionIds;
+          } else {
+            submissionIds = Object.values(rawSubmissionIds);
+          }
         }
+
+        submissionIds = Array.isArray(submissionIds) ? submissionIds.filter(Boolean) : [];
         
         if (submissionIds.length > 0) {
           const placeholders = submissionIds.map(() => '?').join(',');

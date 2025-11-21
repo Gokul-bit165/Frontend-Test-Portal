@@ -208,23 +208,8 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Challenge not found' });
     }
     
-    // Return challenge without expected solution (for candidate view)
-    const publicChallenge = {
-      id: challenge.id,
-      title: challenge.title,
-      courseId: challenge.courseId,
-      level: challenge.level,
-      difficulty: challenge.difficulty,
-      description: challenge.description,
-      instructions: challenge.instructions,
-      points: challenge.points || 0,
-      hints: challenge.hints,
-      tags: challenge.tags || [],
-      timeLimit: challenge.timeLimit || 60,
-      passingThreshold: challenge.passingThreshold || {}
-    };
-    
-    res.json(publicChallenge);
+    // Return full challenge including expected solution (for candidate view and preview)
+    res.json(challenge);
   } catch (error) {
     console.error('Error fetching challenge:', error);
     res.status(500).json({ error: 'Failed to fetch challenge' });

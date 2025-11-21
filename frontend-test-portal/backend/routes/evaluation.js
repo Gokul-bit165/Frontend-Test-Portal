@@ -8,6 +8,7 @@ const router = express.Router();
 const evaluator = require('../services/evaluator');
 const fs = require('fs');
 const path = require('path');
+const ChallengeModel = require('../models/Challenge');
 const SubmissionModel = require('../models/Submission');
 
 const submissionsPath = path.join(__dirname, '../data/submissions.json');
@@ -29,28 +30,39 @@ const getChallenges = () => {
   return JSON.parse(data);
 };
 
-// Get challenge from either old or new format
-const getChallenge = (challengeId) => {
+// Get challenge from database
+const getChallenge = async (challengeId) => {
   try {
-    // Try old format first
-    const oldChallenges = getChallenges();
-    let challenge = oldChallenges.find(c => c.id === challengeId);
+    // Get from database
+    const challenge = await ChallengeModel.findById(challengeId);
     
     if (challenge) {
-      console.log(`📄 Found challenge in old format: ${challengeId}`);
+      console.log(`📄 Found challenge in database: ${challengeId}`);
       return challenge;
     }
     
-    // If not found, try new format
-    if (fs.existsSync(challengesNewPath)) {
-      const newData = fs.readFileSync(challengesNewPath, 'utf8');
-      const newChallenges = JSON.parse(newData);
-      challenge = newChallenges.find(c => c.id === challengeId);
+    // Fallback to JSON files if database fails
+    try {
+      const oldChallenges = getChallenges();
+      let fallbackChallenge = oldChallenges.find(c => c.id === challengeId);
       
-      if (challenge) {
-        console.log(`📄 Found challenge in new format: ${challengeId}`);
-        return challenge;
+      if (fallbackChallenge) {
+        console.log(`📄 Found challenge in JSON fallback: ${challengeId}`);
+        return fallbackChallenge;
       }
+      
+      if (fs.existsSync(challengesNewPath)) {
+        const newData = fs.readFileSync(challengesNewPath, 'utf8');
+        const newChallenges = JSON.parse(newData);
+        fallbackChallenge = newChallenges.find(c => c.id === challengeId);
+        
+        if (fallbackChallenge) {
+          console.log(`📄 Found challenge in new format: ${challengeId}`);
+          return fallbackChallenge;
+        }
+      }
+    } catch (jsonError) {
+      console.error('JSON fallback failed:', jsonError);
     }
     
     return null;
@@ -92,7 +104,7 @@ router.post('/', async (req, res) => {
     }
     
     // Get challenge with expected solution
-    const challenge = getChallenge(submission.challengeId);
+    const challenge = await getChallenge(submission.challengeId);
     
     if (!challenge) {
       console.error(`❌ Challenge not found: ${submission.challengeId}`);
@@ -164,7 +176,7 @@ router.post('/quick', async (req, res) => {
     }
     
     // Get challenge
-    const challenge = getChallenge(challengeId);
+    const challenge = await getChallenge(challengeId);
     
     if (!challenge) {
       console.error(`❌ Challenge not found: ${challengeId}`);

@@ -1,0 +1,129 @@
+[
+    {
+        "id":  "ch-001",
+        "title":  "Build a Centered Card",
+        "difficulty":  "Easy",
+        "description":  "Create a card component that is centered on the page with a shadow and rounded corners.",
+        "instructions":  "Create a card with:\n- Width of 400px\n- Centered horizontally and vertically\n- Padding of 30px\n- Border radius of 10px\n- Box shadow\n- A heading \u0027Welcome\u0027 and a paragraph of text",
+        "tags":  [
+                     "HTML",
+                     "CSS",
+                     "Layout"
+                 ],
+        "timeLimit":  15,
+        "passingThreshold":  {
+                                 "structure":  70,
+                                 "visual":  80,
+                                 "overall":  75
+                             },
+        "expectedSolution":  {
+                                 "html":  "\u003c!DOCTYPE html\u003e\n\u003chtml\u003e\n\u003chead\u003e\n  \u003ctitle\u003eCentered Card\u003c/title\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n  \u003cdiv class=\"card\"\u003e\n    \u003ch1\u003eWelcome\u003c/h1\u003e\n    \u003cp\u003eThis is a centered card component with beautiful styling.\u003c/p\u003e\n  \u003c/div\u003e\n\u003c/body\u003e\n\u003c/html\u003e",
+                                 "css":  "body {\n  margin: 0;\n  padding: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: #f0f0f0;\n  font-family: Arial, sans-serif;\n}\n\n.card {\n  width: 400px;\n  padding: 30px;\n  background: white;\n  border-radius: 10px;\n  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\n}\n\n.card h1 {\n  margin: 0 0 15px 0;\n  color: #333;\n}\n\n.card p {\n  margin: 0;\n  color: #666;\n  line-height: 1.6;\n}",
+                                 "js":  ""
+                             },
+        "createdAt":  "2025-01-15T10:00:00.000Z",
+        "updatedAt":  "2025-01-15T10:00:00.000Z"
+    },
+    {
+        "id":  "ch-002",
+        "title":  "Interactive Button with Hover",
+        "difficulty":  "Easy",
+        "description":  "Create a button that changes color on hover and shows an alert when clicked.",
+        "instructions":  "Create a button with:\n- Text \u0027Click Me\u0027\n- Blue background (#3b82f6)\n- White text\n- Padding: 12px 24px\n- Border radius: 6px\n- Changes to darker blue on hover\n- Shows alert \u0027Button clicked!\u0027 on click",
+        "tags":  [
+                     "HTML",
+                     "CSS",
+                     "JavaScript",
+                     "Interactivity"
+                 ],
+        "timeLimit":  20,
+        "passingThreshold":  {
+                                 "structure":  75,
+                                 "visual":  85,
+                                 "overall":  80
+                             },
+        "expectedSolution":  {
+                                 "html":  "\u003c!DOCTYPE html\u003e\n\u003chtml\u003e\n\u003chead\u003e\n  \u003ctitle\u003eInteractive Button\u003c/title\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n  \u003cbutton id=\"myButton\"\u003eClick Me\u003c/button\u003e\n\u003c/body\u003e\n\u003c/html\u003e",
+                                 "css":  "body {\n  margin: 0;\n  padding: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: #f9fafb;\n}\n\nbutton {\n  padding: 12px 24px;\n  background: #3b82f6;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  font-size: 16px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: background 0.3s;\n}\n\nbutton:hover {\n  background: #2563eb;\n}",
+                                 "js":  "document.getElementById(\u0027myButton\u0027).addEventListener(\u0027click\u0027, function() {\n  alert(\u0027Button clicked!\u0027);\n});"
+                             },
+        "createdAt":  "2025-01-16T10:00:00.000Z",
+        "updatedAt":  "2025-01-16T10:00:00.000Z"
+    },
+    {
+        "id":  "ch-003",
+        "title":  "Responsive Navigation Bar",
+        "difficulty":  "Medium",
+        "description":  "Build a horizontal navigation bar with multiple links and proper styling.",
+        "instructions":  "Create a navigation bar with:\n- Fixed at top\n- Background color #1f2937\n- Contains 4 links: Home, About, Services, Contact\n- Links are white and evenly spaced\n- Links change color to #60a5fa on hover\n- Padding: 20px\n- Use flexbox for layout",
+        "tags":  [
+                     "HTML",
+                     "CSS",
+                     "Navigation",
+                     "Flexbox"
+                 ],
+        "timeLimit":  25,
+        "passingThreshold":  {
+                                 "structure":  80,
+                                 "visual":  85,
+                                 "overall":  82
+                             },
+        "expectedSolution":  {
+                                 "html":  "\u003c!DOCTYPE html\u003e\n\u003chtml\u003e\n\u003chead\u003e\n  \u003ctitle\u003eNavigation Bar\u003c/title\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n  \u003cnav class=\"navbar\"\u003e\n    \u003ca href=\"#\"\u003eHome\u003c/a\u003e\n    \u003ca href=\"#\"\u003eAbout\u003c/a\u003e\n    \u003ca href=\"#\"\u003eServices\u003c/a\u003e\n    \u003ca href=\"#\"\u003eContact\u003c/a\u003e\n  \u003c/nav\u003e\n  \u003cdiv class=\"content\"\u003e\n    \u003ch1\u003eWelcome to our website\u003c/h1\u003e\n  \u003c/div\u003e\n\u003c/body\u003e\n\u003c/html\u003e",
+                                 "css":  "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: Arial, sans-serif;\n}\n\n.navbar {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  background: #1f2937;\n  padding: 20px;\n  display: flex;\n  justify-content: center;\n  gap: 40px;\n}\n\n.navbar a {\n  color: white;\n  text-decoration: none;\n  font-size: 16px;\n  transition: color 0.3s;\n}\n\n.navbar a:hover {\n  color: #60a5fa;\n}\n\n.content {\n  margin-top: 80px;\n  padding: 20px;\n  text-align: center;\n}\n\n.content h1 {\n  color: #1f2937;\n}",
+                                 "js":  ""
+                             },
+        "createdAt":  "2025-01-17T10:00:00.000Z",
+        "updatedAt":  "2025-01-17T10:00:00.000Z"
+    },
+    {
+        "id":  "ch-004",
+        "title":  "Simple Form with Validation",
+        "difficulty":  "Medium",
+        "description":  "Create a form with email validation and submit handling.",
+        "instructions":  "Create a form with:\n- Email input field\n- Submit button\n- On submit, validate email is not empty\n- Show success message \u0027Form submitted!\u0027 in green if valid\n- Show error message \u0027Please enter an email\u0027 in red if empty\n- Prevent default form submission\n- Style the form with proper spacing and colors",
+        "tags":  [
+                     "HTML",
+                     "CSS",
+                     "JavaScript",
+                     "Forms",
+                     "Validation"
+                 ],
+        "timeLimit":  30,
+        "passingThreshold":  {
+                                 "structure":  75,
+                                 "visual":  80,
+                                 "overall":  78
+                             },
+        "expectedSolution":  {
+                                 "html":  "\u003c!DOCTYPE html\u003e\n\u003chtml\u003e\n\u003chead\u003e\n  \u003ctitle\u003eForm Validation\u003c/title\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n  \u003cdiv class=\"form-container\"\u003e\n    \u003cform id=\"emailForm\"\u003e\n      \u003clabel for=\"email\"\u003eEmail Address\u003c/label\u003e\n      \u003cinput type=\"email\" id=\"email\" placeholder=\"Enter your email\"\u003e\n      \u003cbutton type=\"submit\"\u003eSubmit\u003c/button\u003e\n      \u003cdiv id=\"message\"\u003e\u003c/div\u003e\n    \u003c/form\u003e\n  \u003c/div\u003e\n\u003c/body\u003e\n\u003c/html\u003e",
+                                 "css":  "body {\n  margin: 0;\n  padding: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  background: #f3f4f6;\n  font-family: Arial, sans-serif;\n}\n\n.form-container {\n  background: white;\n  padding: 40px;\n  border-radius: 10px;\n  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\n  width: 400px;\n}\n\nform {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n}\n\nlabel {\n  font-weight: 600;\n  color: #374151;\n}\n\ninput {\n  padding: 12px;\n  border: 1px solid #d1d5db;\n  border-radius: 6px;\n  font-size: 16px;\n}\n\nbutton {\n  padding: 12px;\n  background: #3b82f6;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  font-size: 16px;\n  font-weight: 600;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background: #2563eb;\n}\n\n#message {\n  padding: 10px;\n  border-radius: 6px;\n  text-align: center;\n  font-weight: 600;\n}\n\n.success {\n  background: #d1fae5;\n  color: #065f46;\n}\n\n.error {\n  background: #fee2e2;\n  color: #991b1b;\n}",
+                                 "js":  "document.getElementById(\u0027emailForm\u0027).addEventListener(\u0027submit\u0027, function(e) {\n  e.preventDefault();\n  const email = document.getElementById(\u0027email\u0027).value;\n  const message = document.getElementById(\u0027message\u0027);\n  \n  if (email.trim() === \u0027\u0027) {\n    message.textContent = \u0027Please enter an email\u0027;\n    message.className = \u0027error\u0027;\n  } else {\n    message.textContent = \u0027Form submitted!\u0027;\n    message.className = \u0027success\u0027;\n  }\n});"
+                             },
+        "createdAt":  "2025-01-18T10:00:00.000Z",
+        "updatedAt":  "2025-01-18T10:00:00.000Z"
+    },
+    {
+        "id":  "ch-ff862245",
+        "title":  "Responsive Navigation Bar with Dropdown Menus",
+        "difficulty":  "Hard",
+        "description":  "Create a fully responsive navigation bar that stays fixed at the top of the viewport. The navigation bar should contain four main links: Home, About, Services, and Contact. The Services link should have a dropdown submenu with at least three submenu items. On desktop screens, the submenu should appear on hover, while on mobile screens, the submenu should open/close when the Services link is clicked.\n\nThe navigation bar should use flexbox for layout, have a consistent color scheme, and provide a smooth user experience on both desktop and mobile devices. The bar must be accessible, keyboard-navigable, and visually appealing.",
+        "instructions":  "Create a fixed navigation bar at the top of the page with the specified links.\n\nUse flexbox to evenly space the navigation links horizontally.\n\nImplement a dropdown submenu under the Services link with at least three items.\n\nOn desktop screens, the submenu appears on hover.\n\nOn mobile screens (width ??? 768px), implement a toggle for opening/closing the submenu when the Services link is clicked.\n\nStyle the navbar with background color #1f2937, white text, and a hover color #60a5fa.\n\nEnsure the navigation bar is keyboard accessible (tab navigation and submenu accessible via keyboard).\n\nThe navbar and dropdown must be responsive and look good on different screen sizes.\n\nProvide smooth transitions for submenu appearance/disappearance.\n\nBonus: Add an accessible \"hamburger\" menu on mobile that toggles the entire navigation links.",
+        "tags":  [
+
+                 ],
+        "timeLimit":  30,
+        "passingThreshold":  {
+                                 "structure":  90,
+                                 "visual":  90,
+                                 "overall":  75
+                             },
+        "expectedSolution":  {
+                                 "html":  "\u003cnav class=\"navbar\"\u003e\n  \u003cul class=\"nav-list\"\u003e\n    \u003cli class=\"nav-item\"\u003e\u003ca href=\"#\"\u003eHome\u003c/a\u003e\u003c/li\u003e\n    \u003cli class=\"nav-item\"\u003e\u003ca href=\"#\"\u003eAbout\u003c/a\u003e\u003c/li\u003e\n    \u003cli class=\"nav-item dropdown\"\u003e\n      \u003ca href=\"#\" class=\"dropbtn\" aria-haspopup=\"true\" aria-expanded=\"false\"\u003eServices\u003c/a\u003e\n      \u003cul class=\"dropdown-content\" aria-label=\"submenu\"\u003e\n        \u003cli\u003e\u003ca href=\"#\"\u003eWeb Design\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#\"\u003eSEO\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#\"\u003eMarketing\u003c/a\u003e\u003c/li\u003e\n      \u003c/ul\u003e\n    \u003c/li\u003e\n    \u003cli class=\"nav-item\"\u003e\u003ca href=\"#\"\u003eContact\u003c/a\u003e\u003c/li\u003e\n  \u003c/ul\u003e\n  \u003cbutton class=\"hamburger\" aria-label=\"Toggle navigation\" aria-expanded=\"false\"\u003e\u0026#9776;\u003c/button\u003e\n\u003c/nav\u003e\n",
+                                 "css":  "body {\n  margin: 0;\n  font-family: Arial, sans-serif;\n}\n\n.navbar {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  background-color: #1f2937;\n  padding: 20px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  z-index: 1000;\n}\n\n.nav-list {\n  list-style: none;\n  display: flex;\n  margin: 0;\n  padding: 0;\n  gap: 40px;\n}\n\n.nav-item a, .dropbtn {\n  color: white;\n  text-decoration: none;\n  font-weight: bold;\n  cursor: pointer;\n  padding: 5px 10px;\n  display: block;\n}\n\n.nav-item a:hover, .dropbtn:hover {\n  color: #60a5fa;\n}\n\n.dropdown {\n  position: relative;\n}\n\n.dropdown-content {\n  display: none;\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background-color: #1f2937;\n  min-width: 160px;\n  box-shadow: 0 8px 16px rgba(0,0,0,0.3);\n  border-radius: 5px;\n  z-index: 1001;\n}\n\n.dropdown-content li a {\n  padding: 10px;\n  color: white;\n}\n\n.dropdown-content li a:hover {\n  background-color: #2563eb;\n  color: white;\n}\n\n.dropdown:hover .dropdown-content {\n  display: block;\n}\n\n/* Hamburger button - hidden on desktop */\n.hamburger {\n  display: none;\n  font-size: 28px;\n  background: none;\n  border: none;\n  color: white;\n  cursor: pointer;\n}\n\n/* Responsive styles */\n@media (max-width: 768px) {\n  .nav-list {\n    flex-direction: column;\n    display: none;\n    width: 100%;\n    background-color: #1f2937;\n    position: absolute;\n    top: 60px;\n    left: 0;\n    border-radius: 0 0 10px 10px;\n  }\n\n  .nav-list.active {\n    display: flex;\n  }\n\n  .dropdown-content {\n    position: static;\n    box-shadow: none;\n  }\n\n  .dropdown:hover .dropdown-content {\n    display: none;\n  }\n\n  .dropdown .dropdown-content.active {\n    display: flex;\n    flex-direction: column;\n  }\n\n  .hamburger {\n    display: block;\n  }\n}\n",
+                                 "js":  "const hamburger = document.querySelector(\u0027.hamburger\u0027);\nconst navList = document.querySelector(\u0027.nav-list\u0027);\nconst dropdown = document.querySelector(\u0027.dropdown\u0027);\nconst dropbtn = document.querySelector(\u0027.dropbtn\u0027);\nconst dropdownContent = document.querySelector(\u0027.dropdown-content\u0027);\n\nhamburger.addEventListener(\u0027click\u0027, () =\u003e {\n  const expanded = hamburger.getAttribute(\u0027aria-expanded\u0027) === \u0027true\u0027;\n  hamburger.setAttribute(\u0027aria-expanded\u0027, !expanded);\n  navList.classList.toggle(\u0027active\u0027);\n});\n\ndropbtn.addEventListener(\u0027click\u0027, (e) =\u003e {\n  if (window.innerWidth \u003c= 768) {\n    e.preventDefault();\n    const expanded = dropbtn.getAttribute(\u0027aria-expanded\u0027) === \u0027true\u0027;\n    dropbtn.setAttribute(\u0027aria-expanded\u0027, !expanded);\n    dropdownContent.classList.toggle(\u0027active\u0027);\n  }\n});\n"
+                             },
+        "createdAt":  "2025-11-08T04:57:28.771Z",
+        "updatedAt":  "2025-11-08T04:57:28.771Z"
+    }
+]

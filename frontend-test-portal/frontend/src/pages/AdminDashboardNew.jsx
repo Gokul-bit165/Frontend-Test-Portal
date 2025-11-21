@@ -99,6 +99,13 @@ export default function AdminDashboard() {
   const [groupedSessions, setGroupedSessions] = useState([]);
   const [submissionSearch, setSubmissionSearch] = useState('');
   const [submissionViewMode, setSubmissionViewMode] = useState('grouped'); // 'grouped' or 'individual'
+  const [detailModal, setDetailModal] = useState({
+    open: false,
+    loading: false,
+    error: '',
+    submission: null,
+    submissionId: null
+  });
 
   // Courses data
   const [courses, setCourses] = useState([]);
@@ -184,6 +191,367 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Failed to load submissions:', error);
+    }
+  };
+
+  const closeDetailModal = () => {
+    setDetailModal({
+      open: false,
+      loading: false,
+      error: '',
+      submission: null,
+      submissionId: null
+    });
+  };
+
+  const fetchSubmissionDetails = async (submissionId) => {
+    setDetailModal({
+      open: true,
+      loading: true,
+      error: '',
+      submission: null,
+      submissionId
+    });
+
+    try {
+      const res = await axios.get(`http://localhost:5000/api/submissions/${submissionId}`);
+      setDetailModal({
+        open: true,
+        loading: false,
+        error: '',
+        submission: res.data,
+        submissionId
+      });
+    } catch (error) {
+      console.error('Failed to load submission details:', error);
+      setDetailModal({
+        open: true,
+        loading: false,
+        error: error.response?.data?.error || 'Failed to load submission details',
+        submission: null,
+        submissionId
+      });
+    }
+  };
+
+  const renderStatusBadge = (status) => {
+    const baseClasses = 'px-3 py-1 rounded-full text-xs font-semibold';
+    if (status === 'passed') {
+      return <span className={`${baseClasses} bg-green-100 text-green-700`}>PASSED</span>;
+    }
+    if (status === 'failed') {
+      return <span className={`${baseClasses} bg-rose-100 text-rose-700`}>FAILED</span>;
+    }
+    if (!status) {
+      return <span className={`${baseClasses} bg-amber-100 text-amber-700`}>PENDING</span>;
+    }
+    return <span className={`${baseClasses} bg-amber-100 text-amber-700`}>{status.toUpperCase()}</span>;
+  };
+
+  const renderSubmissionDetailBody = () => {
+    try {
+      if (detailModal.loading) {
+        return (
+          <div className="py-16 text-center space-y-4">
+            <div className="animate-spin h-12 w-12 rounded-full border-b-2 border-indigo-600 mx-auto"></div>
+            <p className="text-gray-500">Loading submission details…</p>
+          </div>
+        );
+      }
+
+      if (detailModal.error) {
+        return (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+            <p className="text-red-600 font-semibold mb-4">{detailModal.error}</p>
+            <button
+              onClick={() => fetchSubmissionDetails(detailModal.submissionId)}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            >
+              Retry
+            </button>
+          </div>
+        );
+      }
+
+      if (!detailModal.submission) {
+        return <p className="text-gray-500">No submission data available.</p>;
+      }
+
+      const submission = detailModal.submission;
+      const parsedCode = parseJSONSafe(submission.code, submission.code) || {};
+      const safeCode = {
+        html: typeof parsedCode.html === 'string' ? parsedCode.html : (typeof parsedCode === 'string' ? parsedCode : ''),
+        css: typeof parsedCode.css === 'string' ? parsedCode.css : '',
+        js: typeof parsedCode.js === 'string' ? parsedCode.js : ''
+      };
+      const evaluationPayload = parseJSONSafe(submission.result, submission.result) || {};
+      const evaluation = typeof evaluationPayload === 'object' && !Array.isArray(evaluationPayload)
+        ? evaluationPayload
+        : {};
+      const finalScore = Math.round(evaluation.finalScore ?? submission.total_score ?? 0);
+      const contentScore = Math.round(evaluation.contentScore ?? submission.content_score ?? 0);
+      const visualScore = Math.round(evaluation.visualScore ?? submission.visual_score ?? 0);
+      const structureScore = Math.round(evaluation.structureScore ?? submission.structure_score ?? 0);
+      const codeBlocks = [
+        { label: 'HTML', content: safeCode.html },
+        { label: 'CSS', content: safeCode.css },
+        { label: 'JavaScript', content: safeCode.js }
+      ];
+      const rawFeedback = evaluation.feedback;
+      const feedbackIsObject = rawFeedback && typeof rawFeedback === 'object' && !Array.isArray(rawFeedback);
+      const feedbackString = typeof rawFeedback === 'string' ? rawFeedback : '';
+      const encouragementList = (() => {
+        if (feedbackIsObject) {
+          const values = normalizeList(rawFeedback.encouragement);
+          if (values.length) return values;
+        }
+        return feedbackString ? [feedbackString] : ['Great progress!'];
+      })();
+      const improvementsList = (() => {
+        if (feedbackIsObject) {
+          const values = normalizeList(rawFeedback.improvements);
+          if (values.length) return values;
+        }
+        return ['Review semantic structure and styling to match the expected output.'];
+      })();
+      const contentValidation = feedbackIsObject ? rawFeedback.contentValidation : '';
+      const contentDetails = feedbackIsObject ? normalizeList(rawFeedback.contentDetails) : [];
+      const shouldShowContentValidation = !!contentValidation || contentDetails.length > 0;
+
+      return (
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'Final Score', value: finalScore, color: 'text-blue-600' },
+              { label: 'Content', value: contentScore, color: 'text-green-600' },
+              { label: 'Visual', value: visualScore, color: 'text-purple-600' },
+              { label: 'Structure', value: structureScore, color: 'text-rose-600' }
+            ].map(({ label, value, color }) => (
+              <div key={label} className="bg-gray-50 rounded-xl p-4 border">
+                <p className="text-xs uppercase text-gray-500 mb-1">{label}</p>
+                <p className={`text-2xl font-semibold ${color}`}>{Number.isFinite(value) ? value : 0}%</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl border p-5">
+            <div>
+              <p className="text-xs uppercase text-gray-500">Candidate</p>
+              <p className="text-lg font-semibold text-gray-900">{submission.candidateName || 'Anonymous'}</p>
+              <p className="text-sm text-gray-500">User ID: {submission.userId || 'N/A'}</p>
+            </div>
+            <div>
+              <p className="text-xs uppercase text-gray-500">Challenge</p>
+              <p className="text-lg font-semibold text-gray-900">{submission.challengeId}</p>
+              <p className="text-sm text-gray-500">
+                Submitted {submission.submittedAt ? new Date(submission.submittedAt).toLocaleString() : 'N/A'}
+              </p>
+              {submission.evaluatedAt && (
+                <p className="text-sm text-gray-500">
+                  Evaluated {new Date(submission.evaluatedAt).toLocaleString()}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {codeBlocks.map(({ label, content }) => (
+              <div key={label} className="bg-slate-900 rounded-xl p-3 text-xs text-green-100 shadow-inner">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="uppercase tracking-wide text-slate-300">{label}</span>
+                  <span className="text-slate-500 text-[10px]">{(content || '').length} chars</span>
+                </div>
+                <pre className="overflow-auto max-h-64 whitespace-pre-wrap">
+                  {content && typeof content === 'string' && content.trim().length > 0 ? content : '// No code submitted'}
+                </pre>
+              </div>
+            ))}
+          </div>
+
+          {(submission.user_screenshot || submission.expected_screenshot) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {submission.user_screenshot && (
+                <div>
+                  <p className="text-xs uppercase text-gray-500 mb-2">Candidate Output</p>
+                  <img
+                    src={submission.user_screenshot}
+                    alt="Candidate screenshot"
+                    className="rounded-xl border"
+                  />
+                </div>
+              )}
+              {submission.expected_screenshot && (
+                <div>
+                  <p className="text-xs uppercase text-gray-500 mb-2">Expected Output</p>
+                  <img
+                    src={submission.expected_screenshot}
+                    alt="Expected screenshot"
+                    className="rounded-xl border"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {rawFeedback && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                <p className="text-xs font-semibold text-blue-700 uppercase mb-2">Encouragement</p>
+                <ul className="space-y-2 text-sm text-blue-900">
+                  {encouragementList.map((msg, idx) => {
+                    const isObject = msg && typeof msg === 'object';
+                    const title = isObject
+                      ? msg.description || msg.type || 'Feedback'
+                      : msg;
+
+                    return (
+                      <li key={`enc-${idx}`} className="border-l-2 border-blue-300 pl-3 py-1">
+                        <div className="font-medium">{title}</div>
+                        {isObject && msg.details && (
+                          <div className="mt-1 text-xs text-gray-600">
+                            {typeof msg.details === 'string' ? (
+                              <p className="text-blue-800">{msg.details}</p>
+                            ) : (
+                              <pre className="text-[10px] whitespace-pre-wrap font-mono bg-white/60 p-2 rounded">
+                                {JSON.stringify(msg.details, null, 2)}
+                              </pre>
+                            )}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                <p className="text-xs font-semibold text-amber-700 uppercase mb-2">Improvements</p>
+                <ul className="space-y-2 text-sm text-amber-900">
+                  {improvementsList.map((msg, idx) => {
+                    const isObject = msg && typeof msg === 'object';
+                    const title = isObject
+                      ? msg.description || msg.type || 'Review feedback'
+                      : msg;
+
+                    return (
+                      <li key={`imp-${idx}`} className="border-l-2 border-amber-300 pl-3 py-1">
+                        <div className="font-medium">{title}</div>
+                        {isObject && (
+                          <div className="mt-1 space-y-1 text-xs text-gray-600">
+                            {(msg.score !== undefined || msg.weight !== undefined || msg.passed !== undefined) && (
+                              <div>
+                                {msg.score !== undefined && (
+                                  <span>Score: {Math.round(Number(msg.score) || 0)}%</span>
+                                )}
+                                {msg.weight !== undefined && (
+                                  <span>{msg.score !== undefined ? ' • ' : ''}Weight: {msg.weight}%</span>
+                                )}
+                                {typeof msg.passed === 'boolean' && (
+                                  <span>
+                                    {(msg.score !== undefined || msg.weight !== undefined) ? ' • ' : ''}
+                                    {msg.passed ? 'Passed' : 'Failed'}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                            {msg.details && (
+                              typeof msg.details === 'string' ? (
+                                <p className="text-gray-700">{msg.details}</p>
+                              ) : (
+                                <pre className="text-[10px] whitespace-pre-wrap font-mono bg-white/60 p-2 rounded">
+                                  {JSON.stringify(msg.details, null, 2)}
+                                </pre>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              {shouldShowContentValidation && (
+                <div className="md:col-span-2 p-4 bg-white rounded-xl border">
+                  <p className="text-xs font-semibold text-gray-600 uppercase mb-3">Content Validation</p>
+                  {contentValidation && (
+                    <p className="text-sm text-gray-700 mb-2 whitespace-pre-wrap">
+                      {contentValidation}
+                    </p>
+                  )}
+                  {contentDetails.length > 0 && (
+                    <ul className="text-sm text-gray-700 space-y-2">
+                      {contentDetails.map((detail, idx) => {
+                        const isObject = detail && typeof detail === 'object';
+                        const title = isObject
+                          ? detail.description || detail.type || 'Content validation item'
+                          : detail;
+
+                        return (
+                          <li key={`detail-${idx}`} className="border-l-2 border-gray-300 pl-3 py-1">
+                            <div className="font-medium">{title}</div>
+                            {isObject && (
+                              <div className="mt-1 space-y-1 text-xs text-gray-600">
+                                {(detail.score !== undefined || detail.weight !== undefined || detail.passed !== undefined) && (
+                                  <div>
+                                    {detail.score !== undefined && (
+                                      <span>Score: {Math.round(Number(detail.score) || 0)}%</span>
+                                    )}
+                                    {detail.weight !== undefined && (
+                                      <span>{detail.score !== undefined ? ' • ' : ''}Weight: {detail.weight}%</span>
+                                    )}
+                                    {typeof detail.passed === 'boolean' && (
+                                      <span>
+                                        {(detail.score !== undefined || detail.weight !== undefined) ? ' • ' : ''}
+                                        {detail.passed ? 'Passed' : 'Failed'}
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                                {detail.details && (
+                                  typeof detail.details === 'string' ? (
+                                    <p className="text-gray-700">{detail.details}</p>
+                                  ) : (
+                                    <pre className="text-[10px] whitespace-pre-wrap font-mono bg-white/60 p-2 rounded border">
+                                      {JSON.stringify(detail.details, null, 2)}
+                                    </pre>
+                                  )
+                                )}
+                              </div>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    } catch (error) {
+      console.error('Failed to render submission detail view:', error, detailModal.submission);
+      return (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 space-y-3">
+          <p className="text-red-700 font-semibold">Something went wrong while rendering this submission.</p>
+          <p className="text-sm text-red-600">{error.message}</p>
+          <button
+            onClick={() => {
+              if (detailModal.submissionId) {
+                fetchSubmissionDetails(detailModal.submissionId);
+              }
+            }}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Reload submission details
+          </button>
+          <button
+            onClick={() => navigate(`/admin/submission/${detailModal.submissionId || detailModal.submission?.id || ''}`)}
+            className="px-4 py-2 border rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Open full detail page ↗
+          </button>
+        </div>
+      );
     }
   };
 
@@ -273,6 +641,21 @@ export default function AdminDashboard() {
       return [];
     }
     return [value];
+  };
+
+  const parseJSONSafe = (value, fallback = null) => {
+    if (value === undefined || value === null) {
+      return fallback;
+    }
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        console.warn('Failed to parse JSON payload', error);
+        return fallback;
+      }
+    }
+    return value;
   };
 
   const handleAiScreenshotUpload = (event) => {
@@ -417,8 +800,7 @@ export default function AdminDashboard() {
   };
 
   const handleViewSubmissionDetails = (submissionId) => {
-    // Navigate to submission details or open modal
-    window.open(`/admin/submission/${submissionId}`, '_blank');
+    fetchSubmissionDetails(submissionId);
   };
 
   const handleDeleteSubmission = async (submissionId) => {
@@ -1235,6 +1617,40 @@ export default function AdminDashboard() {
           </>
         )}
       </div>
+
+      {/* Submission Detail Modal */}
+      {detailModal.open && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4 py-8">
+          <div className="relative w-full max-w-5xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden">
+            <button
+              onClick={closeDetailModal}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 rounded-full w-10 h-10 flex items-center justify-center bg-gray-100"
+            >
+              ✕
+            </button>
+            <div className="border-b px-6 py-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-xs uppercase text-gray-500">Submission ID</p>
+                <p className="text-lg font-semibold text-gray-900">
+                  {detailModal.submissionId || detailModal.submission?.id || '—'}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {detailModal.submission && renderStatusBadge(detailModal.submission.status)}
+                <button
+                  onClick={() => navigate(`/admin/submission/${detailModal.submissionId || detailModal.submission?.id || ''}`)}
+                  className="px-4 py-2 border rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Open Full Page ↗
+                </button>
+              </div>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              {renderSubmissionDetailBody()}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Course Modal */}
       {showCourseModal && (

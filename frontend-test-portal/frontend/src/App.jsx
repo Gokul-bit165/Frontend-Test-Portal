@@ -18,6 +18,7 @@ import CandidateDashboard from "./pages/CandidateDashboard";
 import ChallengeView from "./pages/ChallengeView";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboardNew";
+import AdminSubmissionDetails from "./pages/AdminSubmissionDetails";
 import CourseManager from "./pages/CourseManager";
 import UserManagement from "./pages/UserManagement";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -150,6 +151,12 @@ function App() {
             path="/admin/users"
             element={
               isAdmin ? <UserManagement /> : <Navigate to="/admin/login" />
+            }
+          />
+          <Route
+            path="/admin/submission/:submissionId"
+            element={
+              isAdmin ? <AdminSubmissionDetails /> : <Navigate to="/admin/login" />
             }
           />
 

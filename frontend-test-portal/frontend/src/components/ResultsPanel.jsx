@@ -89,9 +89,17 @@ export default function ResultsPanel({ result }) {
                       </span>
                       <span className="text-gray-600"> (Weight: {item.weight}%)</span>
                     </div>
-                    <p className="text-sm text-gray-700 whitespace-pre-line">
-                      {item.details}
-                    </p>
+                    {item.details && (
+                      typeof item.details === 'string' ? (
+                        <p className="text-sm text-gray-700 whitespace-pre-line">
+                          {item.details}
+                        </p>
+                      ) : (
+                        <pre className="text-xs text-gray-700 whitespace-pre-wrap font-mono bg-white/60 border border-gray-200 rounded p-3">
+                          {JSON.stringify(item.details, null, 2)}
+                        </pre>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
@@ -186,12 +194,55 @@ export default function ResultsPanel({ result }) {
         <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
           <h4 className="font-semibold text-indigo-900 mb-3">📋 Action Items</h4>
           <ul className="space-y-2">
-            {result.feedback.improvements.map((improvement, index) => (
-              <li key={index} className="flex items-start gap-2 text-indigo-800">
-                <span className="mt-1">•</span>
-                <span>{improvement}</span>
-              </li>
-            ))}
+            {result.feedback.improvements.map((improvement, index) => {
+              const isObject = improvement && typeof improvement === 'object';
+              const title = isObject
+                ? improvement.description || improvement.type || 'Review the detailed feedback'
+                : improvement;
+
+              return (
+                <li
+                  key={index}
+                  className="text-indigo-800 bg-white/40 rounded border border-indigo-100 p-3"
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="mt-1">•</span>
+                    <span className="font-medium leading-snug">{title}</span>
+                  </div>
+
+                  {isObject && (
+                    <div className="mt-2 ml-5 space-y-1 text-sm text-gray-700">
+                      {(improvement.score !== undefined || improvement.weight !== undefined || improvement.passed !== undefined) && (
+                        <div className="text-xs text-gray-500">
+                          {improvement.score !== undefined && (
+                            <span>Score: {Math.round(Number(improvement.score) || 0)}%</span>
+                          )}
+                          {improvement.weight !== undefined && (
+                            <span>{improvement.score !== undefined ? ' • ' : ''}Weight: {improvement.weight}%</span>
+                          )}
+                          {typeof improvement.passed === 'boolean' && (
+                            <span>
+                              {(improvement.score !== undefined || improvement.weight !== undefined) ? ' • ' : ''}
+                              {improvement.passed ? 'Passed' : 'Failed'}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {improvement.details && (
+                        typeof improvement.details === 'string' ? (
+                          <p className="leading-snug">{improvement.details}</p>
+                        ) : (
+                          <pre className="text-xs whitespace-pre-wrap font-mono bg-white/60 p-2 rounded">
+                            {JSON.stringify(improvement.details, null, 2)}
+                          </pre>
+                        )
+                      )}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

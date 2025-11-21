@@ -59,9 +59,10 @@ class SubmissionModel {
 
   // Update submission with evaluation result
   static async updateEvaluation(id, evaluationData) {
-    // Extract screenshot paths from evaluation result
-    const userScreenshot = evaluationData.pixel?.screenshots?.candidate || null;
-    const expectedScreenshot = evaluationData.pixel?.screenshots?.expected || null;
+    // Extract screenshot paths from evaluation result (visual.screenshots preferred)
+    const screenshots = evaluationData.visual?.screenshots || evaluationData.pixel?.screenshots || {};
+    const userScreenshot = screenshots.candidate || null;
+    const expectedScreenshot = screenshots.expected || null;
     
     await query(
       `UPDATE submissions SET

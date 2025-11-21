@@ -218,16 +218,13 @@ router.get('/:courseId/levels', async (req, res) => {
  * Get assigned questions for a specific level (2 random questions)
  * Query params: userId (optional, defaults to 'default-user')
  */
-router.get('/:courseId/levels/:level/questions', (req, res) => {
+router.get('/:courseId/levels/:level/questions', async (req, res) => {
   try {
-    const challenges = getChallenges();
     const { courseId, level } = req.params;
     const userId = req.query.userId || 'default-user';
     
-    // Get all questions for this level (question bank)
-    const allQuestions = challenges.filter(
-      c => c.courseId === courseId && c.level === parseInt(level)
-    ).sort((a, b) => a.questionNumber - b.questionNumber);
+    // Get all questions for this level (question bank) from database
+    const allQuestions = await ChallengeModel.findByCourseLevel(courseId, parseInt(level));
     
     if (allQuestions.length === 0) {
       return res.status(404).json({ error: 'No questions found for this level' });
@@ -540,14 +537,44 @@ router.delete('/:courseId', (req, res) => {
  * GET /api/courses/:courseId/questions
  * Get all questions for a specific course (Admin view)
  */
-router.get('/:courseId/questions', (req, res) => {
+router.get('/:courseId/questions', async (req, res) => {
   try {
     const { courseId } = req.params;
-    const challenges = getChallenges();
-    const courseQuestions = challenges.filter(c => c.courseId === courseId);
+    let courseQuestions;
+    
+    try {
+      // Query challenges from database by course_id
+      const challenges = await query('SELECT * FROM challenges WHERE course_id = ? ORDER BY level, created_at', [courseId]);
+      courseQuestions = challenges.map(c => ({
+        id: c.id,
+        title: c.title,
+        courseId: c.course_id,
+        level: c.level,
+        difficulty: c.difficulty,
+        description: c.description,
+        instructions: c.instructions,
+        tags: Array.isArray(c.tags) ? c.tags : JSON.parse(c.tags || '[]'),
+        timeLimit: c.time_limit,
+        passingThreshold: (typeof c.passing_threshold === 'object' && c.passing_threshold !== null) 
+          ? c.passing_threshold 
+          : JSON.parse(c.passing_threshold || '{}'),
+        points: c.points || 0,
+        hints: Array.isArray(c.hints) ? c.hints : JSON.parse(c.hints || '[]'),
+        expectedSolution: {
+          html: c.expected_html,
+          css: c.expected_css,
+          js: c.expected_js
+        }
+      }));
+    } catch (dbError) {
+      console.log('Database error, using JSON file:', dbError.message);
+      const challenges = getChallenges();
+      courseQuestions = challenges.filter(c => c.courseId === courseId);
+    }
     
     res.json(courseQuestions);
   } catch (error) {
+    console.error('Error fetching course questions:', error);
     res.status(500).json({ error: 'Failed to fetch questions' });
   }
 });

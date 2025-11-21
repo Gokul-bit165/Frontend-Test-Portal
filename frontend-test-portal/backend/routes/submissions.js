@@ -111,8 +111,19 @@ router.post('/', async (req, res) => {
  * GET /api/submissions/:id
  * Get specific submission
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
+    // Try database first for latest submissions with evaluation details
+    try {
+      const dbSubmission = await SubmissionModel.findById(req.params.id);
+      if (dbSubmission) {
+        return res.json(dbSubmission);
+      }
+    } catch (dbError) {
+      console.log('Database fetch failed, using JSON fallback:', dbError.message);
+    }
+
+    // Fallback to JSON file storage
     const submissions = getSubmissions();
     const submission = submissions.find(s => s.id === req.params.id);
     
