@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import QuestionManagerModal from '../components/QuestionManagerModal';
 import SubmissionList from '../components/SubmissionList';
+import GroupedSubmissionsList from '../components/GroupedSubmissionsList';
 import { clearAdminSession, notifySessionChange } from '../utils/session';
 
 const OPEN_SOURCE_RESOURCES = [
@@ -95,7 +96,9 @@ export default function AdminDashboard() {
 
   // Submissions data
   const [submissions, setSubmissions] = useState([]);
+  const [groupedSessions, setGroupedSessions] = useState([]);
   const [submissionSearch, setSubmissionSearch] = useState('');
+  const [submissionViewMode, setSubmissionViewMode] = useState('grouped'); // 'grouped' or 'individual'
 
   // Courses data
   const [courses, setCourses] = useState([]);
@@ -125,6 +128,12 @@ export default function AdminDashboard() {
   useEffect(() => {
     loadAllData();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === 'submissions') {
+      loadSubmissions();
+    }
+  }, [submissionViewMode]);
 
   const loadAllData = async () => {
     setLoading(true);
@@ -158,9 +167,21 @@ export default function AdminDashboard() {
 
   const loadSubmissions = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/submissions');
-      setSubmissions(res.data || []);
-      setStats(prev => ({ ...prev, totalSubmissions: res.data?.length || 0 }));
+      if (submissionViewMode === 'grouped') {
+        const res = await axios.get('http://localhost:5000/api/admin/submissions/grouped');
+        setGroupedSessions(res.data || []);
+        
+        // Calculate stats from sessions
+        let totalSubmissions = 0;
+        res.data.forEach(session => {
+          totalSubmissions += session.total_questions || 0;
+        });
+        setStats(prev => ({ ...prev, totalSubmissions }));
+      } else {
+        const res = await axios.get('http://localhost:5000/api/submissions');
+        setSubmissions(res.data || []);
+        setStats(prev => ({ ...prev, totalSubmissions: res.data?.length || 0 }));
+      }
     } catch (error) {
       console.error('Failed to load submissions:', error);
     }
@@ -393,6 +414,11 @@ export default function AdminDashboard() {
     } catch (error) {
       alert('Failed to delete user: ' + error.message);
     }
+  };
+
+  const handleViewSubmissionDetails = (submissionId) => {
+    // Navigate to submission details or open modal
+    window.open(`/admin/submission/${submissionId}`, '_blank');
   };
 
   const handleDeleteSubmission = async (submissionId) => {
@@ -800,19 +826,59 @@ export default function AdminDashboard() {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold">Submissions Management</h2>
-                  <input
-                    type="text"
-                    placeholder="Search submissions..."
-                    value={submissionSearch}
-                    onChange={(e) => setSubmissionSearch(e.target.value)}
-                    className="px-4 py-2 border rounded-lg"
-                  />
+                  <div className="flex gap-3 items-center">
+                    <div className="flex gap-2 bg-gray-100 rounded-lg p-1">
+                      <button
+                        onClick={() => {
+                          setSubmissionViewMode('grouped');
+                          loadSubmissions();
+                        }}
+                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                          submissionViewMode === 'grouped'
+                            ? 'bg-white text-indigo-600 shadow'
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        📋 Grouped by Test
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSubmissionViewMode('individual');
+                          loadSubmissions();
+                        }}
+                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                          submissionViewMode === 'individual'
+                            ? 'bg-white text-indigo-600 shadow'
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        📄 Individual
+                      </button>
+                    </div>
+                    {submissionViewMode === 'individual' && (
+                      <input
+                        type="text"
+                        placeholder="Search submissions..."
+                        value={submissionSearch}
+                        onChange={(e) => setSubmissionSearch(e.target.value)}
+                        className="px-4 py-2 border rounded-lg"
+                      />
+                    )}
+                  </div>
                 </div>
-                <SubmissionList 
-                  submissions={filteredSubmissions}
-                  onReEvaluate={handleReEvaluate}
-                  onDelete={handleDeleteSubmission}
-                />
+                
+                {submissionViewMode === 'grouped' ? (
+                  <GroupedSubmissionsList 
+                    sessions={groupedSessions}
+                    onViewDetails={handleViewSubmissionDetails}
+                  />
+                ) : (
+                  <SubmissionList 
+                    submissions={filteredSubmissions}
+                    onReEvaluate={handleReEvaluate}
+                    onDelete={handleDeleteSubmission}
+                  />
+                )}
               </div>
             )}
 
