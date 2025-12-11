@@ -25,8 +25,8 @@ export default function Login({ isAdmin = false, onLogin }) {
     setLoading(true);
 
     try {
-      const adminEndpoint = "http://localhost:5000/api/auth/admin/login";
-      const userEndpoint = "http://localhost:5000/api/auth/login";
+      const adminEndpoint = "/api/auth/admin/login";
+      const userEndpoint = "/api/auth/login";
       const endpoints = isAdmin
         ? [adminEndpoint, userEndpoint]
         : [userEndpoint, adminEndpoint];
@@ -105,8 +105,8 @@ export default function Login({ isAdmin = false, onLogin }) {
       if (err.response) {
         setError(
           err.response.data?.error ||
-            err.response.data?.message ||
-            "Login failed. Please try again."
+          err.response.data?.message ||
+          "Login failed. Please try again."
         );
       } else if (err.request) {
         setError(
@@ -210,7 +210,7 @@ export default function Login({ isAdmin = false, onLogin }) {
                     console.log("Google user:", decoded);
 
                     const res = await axios.post(
-                      "http://localhost:5000/api/auth/google",
+                      "/api/auth/google",
                       { token: googleToken }
                     );
 

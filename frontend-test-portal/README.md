@@ -198,6 +198,9 @@ Each submission is evaluated across multiple dimensions:
 # Build and start
 docker compose up -d --build
 
+# Full Rebuild (Clean start)
+docker compose down; docker compose up -d --build
+
 # View logs
 docker compose logs -f
 

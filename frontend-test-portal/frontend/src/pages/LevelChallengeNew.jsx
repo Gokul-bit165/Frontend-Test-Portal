@@ -10,7 +10,7 @@ export default function LevelChallengeNew() {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId') || 'default-user';
   const previewRef = useRef();
-  
+
   const [assignedQuestions, setAssignedQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -109,20 +109,20 @@ export default function LevelChallengeNew() {
   const loadLevelQuestions = async () => {
     try {
       // Use course-based endpoint which assigns 2 random questions per user/level
-      const response = await axios.get(`http://localhost:5000/api/courses/${courseId}/levels/${level}/questions`, {
+      const response = await axios.get(`/api/courses/${courseId}/levels/${level}/questions`, {
         params: { userId }
       });
 
       const questions = Array.isArray(response.data) ? response.data : response.data.assignedQuestions || [];
-      
+
       if (questions.length === 0) {
         setError('No questions assigned for this level');
         setLoading(false);
         return;
       }
-      
+
       setAssignedQuestions(questions);
-      
+
       // Initialize answers object
       const initialAnswers = {};
       questions.forEach(q => {
@@ -135,10 +135,10 @@ export default function LevelChallengeNew() {
         };
       });
       setUserAnswers(initialAnswers);
-      
+
       // Create test session
       await createTestSession();
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Failed to load level questions:', error);
@@ -149,12 +149,12 @@ export default function LevelChallengeNew() {
 
   const createTestSession = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/test-sessions', {
+      const response = await axios.post('/api/test-sessions', {
         user_id: userId,
         course_id: courseId,
         level: parseInt(level)
       });
-      
+
       console.log('Test session created:', response.data.id);
       setTestSessionId(response.data.id);
     } catch (error) {
@@ -185,11 +185,11 @@ export default function LevelChallengeNew() {
     if (!assignedQuestions[currentQuestionIndex]) {
       return;
     }
-    
+
     const questionId = assignedQuestions[currentQuestionIndex].id;
-    
+
     try {
-      const response = await axios.get(`http://localhost:5000/api/challenges/${questionId}`);
+      const response = await axios.get(`/api/challenges/${questionId}`);
       setCurrentQuestion(response.data);
       setError(null);
     } catch (error) {
@@ -201,7 +201,7 @@ export default function LevelChallengeNew() {
   const handleRunCode = () => {
     const questionId = currentQuestion.id;
     const answer = userAnswers[questionId];
-    
+
     if (previewRef.current) {
       previewRef.current.updatePreview(answer);
     }
@@ -219,7 +219,7 @@ export default function LevelChallengeNew() {
     setEvaluating(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/evaluate', {
+      const response = await axios.post('/api/evaluate', {
         userId,
         challengeId: questionId,
         candidateCode: {
@@ -230,7 +230,7 @@ export default function LevelChallengeNew() {
       });
 
       const result = response.data;
-      
+
       setUserAnswers(prev => ({
         ...prev,
         [questionId]: {
@@ -243,7 +243,7 @@ export default function LevelChallengeNew() {
       // Add submission to test session
       if (testSessionId && result.submissionId) {
         try {
-          await axios.post(`http://localhost:5000/api/test-sessions/${testSessionId}/submissions`, {
+          await axios.post(`/api/test-sessions/${testSessionId}/submissions`, {
             submission_id: result.submissionId
           });
           console.log('Added submission to test session');
@@ -253,12 +253,12 @@ export default function LevelChallengeNew() {
       }
 
       setEvaluating(false);
-      
+
       // Check if all questions are submitted
-      const allSubmitted = assignedQuestions.every(q => 
+      const allSubmitted = assignedQuestions.every(q =>
         q.id === questionId ? true : userAnswers[q.id]?.submitted
       );
-      
+
       if (allSubmitted && testSessionId) {
         // Navigate to results page
         setTimeout(() => {
@@ -365,12 +365,12 @@ export default function LevelChallengeNew() {
   }
 
   const questionId = currentQuestion.id;
-  const currentAnswer = userAnswers[questionId] || { 
-    html: '', 
-    css: '', 
-    js: '', 
-    submitted: false, 
-    result: null 
+  const currentAnswer = userAnswers[questionId] || {
+    html: '',
+    css: '',
+    js: '',
+    submitted: false,
+    result: null
   };
 
   return (
@@ -388,7 +388,7 @@ export default function LevelChallengeNew() {
             <h1 className="text-2xl font-bold">Level {level} Challenges</h1>
             <p className="text-gray-600">Complete all questions to unlock the next level</p>
           </div>
-          
+
           {/* Question Navigator */}
           <div className="flex items-center gap-4">
             <div className="flex gap-2">
@@ -398,13 +398,12 @@ export default function LevelChallengeNew() {
                   <button
                     key={q.id}
                     onClick={() => navigateToQuestion(index)}
-                    className={`w-12 h-12 rounded font-semibold transition-all ${
-                      index === currentQuestionIndex
-                        ? 'bg-blue-600 text-white ring-2 ring-blue-300'
-                        : status === 'answered'
+                    className={`w-12 h-12 rounded font-semibold transition-all ${index === currentQuestionIndex
+                      ? 'bg-blue-600 text-white ring-2 ring-blue-300'
+                      : status === 'answered'
                         ? 'bg-green-500 text-white'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
+                      }`}
                     title={`Question ${index + 1} - ${status === 'answered' ? 'Answered' : 'Not Answered'}`}
                   >
                     {index + 1}
@@ -412,7 +411,7 @@ export default function LevelChallengeNew() {
                 );
               })}
             </div>
-            
+
             {allQuestionsSubmitted() && (
               <button
                 onClick={handleFinishLevel}
@@ -429,7 +428,7 @@ export default function LevelChallengeNew() {
       <div className="container mx-auto p-6">
         {/* Question Header */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg p-6">
-          <h2 className="text-2xl font-bold mb-2">{currentQuestion.title}</h2>
+          <h2 className="text-2xl font-bold mb-2">{currentQuestion.description || currentQuestion.title}</h2>
           <p className="text-blue-100">Question {currentQuestionIndex + 1} of {assignedQuestions.length}</p>
         </div>
 
@@ -441,7 +440,7 @@ export default function LevelChallengeNew() {
             {showInstructions && (
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-lg">📝 Instructions</h3>
+                  <h3 className="font-semibold text-lg">{currentQuestion.description || '📝 Instructions'}</h3>
                   <button
                     onClick={() => setShowInstructions(false)}
                     className="text-blue-600 hover:text-blue-800 text-sm"
@@ -449,8 +448,11 @@ export default function LevelChallengeNew() {
                     Hide
                   </button>
                 </div>
-                <p className="text-gray-700 mb-3">
-                  {currentQuestion.description || currentQuestion.instructions || 'No description available'}
+
+                {/* Description (removed separate block since it is now the header) */}
+
+                <p className="text-gray-700 mb-3 whitespace-pre-wrap">
+                  {currentQuestion.instructions || 'No instructions available'}
                 </p>
 
                 {currentQuestion.hints && currentQuestion.hints.length > 0 && (
@@ -467,23 +469,61 @@ export default function LevelChallengeNew() {
                   </div>
                 )}
 
-                {currentQuestion.assets && currentQuestion.assets.length > 0 && (
+                {(currentQuestion.assets && (Array.isArray(currentQuestion.assets) ? currentQuestion.assets.length > 0 : currentQuestion.assets.images?.length > 0)) && (
                   <div className="mt-3">
                     <h4 className="font-semibold mb-2">📁 Assets</h4>
-                    <div className="bg-white p-2 rounded border border-gray-200">
-                      {currentQuestion.assets.map((asset, index) => (
-                        <div key={index} className="flex items-center gap-2 text-sm">
-                          <span className="text-gray-500">📄</span>
-                          <a 
-                            href={`http://localhost:5000/${asset}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                          >
-                            {asset.split('/').pop()}
-                          </a>
-                        </div>
-                      ))}
+                    <div className="bg-white p-2 rounded border border-gray-200 space-y-2">
+                      {(Array.isArray(currentQuestion.assets) ? currentQuestion.assets : currentQuestion.assets.images || []).map((asset, index) => {
+                        // Ensure asset is a string path
+                        const assetPath = typeof asset === 'string' ? asset : asset.path;
+                        const filename = assetPath.split('/').pop();
+                        // Normalize path for usage in code
+                        let codePath = assetPath;
+                        if (!codePath.startsWith('http')) {
+                          // Clean leading slash
+                          codePath = codePath.startsWith('/') ? codePath.slice(1) : codePath;
+
+                          // Heuristic: If it's an image and doesn't have 'images/' or 'assets/', add it
+                          const isImage = /\.(png|jpg|jpeg|gif|svg|webp)$/i.test(codePath);
+                          if (isImage && !codePath.includes('images/') && !codePath.includes('assets/')) {
+                            codePath = `images/${codePath}`;
+                          }
+
+                          // Check if it already has assets prefix
+                          if (!codePath.startsWith('assets/')) {
+                            codePath = `assets/${codePath}`;
+                          }
+                          // Add root slash
+                          codePath = `/${codePath}`;
+                        }
+
+                        return (
+                          <div key={index} className="flex items-center justify-between text-sm bg-gray-50 p-2 rounded">
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              <span className="text-gray-500">📄</span>
+                              <a
+                                href={codePath}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline truncate"
+                                title={filename}
+                              >
+                                {filename}
+                              </a>
+                            </div>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(codePath);
+                                alert(`Copied path: ${codePath}`);
+                              }}
+                              className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs rounded border border-gray-300 transition-colors"
+                              title="Copy path for code"
+                            >
+                              Copy Path
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -527,11 +567,10 @@ export default function LevelChallengeNew() {
               <button
                 onClick={handleSubmitQuestion}
                 disabled={currentAnswer.submitted || evaluating}
-                className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${
-                  currentAnswer.submitted || evaluating
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
+                className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${currentAnswer.submitted || evaluating
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
               >
                 {evaluating ? '⏳ Evaluating...' : currentAnswer.submitted ? '✓ Submitted' : '📤 Submit Answer'}
               </button>

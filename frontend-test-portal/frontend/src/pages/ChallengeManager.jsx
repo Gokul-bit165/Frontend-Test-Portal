@@ -25,6 +25,9 @@ export default function ChallengeManager() {
       html: '',
       css: '',
       js: ''
+    },
+    assets: {
+      images: []
     }
   };
 
@@ -46,13 +49,19 @@ export default function ChallengeManager() {
   };
 
   const handleCreate = () => {
-    setFormData(emptyChallenge);
+    setFormData({ ...emptyChallenge, assetImages: '' });
     setEditing(null);
     setShowForm(true);
   };
 
   const handleEdit = (challenge) => {
-    setFormData(challenge);
+    // Flatten assets for form
+    const imagePaths = challenge.assets?.images?.map(img => img.path || img).join('\n') || '';
+
+    setFormData({
+      ...challenge,
+      assetImages: imagePaths
+    });
     setEditing(challenge.id);
     setShowForm(true);
   };
@@ -69,11 +78,36 @@ export default function ChallengeManager() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Process assets
+    const imagePaths = (formData.assetImages || '')
+      .split('\n')
+      .map(path => path.trim())
+      .filter(path => path);
+
+    const assetObjects = imagePaths.map(path => {
+      const filename = path.split('/').pop();
+      return {
+        name: filename,
+        path: path,
+        description: `${filename} image`
+      };
+    });
+
+    const payload = {
+      ...formData,
+      assets: {
+        images: assetObjects
+      }
+    };
+    // Remove temporary form field
+    delete payload.assetImages;
+
     try {
       if (editing) {
-        await updateChallenge(editing, formData);
+        await updateChallenge(editing, payload);
       } else {
-        await createChallenge(formData);
+        await createChallenge(payload);
       }
       setShowForm(false);
       await loadChallenges();
@@ -161,7 +195,7 @@ export default function ChallengeManager() {
             <h2 className="text-2xl font-bold mb-6">
               {editing ? 'Edit Challenge' : 'Create New Challenge'}
             </h2>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -176,7 +210,7 @@ export default function ChallengeManager() {
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Difficulty *
@@ -296,6 +330,31 @@ export default function ChallengeManager() {
                   rows={6}
                   required
                 />
+              </div>
+
+              {/* Assets Section */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <span>🖼️ Assets</span>
+                </h3>
+
+                <div className="space-y-4 bg-blue-50 p-4 rounded-lg">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Image Asset Paths (one per line)
+                    </label>
+                    <textarea
+                      value={formData.assetImages || ''}
+                      onChange={(e) => setFormData({ ...formData, assetImages: e.target.value })}
+                      className="input font-mono text-sm"
+                      rows={4}
+                      placeholder="/assets/images/example.png"
+                    />
+                    <p className="text-xs text-gray-600 mt-1">
+                      💡 Upload images in Asset Manager, then copy their paths here
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div>

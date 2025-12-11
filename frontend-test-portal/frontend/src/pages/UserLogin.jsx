@@ -17,14 +17,14 @@ export default function UserLogin() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
-      
+      const response = await axios.post('/api/auth/login', credentials);
+
       // Store user info
       localStorage.setItem('userId', response.data.user.id);
       localStorage.setItem('username', response.data.user.username);
       localStorage.setItem('userToken', response.data.token);
       localStorage.setItem('userRole', response.data.user.role);
-      
+
       // Redirect to courses
       navigate('/');
     } catch (err) {

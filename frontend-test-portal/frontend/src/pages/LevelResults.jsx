@@ -7,7 +7,7 @@ export default function LevelResults() {
   const location = useLocation();
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId') || 'default-user';
-  
+
   const [results, setResults] = useState([]);
   const [levelUnlocked, setLevelUnlocked] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function LevelResults() {
   const calculateResults = async () => {
     try {
       const { submissions, assignedQuestions } = location.state || {};
-      
+
       if (!submissions || !assignedQuestions) {
         navigate(`/course/${courseId}`);
         return;
@@ -47,7 +47,7 @@ export default function LevelResults() {
       // Check if level should be unlocked
       if (allPassed || avgScore >= 70) {
         // Mark level as complete and unlock next level
-        await axios.post('http://localhost:5000/api/users/complete-level', {
+        await axios.post('/api/users/complete-level', {
           userId,
           courseId,
           level: parseInt(level)
@@ -89,11 +89,10 @@ export default function LevelResults() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Results Header */}
-        <div className={`rounded-xl shadow-2xl p-8 mb-8 ${
-          levelUnlocked
+        <div className={`rounded-xl shadow-2xl p-8 mb-8 ${levelUnlocked
             ? 'bg-gradient-to-r from-green-500 to-green-600'
             : 'bg-gradient-to-r from-orange-500 to-orange-600'
-        } text-white`}>
+          } text-white`}>
           <div className="text-center">
             <div className="text-6xl mb-4">
               {levelUnlocked ? '🎉' : '📝'}
@@ -132,19 +131,17 @@ export default function LevelResults() {
         {/* Individual Question Results */}
         <div className="space-y-4 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Question Breakdown</h2>
-          
+
           {results.map((result, index) => (
             <div
               key={index}
-              className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${
-                result.passed ? 'border-green-500' : 'border-red-500'
-              }`}
+              className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${result.passed ? 'border-green-500' : 'border-red-500'
+                }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${
-                    result.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                  }`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${result.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
                     Q{result.questionNumber}
                   </div>
                   <div>
@@ -204,7 +201,7 @@ export default function LevelResults() {
           >
             Back to Course
           </button>
-          
+
           {!levelUnlocked && (
             <button
               onClick={() => navigate(`/level/${courseId}/${level}`)}
@@ -213,7 +210,7 @@ export default function LevelResults() {
               Try Again
             </button>
           )}
-          
+
           {levelUnlocked && (
             <button
               onClick={() => navigate(`/level/${courseId}/${parseInt(level) + 1}`)}

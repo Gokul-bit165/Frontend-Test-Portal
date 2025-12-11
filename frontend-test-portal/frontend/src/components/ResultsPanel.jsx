@@ -4,11 +4,10 @@ export default function ResultsPanel({ result }) {
   return (
     <div className="space-y-6">
       {/* Overall Score */}
-      <div className={`p-6 rounded-lg text-center ${
-        result.passed
+      <div className={`p-6 rounded-lg text-center ${result.passed
           ? 'bg-green-100 border-2 border-green-500'
           : 'bg-red-100 border-2 border-red-500'
-      }`}>
+        }`}>
         <h3 className="text-2xl font-bold mb-2">
           {result.passed ? '🎉 Congratulations!' : '📝 Keep Trying!'}
         </h3>
@@ -45,7 +44,7 @@ export default function ResultsPanel({ result }) {
             Weight: 50%
           </div>
         </div>
-        
+
         <div className="bg-white p-4 rounded-lg border border-gray-200">
           <div className="text-sm text-gray-600 mb-1">Visual</div>
           <div className="text-2xl font-bold text-green-600">
@@ -64,16 +63,15 @@ export default function ResultsPanel({ result }) {
       {result.content && result.content.details && (
         <div className="space-y-4">
           <h4 className="font-semibold text-lg">📝 Content Validation (Question-Specific)</h4>
-          
+
           <div className="space-y-3">
             {result.content.details.map((item, index) => (
-              <div 
-                key={index} 
-                className={`p-4 rounded-lg border-2 ${
-                  item.passed 
-                    ? 'bg-green-50 border-green-300' 
+              <div
+                key={index}
+                className={`p-4 rounded-lg border-2 ${item.passed
+                    ? 'bg-green-50 border-green-300'
                     : 'bg-red-50 border-red-300'
-                }`}
+                  }`}
               >
                 <div className="flex items-start gap-3">
                   <span className="text-2xl">
@@ -122,7 +120,7 @@ export default function ResultsPanel({ result }) {
       {false && result.feedback?.categories && (
         <div className="space-y-4">
           <h4 className="font-semibold text-lg">Element Detection Results (Generic)</h4>
-          
+
           {/* Matching Elements */}
           {result.feedback.categories.matching.length > 0 && (
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
@@ -255,7 +253,7 @@ export default function ResultsPanel({ result }) {
             <div>
               <p className="text-xs text-gray-600 mb-2 font-medium">Your Output</p>
               <img
-                src={`http://localhost:5000${result.visual.screenshots.candidate}`}
+                src={`${result.visual.screenshots.candidate}`}
                 alt="Candidate output"
                 className="w-full border-2 border-gray-300 rounded shadow-sm"
               />
@@ -263,7 +261,7 @@ export default function ResultsPanel({ result }) {
             <div>
               <p className="text-xs text-gray-600 mb-2 font-medium">Expected Output</p>
               <img
-                src={`http://localhost:5000${result.visual.screenshots.expected}`}
+                src={`${result.visual.screenshots.expected}`}
                 alt="Expected output"
                 className="w-full border-2 border-gray-300 rounded shadow-sm"
               />
@@ -272,7 +270,7 @@ export default function ResultsPanel({ result }) {
           <div className="mt-4">
             <p className="text-xs text-gray-600 mb-2 font-medium">Differences Highlighted</p>
             <img
-              src={`http://localhost:5000${result.visual.screenshots.diff}`}
+              src={`${result.visual.screenshots.diff}`}
               alt="Diff"
               className="w-full border-2 border-red-300 rounded shadow-sm"
             />

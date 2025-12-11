@@ -6,7 +6,7 @@
 import axios from 'axios';
 
 // Use environment variable for API URL, fallback to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Create axios instance
 const api = axios.create({
@@ -34,7 +34,7 @@ export const getChallenge = (id) => api.get(`/challenges/${id}`);
 export const getCourses = () => api.get('/courses');
 export const getCourse = (courseId) => api.get(`/courses/${courseId}`);
 export const getCourseLevels = (courseId) => api.get(`/courses/${courseId}/levels`);
-export const getLevelQuestions = (courseId, level, userId = 'default-user') => 
+export const getLevelQuestions = (courseId, level, userId = 'default-user') =>
   api.get(`/courses/${courseId}/levels/${level}/questions?userId=${userId}`);
 export const completeQuestion = (userId, data) => api.post(`/courses/progress/${userId}/complete`, data);
 export const getUserProgress = (userId) => api.get(`/courses/progress/${userId}`);
@@ -51,8 +51,12 @@ export const bulkUploadQuestions = (courseId, questions) => api.post(`/courses/$
 export const getRandomQuestions = (courseId, level, count = 2) => api.get(`/courses/${courseId}/levels/${level}/randomize?count=${count}`);
 
 // Level-specific question bank management
-export const downloadLevelTemplate = (courseId, level) => 
+export const downloadLevelTemplate = (courseId, level) =>
   api.get(`/courses/${courseId}/levels/${level}/template`, { responseType: 'blob' });
+
+export const downloadCsvTemplate = (courseId, level) =>
+  api.get(`/courses/sample/csv${courseId && level ? `?courseId=${courseId}&level=${level}` : ''}`, { responseType: 'blob' });
+
 export const uploadLevelQuestionBank = (courseId, level, questions, randomizeCount) =>
   api.post(`/courses/${courseId}/levels/${level}/questions/bulk`, { questions, randomizeCount });
 
@@ -70,17 +74,17 @@ export const getSubmission = (id) => api.get(`/submissions/${id}`);
 export const getSubmissionResult = (id) => api.get(`/submissions/${id}/result`);
 
 // Evaluation
-export const evaluateSolution = (submissionId) => 
+export const evaluateSolution = (submissionId) =>
   api.post('/evaluate', { submissionId });
 
 export const quickEvaluate = (code, challengeId) =>
   api.post('/evaluate/quick', { code, challengeId });
 
 // Admin
-export const adminLogin = (credentials) => 
+export const adminLogin = (credentials) =>
   api.post('/admin/login', credentials);
 
-export const getAdminChallenges = () => 
+export const getAdminChallenges = () =>
   api.get('/admin/challenges');
 
 export const createChallenge = (challenge) =>

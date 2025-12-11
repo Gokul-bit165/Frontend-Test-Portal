@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 const TestResultsPage = () => {
   const { sessionId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const [sessionData, setSessionData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,9 +43,9 @@ const TestResultsPage = () => {
       await axios.put(`${API_BASE}/test-sessions/${sessionId}/complete`, {
         user_feedback: feedback
       });
-      
+
       alert('Thank you for your feedback!');
-      
+
       // Redirect back to course or dashboard
       const courseId = sessionData?.course_id;
       if (courseId) {
@@ -105,11 +105,10 @@ const TestResultsPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Overall Result Header */}
-        <div className={`rounded-lg shadow-xl p-8 mb-8 ${
-          overallPassed 
-            ? 'bg-gradient-to-r from-green-400 to-green-600' 
+        <div className={`rounded-lg shadow-xl p-8 mb-8 ${overallPassed
+            ? 'bg-gradient-to-r from-green-400 to-green-600'
             : 'bg-gradient-to-r from-red-400 to-red-600'
-        }`}>
+          }`}>
           <div className="text-center text-white">
             <div className="text-6xl mb-4">
               {overallPassed ? '🎉' : '📝'}
@@ -118,8 +117,8 @@ const TestResultsPage = () => {
               {overallPassed ? 'Congratulations!' : 'Keep Learning!'}
             </h1>
             <p className="text-xl mb-4">
-              {overallPassed 
-                ? 'You passed all questions!' 
+              {overallPassed
+                ? 'You passed all questions!'
                 : 'You need to pass all questions to complete this test'}
             </p>
             <div className="text-3xl font-bold">
@@ -131,21 +130,20 @@ const TestResultsPage = () => {
         {/* Individual Question Results */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Question Results</h2>
-          
+
           <div className="space-y-4">
             {submissions.map((submission, index) => {
               const isPassed = submission.passed === 1 || submission.status === 'passed';
-              
+
               return (
                 <div
                   key={submission.id}
-                  className={`border-2 rounded-lg p-5 transition-all ${
-                    isPassed
+                  className={`border-2 rounded-lg p-5 transition-all ${isPassed
                       ? 'border-green-400 bg-green-50'
                       : submission.status === 'pending'
-                      ? 'border-yellow-400 bg-yellow-50'
-                      : 'border-red-400 bg-red-50'
-                  }`}
+                        ? 'border-yellow-400 bg-yellow-50'
+                        : 'border-red-400 bg-red-50'
+                    }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -162,7 +160,7 @@ const TestResultsPage = () => {
                           </p>
                         </div>
                       </div>
-                      
+
                       {submission.status !== 'pending' && (
                         <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-3">
                           <div className="bg-white rounded p-2 text-center">
@@ -185,23 +183,21 @@ const TestResultsPage = () => {
                           </div>
                           <div className="bg-white rounded p-2 text-center">
                             <div className="text-xs text-gray-600">Final</div>
-                            <div className={`text-lg font-bold ${
-                              (submission.final_score || 0) >= 70 ? 'text-green-600' : 'text-red-600'
-                            }`}>
+                            <div className={`text-lg font-bold ${(submission.final_score || 0) >= 70 ? 'text-green-600' : 'text-red-600'
+                              }`}>
                               {submission.final_score || 0}%
                             </div>
                           </div>
                         </div>
                       )}
                     </div>
-                    
-                    <div className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                      isPassed
+
+                    <div className={`px-4 py-2 rounded-full text-sm font-semibold ${isPassed
                         ? 'bg-green-600 text-white'
                         : submission.status === 'pending'
-                        ? 'bg-yellow-600 text-white'
-                        : 'bg-red-600 text-white'
-                    }`}>
+                          ? 'bg-yellow-600 text-white'
+                          : 'bg-red-600 text-white'
+                      }`}>
                       {isPassed ? 'PASSED' : submission.status === 'pending' ? 'PENDING' : 'FAILED'}
                     </div>
                   </div>
@@ -218,22 +214,21 @@ const TestResultsPage = () => {
             <p className="text-gray-600 mb-4">
               Help us improve! Tell us about your experience with this test.
             </p>
-            
+
             <textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               placeholder="What did you think about this test? Any suggestions?"
               className="w-full border-2 border-gray-300 rounded-lg p-3 min-h-[120px] focus:border-indigo-500 focus:outline-none"
             />
-            
+
             <button
               onClick={handleFeedbackSubmit}
               disabled={submitting || !feedback.trim()}
-              className={`w-full mt-4 py-3 rounded-lg font-semibold transition-all ${
-                submitting || !feedback.trim()
+              className={`w-full mt-4 py-3 rounded-lg font-semibold transition-all ${submitting || !feedback.trim()
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-indigo-600 text-white hover:bg-indigo-700'
-              }`}
+                }`}
             >
               {submitting ? 'Submitting...' : 'Submit Feedback & Continue'}
             </button>
@@ -248,7 +243,7 @@ const TestResultsPage = () => {
           >
             Back to Course
           </button>
-          
+
           {!overallPassed && (
             <button
               onClick={() => navigate(`/level/${sessionData.course_id}/${sessionData.level}`)}

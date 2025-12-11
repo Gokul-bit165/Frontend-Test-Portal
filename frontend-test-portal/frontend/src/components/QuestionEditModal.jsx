@@ -26,9 +26,15 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
   useEffect(() => {
     if (question) {
       // Convert assets array to string paths
-      const imagePaths = question.assets?.images?.map(img => img.path || img).join('\n') || '';
+      let imagePaths = '';
+      if (Array.isArray(question.assets)) {
+        imagePaths = question.assets.map(a => (typeof a === 'string' ? a : a.path)).join('\n');
+      } else if (question.assets?.images) {
+        imagePaths = question.assets.images.map(img => img.path || img).join('\n');
+      }
+
       const referencePath = question.assets?.reference || '';
-      
+
       setFormData({
         id: question.id || '',
         title: question.title || '',
@@ -58,15 +64,53 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
     }
   }, [question, courseId]);
 
+  const handleExtractAssets = () => {
+    const html = formData.expectedSolutionHtml || '';
+    const css = formData.expectedSolutionCss || '';
+    const combined = html + css;
+
+    // Regex for src="..." or url(...)
+    // Matches common image extensions
+    const regex = /(?:src=["']|url\(["']?)([^"')]+\.(?:png|jpg|jpeg|gif|svg|webp))["')]/gi;
+    const matches = [...combined.matchAll(regex)];
+
+    const uniquePaths = new Set();
+    const currentPaths = formData.assetImages.split('\n').map(p => p.trim()).filter(p => p);
+
+    // Add existing paths first
+    currentPaths.forEach(p => uniquePaths.add(p));
+
+    matches.forEach(match => {
+      let path = match[1];
+      // Normalize to /assets/images/ format if it's just a filename
+      if (!path.startsWith('http') && !path.startsWith('/') && !path.startsWith('assets')) {
+        // remove any leading ./ or images/ if present to cleaner format
+        path = path.replace(/^(\.\/)?(images\/)?/, '');
+        path = `/assets/images/${path}`;
+      } else if (path.startsWith('images/')) {
+        path = `/assets/${path}`;
+      }
+
+      uniquePaths.add(path);
+    });
+
+    setFormData({
+      ...formData,
+      assetImages: Array.from(uniquePaths).join('\n')
+    });
+
+    alert(`Extracted ${uniquePaths.size - currentPaths.length} new asset(s) from code!`);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Convert asset paths to proper format
     const imagePaths = formData.assetImages
       .split('\n')
       .map(path => path.trim())
       .filter(path => path);
-    
+
     const assetImages = imagePaths.map(path => {
       const filename = path.split('/').pop();
       return {
@@ -75,7 +119,7 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
         description: `${filename} image`
       };
     });
-    
+
     const questionData = {
       id: formData.id,
       courseId: courseId,
@@ -101,7 +145,7 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
       },
       assets: {
         images: assetImages,
-        reference: formData.assetReference.trim()
+        reference: ''
       },
       prerequisite: question?.prerequisite || null,
       createdAt: question?.createdAt || new Date().toISOString(),
@@ -220,8 +264,8 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
           </div>
 
           {/* Passing Thresholds */}
-          <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-            <h4 className="text-sm font-semibold text-amber-900 mb-3 flex items-center gap-2">
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
               <span>🎯</span> Passing Thresholds (Scoring)
             </h4>
             <div className="grid grid-cols-3 gap-4">
@@ -308,12 +352,22 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
               <span>🖼️ Assets</span>
               <span className="text-sm font-normal text-gray-500">(Images & Reference Screenshots)</span>
             </h3>
-            
-            <div className="space-y-4 bg-blue-50 p-4 rounded-lg">
+
+            <div className="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Image Asset Paths (one per line)
-                </label>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Image Asset Paths (one per line)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleExtractAssets}
+                    className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300 transition-colors font-semibold flex items-center gap-1"
+                    title="Scan HTML & CSS for image links"
+                  >
+                    ✨ Extract from Code
+                  </button>
+                </div>
                 <textarea
                   value={formData.assetImages}
                   onChange={(e) => setFormData({ ...formData, assetImages: e.target.value })}
@@ -325,29 +379,13 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
                   💡 Upload images in <strong>Asset Manager</strong>, then copy their paths here
                 </p>
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Reference Screenshot Path (expected output)
-                </label>
-                <input
-                  type="text"
-                  value={formData.assetReference}
-                  onChange={(e) => setFormData({ ...formData, assetReference: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg font-mono text-sm"
-                  placeholder="/assets/references/html-css-l1-q1-ref.png"
-                />
-                <p className="text-xs text-gray-600 mt-1">
-                  📸 Screenshot showing what the final result should look like
-                </p>
-              </div>
             </div>
           </div>
 
           {/* Expected Solution */}
           <div className="border-t pt-6">
             <h3 className="text-lg font-bold mb-4">Expected Solution</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">HTML</label>
@@ -359,7 +397,7 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
                   placeholder="<!DOCTYPE html>..."
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">CSS</label>
                 <textarea
@@ -370,7 +408,7 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
                   placeholder="body { margin: 0; }..."
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">JavaScript (optional)</label>
                 <textarea
@@ -395,7 +433,7 @@ export default function QuestionEditModal({ question, courseId, onSave, onClose 
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-black"
             >
               {question ? 'Save Changes' : 'Add Question'}
             </button>

@@ -31,7 +31,7 @@ export default function GroupedSubmissionsList({ sessions, onViewDetails }) {
       failed: 'bg-red-100 text-red-800 border-red-300',
       pending: 'bg-yellow-100 text-yellow-800 border-yellow-300'
     };
-    
+
     return (
       <span className={`px-2 py-1 rounded text-xs font-semibold border ${statusStyles[status] || 'bg-gray-100 text-gray-800'}`}>
         {status?.toUpperCase() || 'UNKNOWN'}
@@ -51,14 +51,14 @@ export default function GroupedSubmissionsList({ sessions, onViewDetails }) {
     <div className="space-y-4">
       {sessions.map((session) => {
         const isExpanded = expandedSessions.has(session.session_id);
-        const completionRate = session.total_questions > 0 
+        const completionRate = session.total_questions > 0
           ? Math.round((session.passed_count / session.total_questions) * 100)
           : 0;
 
         return (
           <div key={session.session_id} className="bg-white rounded-lg border shadow-sm overflow-hidden">
             {/* Session Header */}
-            <div 
+            <div
               className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
               onClick={() => toggleSession(session.session_id)}
             >
@@ -73,7 +73,7 @@ export default function GroupedSubmissionsList({ sessions, onViewDetails }) {
                       Level {session.level}
                     </span>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
                       <span className="text-gray-500">Email:</span>
@@ -107,10 +107,10 @@ export default function GroupedSubmissionsList({ sessions, onViewDetails }) {
                 </div>
 
                 <div className="ml-4">
-                  <svg 
+                  <svg
                     className={`w-6 h-6 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -123,12 +123,12 @@ export default function GroupedSubmissionsList({ sessions, onViewDetails }) {
             {isExpanded && (
               <div className="border-t bg-gray-50 p-4">
                 <h4 className="font-semibold text-gray-700 mb-3">Question Submissions:</h4>
-                
+
                 {session.submissions && session.submissions.length > 0 ? (
                   <div className="space-y-2">
                     {session.submissions.map((submission, index) => (
-                      <div 
-                        key={submission.id} 
+                      <div
+                        key={submission.id}
                         className="bg-white p-3 rounded border flex items-center justify-between"
                       >
                         <div className="flex-1">
@@ -151,13 +151,13 @@ export default function GroupedSubmissionsList({ sessions, onViewDetails }) {
                             </span>
                           </div>
                         </div>
-                        
+
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             onViewDetails(submission.id);
                           }}
-                          className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200"
+                          className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
                         >
                           View Details
                         </button>

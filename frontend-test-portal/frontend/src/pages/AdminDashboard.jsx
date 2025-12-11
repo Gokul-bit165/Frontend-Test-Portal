@@ -25,21 +25,21 @@ export default function AdminDashboard() {
   const loadGroupedSubmissions = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/admin/submissions/grouped');
+      const response = await axios.get('/api/admin/submissions/grouped');
       const sessions = response.data;
       setGroupedSessions(sessions);
-      
+
       // Calculate stats from sessions
       let totalSubmissions = 0;
       let passedSubmissions = 0;
       let failedSubmissions = 0;
-      
+
       sessions.forEach(session => {
         totalSubmissions += session.total_questions || 0;
         passedSubmissions += session.passed_count || 0;
         failedSubmissions += (session.total_questions - session.passed_count) || 0;
       });
-      
+
       setStats({
         totalSessions: sessions.length,
         total: totalSubmissions,
@@ -60,7 +60,7 @@ export default function AdminDashboard() {
       const response = await getAllSubmissions();
       const data = response.data;
       setSubmissions(data);
-      
+
       // Calculate stats
       setStats({
         total: data.length,
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
 
   const handleReEvaluate = async (submissionId) => {
     if (!confirm('Re-evaluate this submission?')) return;
-    
+
     try {
       await reEvaluateSubmission(submissionId);
       await loadSubmissions();
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
 
   const handleDelete = async (submissionId) => {
     if (!confirm('Are you sure you want to delete this submission? This action cannot be undone.')) return;
-    
+
     try {
       await deleteSubmission(submissionId);
       await loadSubmissions();
@@ -169,21 +169,19 @@ export default function AdminDashboard() {
         <div className="mb-6 flex gap-3">
           <button
             onClick={() => setViewMode('grouped')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              viewMode === 'grouped'
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${viewMode === 'grouped'
                 ? 'bg-indigo-600 text-white'
                 : 'bg-white text-gray-700 border hover:bg-gray-50'
-            }`}
+              }`}
           >
             📋 Grouped by Test Session
           </button>
           <button
             onClick={() => setViewMode('individual')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              viewMode === 'individual'
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${viewMode === 'individual'
                 ? 'bg-indigo-600 text-white'
                 : 'bg-white text-gray-700 border hover:bg-gray-50'
-            }`}
+              }`}
           >
             📄 Individual Submissions
           </button>
