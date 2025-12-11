@@ -1,0 +1,64 @@
+[
+  {
+    "id": "course-fullstack-l1-q1",
+    "courseId": "course-fullstack",
+    "level": 1,
+    "questionNumber": 1,
+    "title": "Level 1 - Question 1",
+    "description": "Brief description of what students need to build",
+    "instructions": "Detailed step-by-step instructions:\n- Step 1: Create HTML structure\n- Step 2: Apply CSS styling\n- Step 3: Add interactivity",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": [
+      "Hint 1: Use semantic HTML tags",
+      "Hint 2: Apply modern CSS techniques",
+      "Hint 3: Test in browser"
+    ],
+    "tags": ["HTML", "CSS"],
+    "timeLimit": 20,
+    "points": 100,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": null,
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Solution</title>\n</head>\n<body>\n  <div class=\"container\">\n    <!-- Your solution here -->\n  </div>\n</body>\n</html>",
+      "css": "body {\n  margin: 0;\n  padding: 20px;\n  font-family: Arial, sans-serif;\n}\n\n.container {\n  max-width: 800px;\n  margin: 0 auto;\n}",
+      "js": "// Optional JavaScript"
+    }
+  },
+  {
+    "id": "course-fullstack-l1-q2",
+    "courseId": "course-fullstack",
+    "level": 1,
+    "questionNumber": 2,
+    "title": "Level 1 - Question 2",
+    "description": "Another question for this level",
+    "instructions": "Build something based on the requirements",
+    "assets": {
+      "images": [],
+      "reference": ""
+    },
+    "hints": ["Apply what you learned in Q1"],
+    "tags": ["HTML", "CSS"],
+    "timeLimit": 25,
+    "points": 120,
+    "passingThreshold": {
+      "structure": 70,
+      "visual": 80,
+      "overall": 75
+    },
+    "isLocked": false,
+    "prerequisite": "course-fullstack-l1-q1",
+    "expectedSolution": {
+      "html": "<!DOCTYPE html>\n<html>\n<body>\n  <h1>Question 2</h1>\n</body>\n</html>",
+      "css": "h1 { color: #333; }",
+      "js": ""
+    }
+  }
+]
