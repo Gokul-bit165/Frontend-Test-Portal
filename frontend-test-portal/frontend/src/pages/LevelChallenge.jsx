@@ -9,7 +9,7 @@ export default function LevelChallenge() {
   const { courseId, level } = useParams();
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId') || 'default-user';
-  
+
   const [assignedQuestions, setAssignedQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [challenge, setChallenge] = useState(null);
@@ -27,7 +27,7 @@ export default function LevelChallenge() {
   const [feedback, setFeedback] = useState('');
   const [testSessionId, setTestSessionId] = useState(null);
   const [finishingLevel, setFinishingLevel] = useState(false);
-  
+
   // Restrictions and Timer State
   const [restrictions, setRestrictions] = useState({
     blockCopy: false,
@@ -41,8 +41,41 @@ export default function LevelChallenge() {
   const [showViolationToast, setShowViolationToast] = useState(false);
   const [violationMessage, setViolationMessage] = useState('');
   const [lastViolationTime, setLastViolationTime] = useState(0);
-  
+
   const previewRef = useRef();
+
+  // Resizable Split View State
+  const [splitRatio, setSplitRatio] = useState(0.5);
+  const [isDragging, setIsDragging] = useState(false);
+  const [fullScreenView, setFullScreenView] = useState(null); // 'live' | 'expected' | null
+  const splitContainerRef = useRef();
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDragging || !splitContainerRef.current) return;
+      const containerRect = splitContainerRef.current.getBoundingClientRect();
+      const relativeY = e.clientY - containerRect.top;
+      const newRatio = Math.max(0.2, Math.min(0.8, relativeY / containerRect.height));
+      setSplitRatio(newRatio);
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      document.body.style.cursor = 'default';
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'row-resize';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'default';
+    };
+  }, [isDragging]);
 
   useEffect(() => {
     if (courseId && level) {
@@ -59,28 +92,28 @@ export default function LevelChallenge() {
 
   const loadLevelQuestions = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/challenges/level-questions`, {
-        params: { 
-          userId, 
-          courseId, 
+      const response = await axios.get(`/api/challenges/level-questions`, {
+        params: {
+          userId,
+          courseId,
           level: parseInt(level),
           forceNew: 'true' // Always get new random questions on each test entry
         }
       });
-      
+
       let questions = response.data.assignedQuestions || [];
-      
+
       if (questions.length === 0) {
         alert('No questions assigned for this level');
         navigate(`/course/${courseId}`);
         return;
       }
-      
+
       // Shuffle questions array to randomize order every time
       questions = shuffleArray(questions);
-      
+
       setAssignedQuestions(questions);
-      
+
       // Initialize answers
       const initialAnswers = {};
       questions.forEach(q => {
@@ -93,10 +126,10 @@ export default function LevelChallenge() {
         };
       });
       setUserAnswers(initialAnswers);
-      
+
       // Create test session
       await createTestSession();
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Failed to load level questions:', error);
@@ -107,12 +140,12 @@ export default function LevelChallenge() {
 
   const createTestSession = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/test-sessions', {
+      const response = await axios.post('/api/test-sessions', {
         user_id: userId,
         course_id: courseId,
         level: parseInt(level)
       });
-      
+
       console.log('Test session created:', response.data.id);
       setTestSessionId(response.data.id);
     } catch (error) {
@@ -133,14 +166,14 @@ export default function LevelChallenge() {
 
   const loadCurrentQuestion = async () => {
     if (!assignedQuestions[currentQuestionIndex]) return;
-    
+
     const questionId = assignedQuestions[currentQuestionIndex].id;
-    
+
     try {
-      const response = await axios.get(`http://localhost:5000/api/challenges/${questionId}`);
+      const response = await axios.get(`/api/challenges/${questionId}`);
       const challengeData = response.data;
       setChallenge(challengeData);
-      
+
       // Load saved answer if exists
       const savedAnswer = userAnswers[questionId];
       if (savedAnswer) {
@@ -158,7 +191,7 @@ export default function LevelChallenge() {
   // Load restrictions from API
   const loadRestrictions = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/courses/${courseId}/restrictions`);
+      const response = await axios.get(`/api/courses/${courseId}/restrictions`);
       if (response.data) {
         setRestrictions(response.data);
         // Initialize timer if timeLimit is set
@@ -174,7 +207,7 @@ export default function LevelChallenge() {
   // Timer countdown
   useEffect(() => {
     if (timeRemaining === null || timeRemaining <= 0) return;
-    
+
     const interval = setInterval(() => {
       setTimeRemaining(prev => {
         if (prev <= 1) {
@@ -186,7 +219,7 @@ export default function LevelChallenge() {
         return prev - 1;
       });
     }, 1000);
-    
+
     return () => clearInterval(interval);
   }, [timeRemaining]);
 
@@ -202,15 +235,15 @@ export default function LevelChallenge() {
   const handleViolation = (type) => {
     const now = Date.now();
     if (now - lastViolationTime < 2000) return; // 2 second cooldown
-    
+
     setLastViolationTime(now);
     const newViolations = violations + 1;
     setViolations(newViolations);
-    
+
     setViolationMessage(`${type}`);
     setShowViolationToast(true);
     setTimeout(() => setShowViolationToast(false), 3000);
-    
+
     if (newViolations >= restrictions.maxViolations) {
       setTimeout(() => {
         alert('Maximum violations reached! Test will be submitted.');
@@ -263,13 +296,13 @@ export default function LevelChallenge() {
     // Auto-enter fullscreen on click if not in fullscreen
     const handleClickForFullscreen = () => {
       if (restrictions.forceFullscreen && !document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
+        document.documentElement.requestFullscreen().catch(() => { });
       }
     };
     document.addEventListener('click', handleClickForFullscreen);
 
     if (restrictions.blockCopy) document.body.style.userSelect = 'none';
-    
+
     // Initial fullscreen entry
     if (restrictions.forceFullscreen && !document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {
@@ -335,7 +368,7 @@ export default function LevelChallenge() {
     try {
       // Step 1: Create submission
       setEvaluationStep('Creating submission...');
-      const submitResponse = await axios.post('http://localhost:5000/api/submissions', {
+      const submitResponse = await axios.post('/api/submissions', {
         challengeId: questionId,
         candidateName: userId,
         code: {
@@ -346,23 +379,23 @@ export default function LevelChallenge() {
       });
 
       const submissionId = submitResponse.data.submissionId;
-      
+
       setEvaluationStep('Launching browser environment...');
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       setEvaluationStep('Rendering your code...');
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       setEvaluationStep('Comparing with expected solution...');
-      
+
       // Step 2: Evaluate submission
-      const evalResponse = await axios.post('http://localhost:5000/api/evaluate', {
+      const evalResponse = await axios.post('/api/evaluate', {
         submissionId: submissionId
       });
 
       const evalResult = evalResponse.data.result;
       setResult(evalResult);
-      
+
       // Save result
       setUserAnswers(prev => ({
         ...prev,
@@ -378,7 +411,7 @@ export default function LevelChallenge() {
       // Add submission to test session
       if (testSessionId && submissionId) {
         try {
-          await axios.post(`http://localhost:5000/api/test-sessions/${testSessionId}/submissions`, {
+          await axios.post(`/api/test-sessions/${testSessionId}/submissions`, {
             submission_id: submissionId
           });
           console.log('Added submission to test session');
@@ -386,7 +419,7 @@ export default function LevelChallenge() {
           console.error('Failed to add submission to session:', err);
         }
       }
-      
+
       setEvaluationStep('');
     } catch (error) {
       console.error('Submission failed:', error);
@@ -407,14 +440,14 @@ export default function LevelChallenge() {
     try {
       if (testSessionId) {
         console.log('Completing test session:', testSessionId);
-        
+
         // MUST wait for completion before navigating
-        await axios.put(`http://localhost:5000/api/test-sessions/${testSessionId}/complete`, {
+        await axios.put(`/api/test-sessions/${testSessionId}/complete`, {
           user_feedback: null
         });
-        
+
         console.log('Test session completed successfully');
-        
+
         // Small delay to ensure database write is committed
         await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -444,7 +477,7 @@ export default function LevelChallenge() {
 
     const submittedCount = results.filter(r => r.submitted).length;
     const passedCount = results.filter(r => r.passed).length;
-    const avgScore = submittedCount > 0 
+    const avgScore = submittedCount > 0
       ? Math.round(results.reduce((sum, r) => sum + r.score, 0) / assignedQuestions.length)
       : 0;
 
@@ -479,15 +512,15 @@ export default function LevelChallenge() {
       };
 
       // Save to backend
-      await axios.post('http://localhost:5000/api/level-completion', completionData);
+      await axios.post('/api/level-completion', completionData);
 
       // Close modal and navigate
       setShowFinishModal(false);
       navigate(`/level-results/${courseId}/${level}`, {
-        state: { 
-          userAnswers, 
+        state: {
+          userAnswers,
           assignedQuestions,
-          completionData 
+          completionData
         }
       });
     } catch (error) {
@@ -534,7 +567,7 @@ export default function LevelChallenge() {
           </div>
         </div>
       )}
-      
+
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="px-6 py-4">
@@ -551,18 +584,17 @@ export default function LevelChallenge() {
                 Level {level} • Question {currentQuestionIndex + 1} of {assignedQuestions.length}
               </p>
             </div>
-            
+
             {/* Question Navigator with Timer */}
             <div className="flex items-center gap-3">
               {/* Small Timer */}
               {restrictions.timeLimit > 0 && timeRemaining !== null && (
-                <div className={`px-3 py-2 rounded border font-mono font-bold ${
-                  timeRemaining <= 300 ? 'bg-red-50 border-red-300 text-red-600' : 'bg-blue-50 border-blue-300 text-blue-600'
-                }`}>
+                <div className={`px-3 py-2 rounded border font-mono font-bold ${timeRemaining <= 300 ? 'bg-red-50 border-red-300 text-red-600' : 'bg-blue-50 border-blue-300 text-blue-600'
+                  }`}>
                   ⏱️ {formatTime(timeRemaining)}
                 </div>
               )}
-              
+
               {/* Question Number Boxes */}
               <div className="flex gap-2">
                 {assignedQuestions.map((q, index) => {
@@ -570,13 +602,12 @@ export default function LevelChallenge() {
                   return (
                     <div
                       key={q.id}
-                      className={`w-10 h-10 rounded flex items-center justify-center font-semibold ${
-                        index === currentQuestionIndex
-                          ? 'bg-blue-600 text-white ring-2 ring-blue-300'
-                          : isSubmitted
+                      className={`w-10 h-10 rounded flex items-center justify-center font-semibold ${index === currentQuestionIndex
+                        ? 'bg-blue-600 text-white ring-2 ring-blue-300'
+                        : isSubmitted
                           ? 'bg-green-500 text-white'
                           : 'bg-gray-200 text-gray-700'
-                      }`}
+                        }`}
                       title={`Question ${index + 1} - ${isSubmitted ? 'Submitted' : 'Not Submitted'}`}
                     >
                       {index + 1}
@@ -650,10 +681,10 @@ export default function LevelChallenge() {
             <span className="font-semibold">
               {showInstructions ? '📖 Hide Instructions' : '📖 Show Instructions'}
             </span>
-            <svg 
+            <svg
               className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''}`}
-              fill="none" 
-              stroke="currentColor" 
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -662,56 +693,84 @@ export default function LevelChallenge() {
 
           {/* Instructions */}
           {showInstructions && (
-          <div className="card">
-            <h2 className="text-lg font-bold mb-3">Challenge Instructions</h2>
-            
-            <div className="text-gray-700 whitespace-pre-wrap mb-4">{challenge.instructions || challenge.description}</div>
-            
-            {/* Assets Section */}
-            {challenge.assets && challenge.assets.length > 0 && (
-              <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                <h3 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Assets for this challenge:
-                </h3>
-                <div className="space-y-2">
-                  {challenge.assets.map((asset, index) => (
-                    <div key={index} className="bg-white p-2 rounded border border-purple-100">
-                      <a 
-                        href={`http://localhost:5000/${asset}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-purple-700 hover:underline"
-                      >
-                        📄 {asset.split('/').pop()}
-                      </a>
-                    </div>
-                  ))}
+            <div className="card">
+              <h2 className="text-lg font-bold mb-3">{challenge.description || 'Challenge Instructions'}</h2>
+
+              <div className="text-gray-700 whitespace-pre-wrap mb-4">{challenge.instructions || challenge.description}</div>
+
+              {/* Assets Section */}
+              {(challenge.assets && (Array.isArray(challenge.assets) ? challenge.assets.length > 0 : challenge.assets.images?.length > 0)) && (
+                <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                  <h3 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Description
+                  </h3>
+                  <div className="space-y-2">
+                    {(Array.isArray(challenge.assets) ? challenge.assets : challenge.assets?.images || []).map((asset, index) => {
+                      // Normalize path
+                      const assetPath = typeof asset === 'string' ? asset : asset.path;
+                      const filename = assetPath.split('/').pop();
+                      let codePath = assetPath;
+                      if (!codePath.startsWith('http')) {
+                        codePath = codePath.startsWith('/') ? codePath.slice(1) : codePath;
+                        const isImage = /\.(png|jpg|jpeg|gif|svg|webp)$/i.test(codePath);
+                        if (isImage && !codePath.includes('images/') && !codePath.includes('assets/')) {
+                          codePath = `images/${codePath}`;
+                        }
+                        if (!codePath.startsWith('assets/')) {
+                          codePath = `assets/${codePath}`;
+                        }
+                        codePath = `/${codePath}`;
+                      }
+
+                      return (
+                        <div key={index} className="bg-white p-2 rounded border border-purple-100 flex items-center justify-between">
+                          <a
+                            href={codePath}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline text-sm truncate max-w-[200px]"
+                            title={filename}
+                          >
+                            {filename}
+                          </a>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(codePath);
+                              alert(`Copied path: ${codePath}`);
+                            }}
+                            className="ml-2 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded border transition-colors"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
-            
-            {/* Hints Section */}
-            {challenge.hints && challenge.hints.length > 0 && (
-              <details className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg cursor-pointer">
-                <summary className="font-semibold text-yellow-900 cursor-pointer flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                  💡 Hints ({challenge.hints.length})
-                </summary>
-                <div className="mt-3 space-y-2">
-                  {challenge.hints.map((hint, index) => (
-                    <p key={index} className="text-sm text-yellow-800 pl-4 border-l-2 border-yellow-300">
-                      {index + 1}. {hint}
-                    </p>
-                  ))}
-                </div>
-              </details>
-            )}
-          </div>
+              )}
+
+              {/* Hints Section */}
+              {challenge.hints && challenge.hints.length > 0 && (
+                <details className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg cursor-pointer">
+                  <summary className="font-semibold text-yellow-900 cursor-pointer flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    💡 Hints ({challenge.hints.length})
+                  </summary>
+                  <div className="mt-3 space-y-2">
+                    {challenge.hints.map((hint, index) => (
+                      <p key={index} className="text-sm text-yellow-800 pl-4 border-l-2 border-yellow-300">
+                        {index + 1}. {hint}
+                      </p>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </div>
           )}
 
           {/* Code Editors */}
@@ -724,44 +783,91 @@ export default function LevelChallenge() {
         </div>
 
         {/* Right Panel: Preview & Results */}
-        <div className="flex flex-col gap-4 overflow-auto">
-          {/* Preview */}
-          <div className="card flex-1">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-lg font-bold">Live Preview</h2>
-              <button
-                onClick={() => setShowExpectedScreenshot(!showExpectedScreenshot)}
-                className="text-sm px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
-                title="Toggle expected result view"
-              >
-                {showExpectedScreenshot ? '👁️ Hide' : '🎯 Show'} Expected Result
-              </button>
+        <div className="flex flex-col h-full overflow-hidden relative">
+          {/* Split View Container */}
+          <div
+            ref={splitContainerRef}
+            className="flex-1 flex flex-col min-h-0 relative"
+          >
+            {/* Top Pane: Live Preview */}
+            <div
+              className="flex flex-col min-h-0"
+              style={{ height: showExpectedScreenshot ? `${splitRatio * 100}%` : '100%' }}
+            >
+              <div className="card flex-1 flex flex-col min-h-0 p-0 overflow-hidden">
+                <div className="p-3 border-b flex justify-between items-center bg-gray-50">
+                  <h2 className="text-lg font-bold">Live Preview</h2>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setFullScreenView('live')}
+                      className="text-xs px-2 py-1 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 flex items-center gap-1"
+                      title="Full Screen Preview"
+                    >
+                      ⤢ Full Screen
+                    </button>
+                    <button
+                      onClick={() => setShowExpectedScreenshot(!showExpectedScreenshot)}
+                      className={`text-xs px-3 py-1 rounded transition-colors ${showExpectedScreenshot ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700'}`}
+                      title="Toggle expected result view"
+                    >
+                      {showExpectedScreenshot ? '👁️ Hide Expected' : '🎯 Show Expected'}
+                    </button>
+                  </div>
+                </div>
+                <div className="flex-1 relative overflow-hidden">
+                  <PreviewFrame ref={previewRef} code={code} />
+                </div>
+              </div>
             </div>
-            <PreviewFrame ref={previewRef} code={code} />
+
+            {/* Drag Handle */}
+            {showExpectedScreenshot && (
+              <div
+                className="h-2 bg-gray-200 hover:bg-blue-400 cursor-row-resize shrink-0 flex items-center justify-center transition-colors z-10"
+                onMouseDown={() => setIsDragging(true)}
+              >
+                <div className="w-8 h-1 bg-gray-400 rounded-full"></div>
+              </div>
+            )}
+
+            {/* Bottom Pane: Expected Screenshot */}
+            {showExpectedScreenshot && challenge?.expectedSolution && (
+              <div
+                className="flex flex-col min-h-0"
+                style={{ height: `${(1 - splitRatio) * 100}%` }}
+              >
+                <div className="card flex-1 flex flex-col min-h-0 p-0 overflow-hidden mt-0">
+                  <div className="p-3 border-b flex justify-between items-center bg-green-50">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-lg font-bold text-green-700">Expected Result</h2>
+                      <span className="text-xs text-gray-500 hidden sm:inline">Match this design</span>
+                    </div>
+                    <button
+                      onClick={() => setFullScreenView('expected')}
+                      className="text-xs px-2 py-1 rounded bg-green-200 hover:bg-green-300 text-green-800 flex items-center gap-1"
+                    >
+                      ⤢ Full Screen
+                    </button>
+                  </div>
+                  <div className="flex-1 relative overflow-auto bg-gray-100">
+                    <div className="h-full border-2 border-transparent">
+                      <PreviewFrame
+                        code={{
+                          html: challenge.expectedSolution.html || '',
+                          css: challenge.expectedSolution.css || '',
+                          js: challenge.expectedSolution.js || ''
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Expected Screenshot */}
-          {showExpectedScreenshot && challenge?.expectedSolution && (
-            <div className="card">
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-lg font-bold text-green-700">✅ Expected Result</h2>
-                <span className="text-xs text-gray-500">This is what your solution should look like</span>
-              </div>
-              <div className="border-2 border-green-200 rounded-lg overflow-hidden bg-white">
-                <PreviewFrame 
-                  code={{
-                    html: challenge.expectedSolution.html || '',
-                    css: challenge.expectedSolution.css || '',
-                    js: challenge.expectedSolution.js || ''
-                  }} 
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Results */}
+          {/* Results (Below Split View) */}
           {(evaluating || result) && (
-            <div className="card">
+            <div className="card mt-4 shrink-0 max-h-[40%] overflow-auto">
               <h2 className="text-lg font-bold mb-3">Evaluation Results</h2>
               {evaluating ? (
                 <div className="text-center py-8">
@@ -831,6 +937,43 @@ export default function LevelChallenge() {
           )}
         </div>
       </div>
+      {/* Full Screen Modal */}
+      {fullScreenView && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col">
+          <div className={`p-4 border-b flex justify-between items-center ${fullScreenView === 'expected' ? 'bg-green-50' : 'bg-gray-50'}`}>
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              {fullScreenView === 'live' ? '🖥️ Live Preview (Full Screen)' : '✅ Expected Result (Full Screen)'}
+              <span className="text-sm font-normal text-gray-500">
+                {fullScreenView === 'live' ? '- Your Code' : '- Target Design'}
+              </span>
+            </h2>
+            <button
+              onClick={() => setFullScreenView(null)}
+              className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Exit Full Screen
+            </button>
+          </div>
+          <div className="flex-1 relative bg-gray-100 overflow-hidden p-4">
+            <div className="h-full w-full bg-white shadow-xl rounded-lg overflow-hidden border">
+              {fullScreenView === 'live' ? (
+                <PreviewFrame ref={previewRef} code={code} />
+              ) : (
+                <PreviewFrame
+                  code={{
+                    html: challenge.expectedSolution.html || '',
+                    css: challenge.expectedSolution.css || '',
+                    js: challenge.expectedSolution.js || ''
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
