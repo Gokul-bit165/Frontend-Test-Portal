@@ -65,32 +65,35 @@ const storage = multer.diskStorage({
   }
 });
 
+// Custom file filter to check for duplicates
+const fileFilter = (req, file, cb) => {
+  // Allow images, HTML, CSS, JS, JSON
+  const allowedMimes = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+    'image/svg+xml',
+    'text/html',
+    'text/css',
+    'text/javascript',
+    'application/javascript',
+    'application/json'
+  ];
+
+  if (!allowedMimes.includes(file.mimetype)) {
+    return cb(new Error('Invalid file type. Only images, HTML, CSS, JS, and JSON files are allowed.'));
+  }
+
+  cb(null, true);
+};
+
 const upload = multer({
   storage,
   limits: {
     fileSize: 10 * 1024 * 1024 // 10MB limit
   },
-  fileFilter: (req, file, cb) => {
-    // Allow images, HTML, CSS, JS, JSON
-    const allowedMimes = [
-      'image/jpeg',
-      'image/png',
-      'image/gif',
-      'image/webp',
-      'image/svg+xml',
-      'text/html',
-      'text/css',
-      'text/javascript',
-      'application/javascript',
-      'application/json'
-    ];
-
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Invalid file type. Only images, HTML, CSS, JS, and JSON files are allowed.'));
-    }
-  }
+  fileFilter
 });
 
 /**
@@ -112,12 +115,54 @@ router.get('/', (req, res) => {
  */
 router.post('/upload', upload.single('asset'), (req, res) => {
   try {
+    const metadata = getMetadata();
+
+    // Check if file already exists in metadata (by original filename)
+    // Note: multer.diskStorage has already saved the file by the time we get here. 
+    // To properly "skip", we should ideally check before multer saves, but multer doesn't easily support that async check in fileFilter without custom storage.
+    // Instead, we can check if the file resulted in a duplicate name in our system logic.
+
+    // However, a better approach for the user request "skip that not store duplicate" 
+    // is to check if we already have this asset in our metadata.
+
+    // If multer saved it, we might want to delete the newly saved duplicate if we decide to reuse the old one.
+    // But since multer's filename function sanitizes and might create unique names, let's see.
+
+    // Let's refine the logic:
+    // 1. We look at the uploaded file info.
+    // 2. We check if an asset with the SAME originalName already exists in the requested category.
+
+    // If we find a match:
+    // - We delete the file that Multer just saved (since it's a duplicate upload).
+    // - We return the EXISTING asset info.
+
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const metadata = getMetadata();
-    
+    const category = req.body.category || 'general';
+    const originalName = req.file.originalname;
+
+    const existingAsset = metadata.find(a =>
+      a.originalName === originalName &&
+      (a.category === category || (!a.category && category === 'general'))
+    );
+
+    if (existingAsset) {
+      // Duplicate found!
+      console.log(`Duplicate asset upload detected: ${originalName}. Using existing asset.`);
+
+      // Delete the file Multer just created to avoid clutter
+      if (req.file.path && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+
+      // Return existing asset with 200 OK (not 201 Created)
+      return res.status(200).json(existingAsset);
+    }
+
+    // New Asset Logic
+
     // Determine the relative path for frontend access
     // Store relative path (inside assets directory) without leading slash
     const relativePath = path.relative(
@@ -133,7 +178,7 @@ router.post('/upload', upload.single('asset'), (req, res) => {
       url: `/assets/${relativePath}`,
       type: req.file.mimetype,
       size: req.file.size,
-      category: req.body.category || 'general',
+      category: category,
       uploadedAt: new Date().toISOString()
     };
 
@@ -154,7 +199,7 @@ router.post('/upload', upload.single('asset'), (req, res) => {
 router.delete('/:filename', (req, res) => {
   try {
     const metadata = getMetadata();
-  const assetIndex = metadata.findIndex(a => a.filename === req.params.filename);
+    const assetIndex = metadata.findIndex(a => a.filename === req.params.filename);
 
     if (assetIndex === -1) {
       return res.status(404).json({ error: 'Asset not found' });

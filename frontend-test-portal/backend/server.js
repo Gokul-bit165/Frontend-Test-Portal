@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'production') {
 // Rate limiting to prevent abuse
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 1000, // Increased limit for admin bulk operations
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
@@ -70,7 +70,7 @@ app.use('/api/auth/google', authLimiter);
 app.use('/api/admin/login', authLimiter);
 
 // CORS Configuration for production
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
+const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
   : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:80'];
 
@@ -166,7 +166,7 @@ app.use('/api/test-sessions', testSessionsRouter);
 // Serve frontend static files
 // In Docker, frontend/dist is copied to the same directory as server.js
 // In development, it's in ../frontend/dist
-const frontendDistPath = fs.existsSync(path.join(__dirname, 'frontend/dist')) 
+const frontendDistPath = fs.existsSync(path.join(__dirname, 'frontend/dist'))
   ? path.join(__dirname, 'frontend/dist')
   : path.resolve(__dirname, '../frontend/dist');
 
@@ -177,10 +177,10 @@ if (fs.existsSync(frontendDistPath)) {
   // Handle client-side routing - serve index.html for non-API routes
   app.get('*', (req, res, next) => {
     // Skip API routes, screenshots, assets, and health check
-    if (req.path.startsWith('/api') || 
-        req.path.startsWith('/screenshots') || 
-        req.path.startsWith('/assets') || 
-        req.path === '/health') {
+    if (req.path.startsWith('/api') ||
+      req.path.startsWith('/screenshots') ||
+      req.path.startsWith('/assets') ||
+      req.path === '/health') {
       return next();
     }
     res.sendFile(path.join(frontendDistPath, 'index.html'));
@@ -193,10 +193,10 @@ if (fs.existsSync(frontendDistPath)) {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
-  
+
   // Don't leak sensitive error details in production
   const isDev = process.env.NODE_ENV === 'development';
-  
+
   res.status(err.status || 500).json({
     error: isDev ? err.message : 'Internal Server Error',
     ...(isDev && { stack: err.stack }),
@@ -221,3 +221,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+// Forced restart with fix for undefined params

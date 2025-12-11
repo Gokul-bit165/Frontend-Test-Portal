@@ -91,6 +91,7 @@ const fs = require("fs");
 const mysql = require("mysql2/promise");
 
 // Check if we should use JSON files instead of MySQL
+// Check if we should use JSON files instead of MySQL
 const USE_JSON = process.env.USE_JSON === "true" || !process.env.DB_HOST;
 
 // Helper: normalize inline certificates ("\n" -> newline) or load from file
@@ -116,9 +117,9 @@ function loadCertificate(certValue) {
 const sslCertificate = loadCertificate(process.env.DB_CA_CERT);
 const sslConfig = sslCertificate
   ? {
-      ca: sslCertificate,
-      rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === "true",
-    }
+    ca: sslCertificate,
+    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === "true",
+  }
   : undefined;
 
 const dbConfig = {
@@ -160,6 +161,9 @@ pool
 
 // Helper function to execute queries
 async function query(sql, params) {
+  if (USE_JSON) {
+    throw new Error('Using JSON file storage (USE_JSON=true)');
+  }
   try {
     const [rows] = await pool.execute(sql, params);
     return rows;

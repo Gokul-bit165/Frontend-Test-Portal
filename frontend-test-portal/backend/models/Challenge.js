@@ -36,8 +36,8 @@ class ChallengeModel {
   static async create(challengeData) {
     const id = challengeData.id || `challenge-${Date.now()}`;
     await query(
-      `INSERT INTO challenges (id, title, difficulty, description, instructions, tags, time_limit, passing_threshold, expected_html, expected_css, expected_js, expected_screenshot_url, course_id, level, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO challenges (id, title, difficulty, description, instructions, tags, time_limit, passing_threshold, expected_html, expected_css, expected_js, expected_screenshot_url, course_id, level, assets, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         challengeData.title,
@@ -53,6 +53,7 @@ class ChallengeModel {
         challengeData.expectedScreenshotUrl || null,
         challengeData.courseId || null,
         challengeData.level || 1,
+        JSON.stringify(challengeData.assets || {}),
         challengeData.createdAt || new Date()
       ]
     );
@@ -76,22 +77,24 @@ class ChallengeModel {
        expected_screenshot_url = COALESCE(?, expected_screenshot_url),
        course_id = COALESCE(?, course_id),
        level = COALESCE(?, level),
+       assets = COALESCE(?, assets),
        updated_at = NOW()
        WHERE id = ?`,
       [
-        challengeData.title,
-        challengeData.difficulty,
-        challengeData.description,
-        challengeData.instructions,
+        challengeData.title !== undefined ? challengeData.title : null,
+        challengeData.difficulty !== undefined ? challengeData.difficulty : null,
+        challengeData.description !== undefined ? challengeData.description : null,
+        challengeData.instructions !== undefined ? challengeData.instructions : null,
         challengeData.tags ? JSON.stringify(challengeData.tags) : null,
-        challengeData.timeLimit,
+        challengeData.timeLimit !== undefined ? challengeData.timeLimit : null,
         challengeData.passingThreshold ? JSON.stringify(challengeData.passingThreshold) : null,
-        challengeData.expectedHtml || challengeData.expectedSolution?.html,
-        challengeData.expectedCss || challengeData.expectedSolution?.css,
-        challengeData.expectedJs || challengeData.expectedSolution?.js,
-        challengeData.expectedScreenshotUrl,
-        challengeData.courseId,
-        challengeData.level,
+        (challengeData.expectedHtml !== undefined ? challengeData.expectedHtml : (challengeData.expectedSolution?.html !== undefined ? challengeData.expectedSolution.html : null)),
+        (challengeData.expectedCss !== undefined ? challengeData.expectedCss : (challengeData.expectedSolution?.css !== undefined ? challengeData.expectedSolution.css : null)),
+        (challengeData.expectedJs !== undefined ? challengeData.expectedJs : (challengeData.expectedSolution?.js !== undefined ? challengeData.expectedSolution.js : null)),
+        challengeData.expectedScreenshotUrl !== undefined ? challengeData.expectedScreenshotUrl : null,
+        challengeData.courseId !== undefined ? challengeData.courseId : null,
+        challengeData.level !== undefined ? challengeData.level : null,
+        challengeData.assets ? JSON.stringify(challengeData.assets) : null,
         id
       ]
     );
@@ -119,8 +122,8 @@ class ChallengeModel {
       instructions: challenge.instructions,
       tags: Array.isArray(challenge.tags) ? challenge.tags : JSON.parse(challenge.tags || '[]'),
       timeLimit: challenge.time_limit,
-      passingThreshold: (typeof challenge.passing_threshold === 'object' && challenge.passing_threshold !== null) 
-        ? challenge.passing_threshold 
+      passingThreshold: (typeof challenge.passing_threshold === 'object' && challenge.passing_threshold !== null)
+        ? challenge.passing_threshold
         : JSON.parse(challenge.passing_threshold || '{}'),
       hints: Array.isArray(challenge.hints) ? challenge.hints : JSON.parse(challenge.hints || '[]'),
       points: challenge.points || 100,
@@ -135,6 +138,9 @@ class ChallengeModel {
       expectedScreenshotUrl: challenge.expected_screenshot_url,
       courseId: challenge.course_id,
       level: challenge.level,
+      assets: (typeof challenge.assets === 'object' && challenge.assets !== null)
+        ? challenge.assets
+        : JSON.parse(challenge.assets || '{"images":[],"reference":""}'),
       createdAt: challenge.created_at,
       updatedAt: challenge.updated_at
     };

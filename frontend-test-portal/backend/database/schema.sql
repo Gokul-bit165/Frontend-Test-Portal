@@ -59,6 +59,7 @@ CREATE TABLE challenges (
     expected_screenshot_url VARCHAR(255),
     course_id VARCHAR(100),
     level INT,
+    assets JSON,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_difficulty (difficulty),

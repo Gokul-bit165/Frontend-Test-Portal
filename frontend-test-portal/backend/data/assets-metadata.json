@@ -60,16 +60,6 @@
     "uploadedAt": "2025-11-08T08:45:31.475Z"
   },
   {
-    "filename": "plus-icon.png",
-    "originalName": "plus-icon.png",
-    "relativePath": "images/plus-icon.png",
-    "url": "/assets/images/plus-icon.png",
-    "type": "image/png",
-    "size": 300,
-    "category": "images",
-    "uploadedAt": "2025-11-08T08:45:31.137Z"
-  },
-  {
     "filename": "product-1.png",
     "originalName": "product-1.png",
     "relativePath": "images/product-1.png",
@@ -90,13 +80,213 @@
     "uploadedAt": "2025-11-11T16:39:04.804Z"
   },
   {
-    "filename": "ex1-example.png",
-    "originalName": "ex1-example.png",
-    "relativePath": "images/ex1-example.png",
-    "url": "/assets/images/ex1-example.png",
-    "type": "image/png",
-    "size": 196965,
+    "filename": "testimonial.jpg",
+    "originalName": "testimonial.jpg",
+    "relativePath": "images/testimonial.jpg",
+    "url": "/assets/images/testimonial.jpg",
+    "type": "image/jpeg",
+    "size": 9115,
     "category": "general",
-    "uploadedAt": "2025-11-21T09:28:51.330Z"
+    "uploadedAt": "2025-12-11T19:56:49.483Z"
+  },
+  {
+    "filename": "education_support.png",
+    "originalName": "education_support.png",
+    "relativePath": "images/education_support.png",
+    "url": "/assets/images/education_support.png",
+    "type": "image/png",
+    "size": 4302,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:49.539Z"
+  },
+  {
+    "filename": "food_support.jpg",
+    "originalName": "food_support.jpg",
+    "relativePath": "images/food_support.jpg",
+    "url": "/assets/images/food_support.jpg",
+    "type": "image/jpeg",
+    "size": 11291,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:49.666Z"
+  },
+  {
+    "filename": "mindset.jpg",
+    "originalName": "mindset.jpg",
+    "relativePath": "images/mindset.jpg",
+    "url": "/assets/images/mindset.jpg",
+    "type": "image/jpeg",
+    "size": 10699,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:49.714Z"
+  },
+  {
+    "filename": "renewable.jpg",
+    "originalName": "renewable.jpg",
+    "relativePath": "images/renewable.jpg",
+    "url": "/assets/images/renewable.jpg",
+    "type": "image/jpeg",
+    "size": 8286,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:49.783Z"
+  },
+  {
+    "filename": "summit.jpg",
+    "originalName": "summit.jpg",
+    "relativePath": "images/summit.jpg",
+    "url": "/assets/images/summit.jpg",
+    "type": "image/jpeg",
+    "size": 16707,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:49.847Z"
+  },
+  {
+    "filename": "tshirt.jpg",
+    "originalName": "tshirt.jpg",
+    "relativePath": "images/tshirt.jpg",
+    "url": "/assets/images/tshirt.jpg",
+    "type": "image/jpeg",
+    "size": 6322,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:49.912Z"
+  },
+  {
+    "filename": "denim.jpg",
+    "originalName": "denim.jpg",
+    "relativePath": "images/denim.jpg",
+    "url": "/assets/images/denim.jpg",
+    "type": "image/jpeg",
+    "size": 11962,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:49.986Z"
+  },
+  {
+    "filename": "smartwatch.jpg",
+    "originalName": "smartwatch.jpg",
+    "relativePath": "images/smartwatch.jpg",
+    "url": "/assets/images/smartwatch.jpg",
+    "type": "image/jpeg",
+    "size": 8350,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.070Z"
+  },
+  {
+    "filename": "phone.jpg",
+    "originalName": "phone.jpg",
+    "relativePath": "images/phone.jpg",
+    "url": "/assets/images/phone.jpg",
+    "type": "image/jpeg",
+    "size": 7223,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.234Z"
+  },
+  {
+    "filename": "colosseum.jpg",
+    "originalName": "colosseum.jpg",
+    "relativePath": "images/colosseum.jpg",
+    "url": "/assets/images/colosseum.jpg",
+    "type": "image/jpeg",
+    "size": 9784,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.414Z"
+  },
+  {
+    "filename": "tajmahal.jpg",
+    "originalName": "tajmahal.jpg",
+    "relativePath": "images/tajmahal.jpg",
+    "url": "/assets/images/tajmahal.jpg",
+    "type": "image/jpeg",
+    "size": 8086,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.448Z"
+  },
+  {
+    "filename": "bali.jpg",
+    "originalName": "bali.jpg",
+    "relativePath": "images/bali.jpg",
+    "url": "/assets/images/bali.jpg",
+    "type": "image/jpeg",
+    "size": 9864,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.527Z"
+  },
+  {
+    "filename": "maldives.jpg",
+    "originalName": "maldives.jpg",
+    "relativePath": "images/maldives.jpg",
+    "url": "/assets/images/maldives.jpg",
+    "type": "image/jpeg",
+    "size": 6913,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.606Z"
+  },
+  {
+    "filename": "poster_design.jpg",
+    "originalName": "poster_design.jpg",
+    "relativePath": "images/poster_design.jpg",
+    "url": "/assets/images/poster_design.jpg",
+    "type": "image/jpeg",
+    "size": 8062,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.668Z"
+  },
+  {
+    "filename": "logo_design.jpg",
+    "originalName": "logo_design.jpg",
+    "relativePath": "images/logo_design.jpg",
+    "url": "/assets/images/logo_design.jpg",
+    "type": "image/jpeg",
+    "size": 9357,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.712Z"
+  },
+  {
+    "filename": "ecommerce.jpg",
+    "originalName": "ecommerce.jpg",
+    "relativePath": "images/ecommerce.jpg",
+    "url": "/assets/images/ecommerce.jpg",
+    "type": "image/jpeg",
+    "size": 12996,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.775Z"
+  },
+  {
+    "filename": "web_project1.jpg",
+    "originalName": "web_project1.jpg",
+    "relativePath": "images/web_project1.jpg",
+    "url": "/assets/images/web_project1.jpg",
+    "type": "image/jpeg",
+    "size": 10992,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.816Z"
+  },
+  {
+    "filename": "cultural_fest.jpg",
+    "originalName": "cultural_fest.jpg",
+    "relativePath": "images/cultural_fest.jpg",
+    "url": "/assets/images/cultural_fest.jpg",
+    "type": "image/jpeg",
+    "size": 9691,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:50.888Z"
+  },
+  {
+    "filename": "cyber_security.jpg",
+    "originalName": "cyber_security.jpg",
+    "relativePath": "images/cyber_security.jpg",
+    "url": "/assets/images/cyber_security.jpg",
+    "type": "image/jpeg",
+    "size": 15939,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:51.029Z"
+  },
+  {
+    "filename": "ai_summit.jpg",
+    "originalName": "ai_summit.jpg",
+    "relativePath": "images/ai_summit.jpg",
+    "url": "/assets/images/ai_summit.jpg",
+    "type": "image/jpeg",
+    "size": 12018,
+    "category": "general",
+    "uploadedAt": "2025-12-11T19:56:51.134Z"
   }
 ]

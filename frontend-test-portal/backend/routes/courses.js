@@ -43,7 +43,40 @@ const saveJSON = (filePath, data) => {
 
 // Helper to get all courses
 const getCourses = () => {
-  return loadJSON(coursesPath);
+  const courses = loadJSON(coursesPath);
+  if (!courses || courses.length === 0) {
+    return [
+      {
+        id: "course-html-css",
+        title: "HTML & CSS Mastery",
+        description: "Master the fundamentals of web development",
+        thumbnail: null,
+        icon: "🎨",
+        color: "#e34c26",
+        totalLevels: 10,
+        estimatedTime: "20 hours",
+        difficulty: "Beginner",
+        tags: ["HTML", "CSS"],
+        isLocked: false,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: "course-fullstack",
+        title: "Fullstack Development",
+        description: "Become a complete web developer",
+        thumbnail: null,
+        icon: "💻",
+        color: "#3B82F6",
+        totalLevels: 12,
+        estimatedTime: "40 hours",
+        difficulty: "Intermediate",
+        tags: ["Node.js", "React", "Database"],
+        isLocked: false,
+        createdAt: new Date().toISOString()
+      }
+    ];
+  }
+  return courses;
 };
 
 // Helper to save courses
@@ -94,7 +127,7 @@ router.get('/', async (req, res) => {
       console.log('Database error, using JSON file:', dbError.message);
       courses = loadJSON(coursesPath);
     }
-    
+
     // Convert snake_case to camelCase for frontend
     const formattedCourses = courses.map(course => ({
       ...course,
@@ -104,7 +137,7 @@ router.get('/', async (req, res) => {
       estimatedTime: course.estimated_time || course.estimatedTime,
       createdAt: course.created_at || course.createdAt
     }));
-    
+
     res.json(formattedCourses);
   } catch (error) {
     console.error('Error fetching courses:', error);
@@ -126,11 +159,11 @@ router.get('/:courseId', async (req, res) => {
       const courses = loadJSON(coursesPath);
       course = courses.find(c => c.id === req.params.courseId);
     }
-    
+
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
+
     // Convert snake_case to camelCase
     const formattedCourse = {
       ...course,
@@ -140,7 +173,7 @@ router.get('/:courseId', async (req, res) => {
       estimatedTime: course.estimated_time || course.estimatedTime,
       createdAt: course.created_at || course.createdAt
     };
-    
+
     res.json(formattedCourse);
   } catch (error) {
     console.error('Error fetching course:', error);
@@ -155,7 +188,7 @@ router.get('/:courseId', async (req, res) => {
 router.get('/:courseId/levels', async (req, res) => {
   try {
     let challenges = [];
-    
+
     // Try database first
     try {
       challenges = await query(
@@ -168,7 +201,7 @@ router.get('/:courseId/levels', async (req, res) => {
       const allChallenges = getChallenges();
       challenges = allChallenges.filter(c => c.courseId === req.params.courseId);
     }
-    
+
     // Group by level
     const levels = {};
     challenges.forEach(challenge => {
@@ -181,7 +214,7 @@ router.get('/:courseId/levels', async (req, res) => {
         ...challenge,
         courseId: challenge.course_id || challenge.courseId,
         timeLimit: challenge.time_limit || challenge.timeLimit,
-        passingThreshold: typeof challenge.passing_threshold === 'string' 
+        passingThreshold: typeof challenge.passing_threshold === 'string'
           ? JSON.parse(challenge.passing_threshold || '{}')
           : (challenge.passingThreshold || {}),
         expectedSolution: challenge.expected_html ? {
@@ -197,7 +230,7 @@ router.get('/:courseId/levels', async (req, res) => {
           : (challenge.tags || [])
       });
     });
-    
+
     // Convert to array and sort
     const levelsArray = Object.keys(levels).map(level => ({
       level: parseInt(level),
@@ -205,7 +238,7 @@ router.get('/:courseId/levels', async (req, res) => {
       totalQuestions: levels[level].length,
       totalPoints: levels[level].reduce((sum, q) => sum + (q.points || 0), 0)
     })).sort((a, b) => a.level - b.level);
-    
+
     res.json(levelsArray);
   } catch (error) {
     console.error('Error fetching levels:', error);
@@ -222,24 +255,24 @@ router.get('/:courseId/levels/:level/questions', async (req, res) => {
   try {
     const { courseId, level } = req.params;
     const userId = req.query.userId || 'default-user';
-    
+
     // Get all questions for this level (question bank) from database
     const allQuestions = await ChallengeModel.findByCourseLevel(courseId, parseInt(level));
-    
+
     if (allQuestions.length === 0) {
       return res.status(404).json({ error: 'No questions found for this level' });
     }
-    
+
     // Check if user already has assigned questions for this level
     const assignments = getAssignments();
     const assignmentKey = `${userId}-${courseId}-${level}`;
     let userAssignment = assignments.find(a => a.key === assignmentKey);
-    
+
     if (!userAssignment) {
       // First time user accesses this level - assign 2 random questions
       const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
       const selectedQuestions = shuffled.slice(0, Math.min(2, allQuestions.length));
-      
+
       userAssignment = {
         key: assignmentKey,
         userId,
@@ -250,24 +283,24 @@ router.get('/:courseId/levels/:level/questions', async (req, res) => {
         assignedAt: new Date().toISOString(),
         totalAvailable: allQuestions.length
       };
-      
+
       assignments.push(userAssignment);
       saveAssignments(assignments);
-      
+
       console.log(`✅ Assigned ${selectedQuestions.length} random questions to ${userId} for ${courseId} Level ${level}`);
     }
-    
+
     // Return only the assigned questions
-    const assignedQuestions = allQuestions.filter(q => 
+    const assignedQuestions = allQuestions.filter(q =>
       userAssignment.assignedQuestions.includes(q.id)
     );
-    
+
     // Add completion status to each question
     const questionsWithStatus = assignedQuestions.map(q => ({
       ...q,
       isCompleted: userAssignment.completedQuestions.includes(q.id)
     }));
-    
+
     res.json(questionsWithStatus);
   } catch (error) {
     console.error('Failed to fetch questions:', error);
@@ -283,12 +316,17 @@ router.get('/:courseId/levels/:level/questions/:questionId', (req, res) => {
   try {
     const challenges = getChallenges();
     const question = challenges.find(c => c.id === req.params.questionId);
-    
+
     if (!question) {
       return res.status(404).json({ error: 'Question not found' });
     }
-    
-    res.json(question);
+
+    res.json({
+      ...question,
+      assets: (typeof question.assets === 'object' && question.assets !== null)
+        ? question.assets
+        : JSON.parse(question.assets || '{"images":[],"reference":""}')
+    });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch question' });
   }
@@ -302,7 +340,7 @@ router.get('/progress/:userId', (req, res) => {
   try {
     const allProgress = getProgress();
     const userProgress = allProgress.find(p => p.userId === req.params.userId);
-    
+
     if (!userProgress) {
       // Return empty progress for new user
       return res.json({
@@ -312,7 +350,7 @@ router.get('/progress/:userId', (req, res) => {
         achievements: []
       });
     }
-    
+
     res.json(userProgress);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch progress' });
@@ -328,44 +366,44 @@ router.post('/progress/:userId/complete', (req, res) => {
   try {
     const { userId } = req.params;
     const { questionId, courseId, level, score } = req.body;
-    
+
     if (!questionId || !courseId || !level) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
-    
+
     // Update assignment to mark question as completed
     const assignments = getAssignments();
     const assignmentKey = `${userId}-${courseId}-${level}`;
     const assignmentIndex = assignments.findIndex(a => a.key === assignmentKey);
-    
+
     if (assignmentIndex === -1) {
       return res.status(404).json({ error: 'Assignment not found' });
     }
-    
+
     const assignment = assignments[assignmentIndex];
-    
+
     // Add to completed questions if not already there
     if (!assignment.completedQuestions.includes(questionId)) {
       assignment.completedQuestions.push(questionId);
       assignment.lastCompletedAt = new Date().toISOString();
     }
-    
+
     // Check if level is complete (all assigned questions done)
     const levelComplete = assignment.completedQuestions.length === assignment.assignedQuestions.length;
     assignment.isLevelComplete = levelComplete;
-    
+
     if (levelComplete) {
       assignment.completedAt = new Date().toISOString();
       console.log(`🎉 ${userId} completed ${courseId} Level ${level}!`);
     }
-    
+
     assignments[assignmentIndex] = assignment;
     saveAssignments(assignments);
-    
+
     // Update user progress
     const allProgress = getProgress();
     let userProgressIndex = allProgress.findIndex(p => p.userId === userId);
-    
+
     if (userProgressIndex === -1) {
       // Create new progress entry
       allProgress.push({
@@ -376,9 +414,9 @@ router.post('/progress/:userId/complete', (req, res) => {
       });
       userProgressIndex = allProgress.length - 1;
     }
-    
+
     const userProgress = allProgress[userProgressIndex];
-    
+
     // Find or create course progress
     let courseProgress = userProgress.courses.find(c => c.courseId === courseId);
     if (!courseProgress) {
@@ -390,24 +428,24 @@ router.post('/progress/:userId/complete', (req, res) => {
       };
       userProgress.courses.push(courseProgress);
     }
-    
+
     // Update points
     const question = getChallenges().find(q => q.id === questionId);
     const points = score || question?.points || 100;
     courseProgress.totalPoints += points;
     userProgress.totalPoints += points;
-    
+
     // Mark level as complete and unlock next level
     if (levelComplete && !courseProgress.completedLevels.includes(parseInt(level))) {
       courseProgress.completedLevels.push(parseInt(level));
       courseProgress.currentLevel = Math.min(parseInt(level) + 1, 6); // Max 6 levels
-      
+
       console.log(`🔓 Unlocked Level ${courseProgress.currentLevel} for ${userId}`);
     }
-    
+
     allProgress[userProgressIndex] = userProgress;
     saveProgress(allProgress);
-    
+
     res.json({
       message: 'Progress updated',
       levelComplete,
@@ -434,20 +472,20 @@ router.put('/:courseId', (req, res) => {
   try {
     const { courseId } = req.params;
     const updatedCourse = req.body;
-    
+
     const courses = getCourses();
     const courseIndex = courses.findIndex(c => c.id === courseId);
-    
+
     if (courseIndex === -1) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
+
     // Update course while keeping the ID
     courses[courseIndex] = { ...courses[courseIndex], ...updatedCourse, id: courseId };
-    
+
     // Save to file
     fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
-    
+
     res.json({
       message: 'Course updated successfully',
       course: courses[courseIndex]
@@ -465,19 +503,19 @@ router.put('/:courseId', (req, res) => {
 router.post('/', (req, res) => {
   try {
     const newCourse = req.body;
-    
+
     // Validate required fields
     if (!newCourse.id || !newCourse.title) {
       return res.status(400).json({ error: 'Course ID and title are required' });
     }
-    
+
     const courses = getCourses();
-    
+
     // Check if course ID already exists
     if (courses.find(c => c.id === newCourse.id)) {
       return res.status(400).json({ error: 'Course ID already exists' });
     }
-    
+
     // Add default values
     const course = {
       totalLevels: 6,
@@ -486,12 +524,12 @@ router.post('/', (req, res) => {
       tags: [],
       ...newCourse
     };
-    
+
     courses.push(course);
-    
+
     // Save to file
     fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
-    
+
     res.status(201).json({
       message: 'Course created successfully',
       course
@@ -509,20 +547,20 @@ router.post('/', (req, res) => {
 router.delete('/:courseId', (req, res) => {
   try {
     const { courseId } = req.params;
-    
+
     const courses = getCourses();
     const courseIndex = courses.findIndex(c => c.id === courseId);
-    
+
     if (courseIndex === -1) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
+
     const deletedCourse = courses[courseIndex];
     courses.splice(courseIndex, 1);
-    
+
     // Save to file
     fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
-    
+
     res.json({
       message: 'Course deleted successfully',
       course: deletedCourse
@@ -541,7 +579,7 @@ router.get('/:courseId/questions', async (req, res) => {
   try {
     const { courseId } = req.params;
     let courseQuestions;
-    
+
     try {
       // Query challenges from database by course_id
       const challenges = await query('SELECT * FROM challenges WHERE course_id = ? ORDER BY level, created_at', [courseId]);
@@ -555,8 +593,8 @@ router.get('/:courseId/questions', async (req, res) => {
         instructions: c.instructions,
         tags: Array.isArray(c.tags) ? c.tags : JSON.parse(c.tags || '[]'),
         timeLimit: c.time_limit,
-        passingThreshold: (typeof c.passing_threshold === 'object' && c.passing_threshold !== null) 
-          ? c.passing_threshold 
+        passingThreshold: (typeof c.passing_threshold === 'object' && c.passing_threshold !== null)
+          ? c.passing_threshold
           : JSON.parse(c.passing_threshold || '{}'),
         points: c.points || 0,
         hints: Array.isArray(c.hints) ? c.hints : JSON.parse(c.hints || '[]'),
@@ -564,14 +602,28 @@ router.get('/:courseId/questions', async (req, res) => {
           html: c.expected_html,
           css: c.expected_css,
           js: c.expected_js
-        }
+        },
+        assets: (typeof c.assets === 'object' && c.assets !== null)
+          ? c.assets
+          : JSON.parse(c.assets || '{"images":[],"reference":""}')
       }));
     } catch (dbError) {
       console.log('Database error, using JSON file:', dbError.message);
       const challenges = getChallenges();
       courseQuestions = challenges.filter(c => c.courseId === courseId);
     }
-    
+
+    // Debug output for assets
+    if (courseQuestions && courseQuestions.length > 0) {
+      console.log(`[DEBUG] GET /courses/${courseId}/questions returning ${courseQuestions.length} items`);
+      const sample = courseQuestions.find(q => q.assets && (q.assets.images?.length > 0 || Array.isArray(q.assets)));
+      if (sample) {
+        console.log(`[DEBUG] Sample question ${sample.id} assets:`, JSON.stringify(sample.assets));
+      } else {
+        console.log(`[DEBUG] No questions with assets found`);
+      }
+    }
+
     res.json(courseQuestions);
   } catch (error) {
     console.error('Error fetching course questions:', error);
@@ -579,31 +631,41 @@ router.get('/:courseId/questions', async (req, res) => {
   }
 });
 
-/**
- * PUT /api/courses/questions/:questionId
- * Update a question (Admin only)
- */
-router.put('/questions/:questionId', (req, res) => {
+// Update a question (Admin only)
+router.put('/questions/:questionId', async (req, res) => {
   try {
     const { questionId } = req.params;
     const updatedQuestion = req.body;
-    
+    console.log(`[DEBUG] PUT Question ${questionId} - Assets payload:`, JSON.stringify(updatedQuestion.assets || 'NO ASSETS'));
+
+    let updatedDbQuestion = null;
+
+    // 1. Update in Database
+    try {
+      updatedDbQuestion = await ChallengeModel.update(questionId, updatedQuestion);
+    } catch (dbError) {
+      console.error('Database update failed:', dbError.message);
+    }
+
+    // 2. Update in JSON File (Legacy/Backup)
     const challenges = getChallenges();
     const questionIndex = challenges.findIndex(c => c.id === questionId);
-    
-    if (questionIndex === -1) {
+
+    if (questionIndex !== -1) {
+      // Update question while keeping the ID
+      challenges[questionIndex] = { ...challenges[questionIndex], ...updatedQuestion, id: questionId };
+      // Update timestamp
+      challenges[questionIndex].updatedAt = new Date().toISOString();
+      // Save to file
+      fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
+    } else if (!updatedDbQuestion) {
+      // If not in DB AND not in JSON, then it's a 404
       return res.status(404).json({ error: 'Question not found' });
     }
-    
-    // Update question while keeping the ID
-    challenges[questionIndex] = { ...challenges[questionIndex], ...updatedQuestion, id: questionId };
-    
-    // Save to file
-    fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
-    
+
     res.json({
       message: 'Question updated successfully',
-      question: challenges[questionIndex]
+      question: updatedDbQuestion || challenges[questionIndex]
     });
   } catch (error) {
     console.error('Question update error:', error);
@@ -611,27 +673,24 @@ router.put('/questions/:questionId', (req, res) => {
   }
 });
 
-/**
- * POST /api/courses/:courseId/questions
- * Create a new question for a course (Admin only)
- */
-router.post('/:courseId/questions', (req, res) => {
+// Create a new question for a course (Admin only)
+router.post('/:courseId/questions', async (req, res) => {
   try {
     const { courseId } = req.params;
     const newQuestion = req.body;
-    
+
     // Validate required fields
     if (!newQuestion.id || !newQuestion.title || !newQuestion.level) {
       return res.status(400).json({ error: 'Question ID, title, and level are required' });
     }
-    
+
     const challenges = getChallenges();
-    
+
     // Check if question ID already exists
     if (challenges.find(c => c.id === newQuestion.id)) {
       return res.status(400).json({ error: 'Question ID already exists' });
     }
-    
+
     // Add default values
     const question = {
       courseId,
@@ -640,14 +699,22 @@ router.post('/:courseId/questions', (req, res) => {
       isLocked: false,
       hints: [],
       assets: { images: [], reference: '' },
-      ...newQuestion
+      ...newQuestion,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
-    
+
+    // 1. Save to Database
+    try {
+      await ChallengeModel.create(question);
+    } catch (dbError) {
+      console.error('Database create failed:', dbError.message);
+    }
+
+    // 2. Save to JSON File (Legacy/Backup)
     challenges.push(question);
-    
-    // Save to file
     fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
-    
+
     res.status(201).json({
       message: 'Question created successfully',
       question
@@ -662,23 +729,25 @@ router.post('/:courseId/questions', (req, res) => {
  * DELETE /api/courses/questions/:questionId
  * Delete a question (Admin only)
  */
-router.delete('/questions/:questionId', (req, res) => {
+router.delete('/questions/:questionId', async (req, res) => {
   try {
     const { questionId } = req.params;
-    
+
+    // Delete from database
+    await ChallengeModel.delete(questionId);
+
+    // Also remove from JSON file backup/cache
     const challenges = getChallenges();
     const questionIndex = challenges.findIndex(c => c.id === questionId);
-    
-    if (questionIndex === -1) {
-      return res.status(404).json({ error: 'Question not found' });
+
+    let deletedQuestion = null;
+    if (questionIndex !== -1) {
+      deletedQuestion = challenges[questionIndex];
+      challenges.splice(questionIndex, 1);
+      // Save to file
+      fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
     }
-    
-    const deletedQuestion = challenges[questionIndex];
-    challenges.splice(questionIndex, 1);
-    
-    // Save to file
-    fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
-    
+
     res.json({
       message: 'Question deleted successfully',
       question: deletedQuestion
@@ -698,23 +767,23 @@ router.post('/:courseId/questions/bulk', (req, res) => {
   try {
     const { courseId } = req.params;
     const { questions } = req.body;
-    
+
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
       return res.status(400).json({ error: 'Questions array required' });
     }
-    
+
     // Validate course exists
     const courses = getCourses();
     const course = courses.find(c => c.id === courseId);
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
+
     const challenges = getChallenges();
     let addedCount = 0;
     let skippedCount = 0;
     const errors = [];
-    
+
     questions.forEach((question, index) => {
       try {
         // Validate required fields
@@ -723,14 +792,14 @@ router.post('/:courseId/questions/bulk', (req, res) => {
           skippedCount++;
           return;
         }
-        
+
         // Check if question ID already exists
         if (challenges.find(c => c.id === question.id)) {
           errors.push(`Question ${index + 1}: ID "${question.id}" already exists`);
           skippedCount++;
           return;
         }
-        
+
         // Add courseId if not present
         const newQuestion = {
           ...question,
@@ -738,7 +807,7 @@ router.post('/:courseId/questions/bulk', (req, res) => {
           createdAt: question.createdAt || new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
-        
+
         challenges.push(newQuestion);
         addedCount++;
       } catch (err) {
@@ -746,12 +815,12 @@ router.post('/:courseId/questions/bulk', (req, res) => {
         skippedCount++;
       }
     });
-    
+
     // Save to file
     if (addedCount > 0) {
       fs.writeFileSync(challengesPath, JSON.stringify(challenges, null, 2));
     }
-    
+
     res.json({
       message: 'Bulk upload completed',
       added: addedCount,
@@ -774,20 +843,20 @@ router.get('/:courseId/levels/:level/randomize', (req, res) => {
   try {
     const { courseId, level } = req.params;
     const count = parseInt(req.query.count) || 2;
-    
+
     const challenges = getChallenges();
     const levelQuestions = challenges.filter(
       c => c.courseId === courseId && c.level === parseInt(level)
     );
-    
+
     if (levelQuestions.length === 0) {
       return res.json([]);
     }
-    
+
     // Shuffle and pick random questions
     const shuffled = [...levelQuestions].sort(() => 0.5 - Math.random());
     const randomQuestions = shuffled.slice(0, Math.min(count, levelQuestions.length));
-    
+
     res.json({
       questions: randomQuestions,
       totalAvailable: levelQuestions.length,
@@ -874,7 +943,7 @@ router.get('/sample/json', (req, res) => {
       }
     }
   ];
-  
+
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Content-Disposition', 'attachment; filename=sample-questions.json');
   res.json(sampleQuestions);
@@ -885,18 +954,74 @@ router.get('/sample/json', (req, res) => {
  * Download sample CSV template for bulk upload
  */
 router.get('/sample/csv', (req, res) => {
-  const csvContent = `id,courseId,level,questionNumber,title,description,instructions,timeLimit,points,tags,hints
-course-id-l1-q1,course-html-css,1,1,"Sample Question","Brief description","Detailed instructions here",15,100,"HTML,CSS","Hint 1|Hint 2|Hint 3"
-course-id-l1-q2,course-html-css,1,2,"Another Question","Second example","Build something similar",20,150,"HTML,CSS,Flexbox","Use what you learned in Q1"
-course-id-l2-q1,course-html-css,2,1,"Level 2 Question","More advanced","Complex instructions",30,200,"HTML,CSS,JavaScript","Hint 1|Hint 2"
+  try {
+    const { courseId, level } = req.query;
 
-Note: This CSV format is simplified. For complex questions with assets and expected solutions use JSON format.
-For expectedSolution HTML/CSS/JS use the JSON format or add them via the web interface after CSV import.`;
-  
-  res.setHeader('Content-Type', 'text/csv');
-  res.setHeader('Content-Disposition', 'attachment; filename=sample-questions.csv');
-  res.send(csvContent);
+    // Complex Simplified Schema Headers
+    const headers = [
+      'id', 'courseId', 'level', 'questionNumber', 'title', 'description', 'instructions',
+      'assets/reference', 'hints/0', 'hints/1', 'hints/2', 'tags/0', 'tags/1',
+      'timeLimit', 'points', 'passingThreshold/structure', 'passingThreshold/style', 'passingThreshold/functionality',
+      'isLocked', 'prerequisite', 'expectedSolution/html', 'expectedSolution/css', 'expectedSolution/js'
+    ];
+
+    // Smart ID generation
+    const cId = courseId || 'course-full';
+    const lId = level || '1';
+    const qCount = 5; // Generate 5 sample rows
+
+    const rows = [];
+
+    for (let i = 1; i <= qCount; i++) {
+      rows.push([
+        `${cId}-l${lId}-q${i}`,
+        cId,
+        lId,
+        i,
+        `Level ${lId} - Question ${i}`,
+        `Design an interface...`,
+        `Use semantic HTML...`,
+        '', // assets/reference
+        `Hint 1: Use Flexbox`,
+        `Hint 2: Apply padding`,
+        `Hint 3: Test responsiveness`,
+        'HTML',
+        'CSS',
+        '60',
+        '100',
+        '70', '80', '75',
+        'FALSE',
+        i > 1 ? `${cId}-l${lId}-q${i - 1}` : '', // prerequisite
+        '<!DOCTYPE html>...',
+        '.container { display: flex; }',
+        '' // js
+      ]);
+    }
+
+    // Helper to quote string if needed
+    const quote = (str) => {
+      if (str === null || str === undefined) return '';
+      const stringField = String(str);
+      if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n') || stringField.includes('\t')) {
+        return `"${stringField.replace(/"/g, '""')}"`;
+      }
+      return stringField;
+    };
+
+    const csvContent =
+      headers.join(',') + '\n' +
+      rows.map(row => row.map(quote).join(',')).join('\n');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename=${cId}-level-${lId}-template.csv`);
+    res.send(csvContent);
+  } catch (error) {
+    console.error('CSV Template download error:', error);
+    res.status(500).json({ error: 'Failed to download CSV template' });
+  }
 });
+
+
 
 /**
  * GET /api/courses/:courseId/levels/:level/template
@@ -904,7 +1029,7 @@ For expectedSolution HTML/CSS/JS use the JSON format or add them via the web int
  */
 router.get('/:courseId/levels/:level/template', (req, res) => {
   const { courseId, level } = req.params;
-  
+
   const sampleQuestions = [
     {
       id: `${courseId}-l${level}-q1`,
@@ -969,7 +1094,7 @@ router.get('/:courseId/levels/:level/template', (req, res) => {
       }
     }
   ];
-  
+
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Content-Disposition', `attachment; filename=${courseId}-level-${level}-template.json`);
   res.json(sampleQuestions);
@@ -984,17 +1109,21 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
   try {
     const { courseId, level } = req.params;
     const { questions, randomizeCount } = req.body;
-    
+
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
       return res.status(400).json({ error: 'Questions array required' });
     }
-    
+
     // Validate course exists
     const courses = getCourses();
     const course = courses.find(c => c.id === courseId);
     if (!course) {
+      console.warn(`[Bulk Upload] Course not found: ${courseId}`);
       return res.status(404).json({ error: 'Course not found' });
     }
+
+    console.log(`[Bulk Upload] Processing ${questions.length} questions for ${courseId} Level ${level}`);
+    console.log(`[Bulk Upload] First question sample:`, JSON.stringify(questions[0]));
 
     // Store randomize count in course level settings
     if (!course.levelSettings) {
@@ -1004,22 +1133,23 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
       course.levelSettings[level] = {};
     }
     course.levelSettings[level].randomizeCount = randomizeCount || 2;
-    
+
     const challenges = getChallenges();
     let addedCount = 0;
     let updatedCount = 0;
     let skippedCount = 0;
     const errors = [];
-    
+
     questions.forEach((question, index) => {
       try {
         // Validate required fields
         if (!question.id || !question.title) {
+          console.warn(`[Bulk Upload] Skipping Q${index}: Missing id/title`, question);
           errors.push(`Question ${index + 1}: Missing required fields (id, title)`);
           skippedCount++;
           return;
         }
-        
+
         // Force the level to match the URL parameter
         const questionData = {
           ...question,
@@ -1028,7 +1158,7 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
           createdAt: question.createdAt || new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
-        
+
         // Check if question ID already exists
         const existingIndex = challenges.findIndex(c => c.id === question.id);
         if (existingIndex !== -1) {
@@ -1041,21 +1171,24 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
           addedCount++;
         }
       } catch (err) {
+        console.error(`[Bulk Upload] Error processing Q${index}:`, err);
         errors.push(`Question ${index + 1}: ${err.message}`);
         skippedCount++;
       }
     });
-    
+
+    console.log(`[Bulk Upload] Complete. Added: ${addedCount}, Updated: ${updatedCount}, Skipped: ${skippedCount}`);
+
     // Save challenges
     if (addedCount > 0 || updatedCount > 0) {
       saveChallenges(challenges);
-      
+
       // Save course with updated level settings
       const courseIndex = courses.findIndex(c => c.id === courseId);
       courses[courseIndex] = course;
       saveCourses(courses);
     }
-    
+
     res.json({
       message: 'Question bank uploaded successfully',
       added: addedCount,
@@ -1080,14 +1213,14 @@ router.put('/:courseId/restrictions', (req, res) => {
   try {
     const { courseId } = req.params;
     const { blockCopy, blockPaste, forceFullscreen, maxViolations, timeLimit } = req.body;
-    
+
     const courses = getCourses();
     const courseIndex = courses.findIndex(c => c.id === courseId);
-    
+
     if (courseIndex === -1) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
+
     // Update restrictions
     courses[courseIndex].restrictions = {
       blockCopy: blockCopy !== undefined ? blockCopy : true,
@@ -1096,9 +1229,9 @@ router.put('/:courseId/restrictions', (req, res) => {
       maxViolations: maxViolations || 3,
       timeLimit: timeLimit !== undefined ? timeLimit : 0 // in minutes, 0 = no limit
     };
-    
+
     fs.writeFileSync(coursesPath, JSON.stringify(courses, null, 2));
-    
+
     res.json({
       message: 'Restrictions updated successfully',
       restrictions: courses[courseIndex].restrictions
@@ -1118,11 +1251,11 @@ router.get('/:courseId/restrictions', (req, res) => {
     const { courseId } = req.params;
     const courses = getCourses();
     const course = courses.find(c => c.id === courseId);
-    
+
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
+
     // Return restrictions or defaults
     const restrictions = course.restrictions || {
       blockCopy: true,
@@ -1131,7 +1264,7 @@ router.get('/:courseId/restrictions', (req, res) => {
       maxViolations: 3,
       timeLimit: 0
     };
-    
+
     res.json(restrictions);
   } catch (error) {
     console.error('Get restrictions error:', error);
@@ -1148,11 +1281,11 @@ router.get('/:courseId/level-settings', (req, res) => {
     const { courseId } = req.params;
     const courses = getCourses();
     const course = courses.find(c => c.id === courseId);
-    
+
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
     }
-    
+
     res.json(course.levelSettings || {});
   } catch (error) {
     console.error('Get level settings error:', error);

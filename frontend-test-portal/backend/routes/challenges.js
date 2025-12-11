@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
       console.log('Database error, using JSON file:', dbError.message);
       challenges = loadJSON(challengesPath);
     }
-    
+
     // Remove expected solutions for candidate view
     const publicChallenges = challenges.map(challenge => ({
       id: challenge.id,
@@ -78,9 +78,10 @@ router.get('/', async (req, res) => {
       timeLimit: challenge.timeLimit || challenge.time_limit,
       passingThreshold: challenge.passingThreshold || {},
       courseId: challenge.courseId || challenge.course_id,
-      level: challenge.level
+      level: challenge.level,
+      assets: challenge.assets || { images: [], reference: '' }
     }));
-    
+
     res.json(publicChallenges);
   } catch (error) {
     console.error('Error fetching challenges:', error);
@@ -95,7 +96,7 @@ router.get('/', async (req, res) => {
 router.get('/level-questions', async (req, res) => {
   try {
     const { userId, courseId, level, forceNew } = req.query;
-    
+
     if (!userId || !courseId || !level) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
@@ -114,7 +115,7 @@ router.get('/level-questions', async (req, res) => {
     } catch (dbError) {
       console.log('Database error, using JSON file:', dbError.message);
       const allChallenges = getAllChallenges();
-      levelQuestions = allChallenges.filter(c => 
+      levelQuestions = allChallenges.filter(c =>
         c.courseId === courseId && c.level === parseInt(level)
       );
     }
@@ -138,12 +139,12 @@ router.get('/level-questions', async (req, res) => {
       // Select 2 random questions (or all if less than 2)
       const shuffled = [...uniqueLevelQuestions].sort(() => 0.5 - Math.random());
       const selectedQuestions = shuffled.slice(0, Math.min(2, shuffled.length));
-      
+
       // Remove old assignment if it exists and forceNew is true
       if (forceNew === 'true' && userAssignment) {
         assignments = assignments.filter(a => a.key !== assignmentKey);
       }
-      
+
       userAssignment = {
         key: assignmentKey,
         userId,
@@ -154,7 +155,7 @@ router.get('/level-questions', async (req, res) => {
         assignedAt: new Date().toISOString(),
         totalAvailable: levelQuestions.length
       };
-      
+
       // Add or update assignment
       if (forceNew === 'true') {
         assignments.push(userAssignment);
@@ -203,13 +204,16 @@ router.get('/:id', async (req, res) => {
       const allChallenges = getAllChallenges();
       challenge = allChallenges.find(c => c.id === req.params.id);
     }
-    
+
     if (!challenge) {
       return res.status(404).json({ error: 'Challenge not found' });
     }
-    
+
     // Return full challenge including expected solution (for candidate view and preview)
-    res.json(challenge);
+    res.json({
+      ...challenge,
+      assets: challenge.assets || { images: [], reference: '' }
+    });
   } catch (error) {
     console.error('Error fetching challenge:', error);
     res.status(500).json({ error: 'Failed to fetch challenge' });
@@ -224,11 +228,11 @@ router.get('/:id/solution', (req, res) => {
   try {
     const allChallenges = getAllChallenges();
     const challenge = allChallenges.find(c => c.id === req.params.id);
-    
+
     if (!challenge) {
       return res.status(404).json({ error: 'Challenge not found' });
     }
-    
+
     res.json(challenge);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch challenge solution' });
@@ -247,10 +251,10 @@ router.post('/', (req, res) => {
       ...req.body,
       createdAt: new Date().toISOString()
     };
-    
+
     challenges.push(newChallenge);
     saveChallenges(challenges);
-    
+
     res.status(201).json(newChallenge);
   } catch (error) {
     console.error('Error creating challenge:', error);
@@ -266,18 +270,18 @@ router.put('/:id', (req, res) => {
   try {
     const challenges = getChallenges();
     const index = challenges.findIndex(c => c.id === req.params.id);
-    
+
     if (index === -1) {
       return res.status(404).json({ error: 'Challenge not found' });
     }
-    
+
     challenges[index] = {
       ...challenges[index],
       ...req.body,
       id: req.params.id,
       updatedAt: new Date().toISOString()
     };
-    
+
     saveChallenges(challenges);
     res.json(challenges[index]);
   } catch (error) {
@@ -294,14 +298,14 @@ router.delete('/:id', (req, res) => {
   try {
     const challenges = getChallenges();
     const index = challenges.findIndex(c => c.id === req.params.id);
-    
+
     if (index === -1) {
       return res.status(404).json({ error: 'Challenge not found' });
     }
-    
+
     challenges.splice(index, 1);
     saveChallenges(challenges);
-    
+
     res.json({ message: 'Challenge deleted successfully' });
   } catch (error) {
     console.error('Error deleting challenge:', error);
