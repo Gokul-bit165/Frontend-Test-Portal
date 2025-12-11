@@ -4,6 +4,7 @@ import axios from 'axios';
 import QuestionManagerModal from '../components/QuestionManagerModal';
 import SubmissionList from '../components/SubmissionList';
 import GroupedSubmissionsList from '../components/GroupedSubmissionsList';
+import AssetsTab from '../components/AssetsTab';
 import { clearAdminSession, notifySessionChange } from '../utils/session';
 
 const OPEN_SOURCE_RESOURCES = [
@@ -46,9 +47,8 @@ const buildFallbackAiQuestion = ({ prompt, screenshotName, assets, libraries }) 
 
   return {
     title: `AI Draft: ${keywords.charAt(0).toUpperCase() + keywords.slice(1)}`,
-    summary: `Generate a coding challenge that recreates "${safePrompt}"${
-      screenshotName ? ` using the screenshot ${screenshotName} as the primary reference.` : '.'
-    }`,
+    summary: `Generate a coding challenge that recreates "${safePrompt}"${screenshotName ? ` using the screenshot ${screenshotName} as the primary reference.` : '.'
+      }`,
     instructions: [
       'Study the uploaded screenshot and outline the semantic sections you observe.',
       'Use any highlighted assets plus the selected open-source libraries to stay faithful to the reference.',
@@ -120,6 +120,7 @@ export default function AdminDashboard() {
 
   // Assets data
   const [assets, setAssets] = useState([]);
+  const [selectedAssets, setSelectedAssets] = useState(new Set());
   const [uploadingAsset, setUploadingAsset] = useState(false);
   const [assetSearch, setAssetSearch] = useState('');
 
@@ -162,7 +163,7 @@ export default function AdminDashboard() {
   const loadUsers = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const res = await axios.get('http://localhost:5000/api/users', {
+      const res = await axios.get('/api/users', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUsers(res.data || []);
@@ -175,9 +176,9 @@ export default function AdminDashboard() {
   const loadSubmissions = async () => {
     try {
       if (submissionViewMode === 'grouped') {
-        const res = await axios.get('http://localhost:5000/api/admin/submissions/grouped');
+        const res = await axios.get('/api/admin/submissions/grouped');
         setGroupedSessions(res.data || []);
-        
+
         // Calculate stats from sessions
         let totalSubmissions = 0;
         res.data.forEach(session => {
@@ -185,7 +186,7 @@ export default function AdminDashboard() {
         });
         setStats(prev => ({ ...prev, totalSubmissions }));
       } else {
-        const res = await axios.get('http://localhost:5000/api/submissions');
+        const res = await axios.get('/api/submissions');
         setSubmissions(res.data || []);
         setStats(prev => ({ ...prev, totalSubmissions: res.data?.length || 0 }));
       }
@@ -214,7 +215,7 @@ export default function AdminDashboard() {
     });
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/submissions/${submissionId}`);
+      const res = await axios.get(`/api/submissions/${submissionId}`);
       setDetailModal({
         open: true,
         loading: false,
@@ -557,7 +558,7 @@ export default function AdminDashboard() {
 
   const loadCourses = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/courses');
+      const res = await axios.get('/api/courses');
       setCourses(res.data || []);
       setStats(prev => ({ ...prev, totalCourses: res.data?.length || 0 }));
     } catch (error) {
@@ -575,7 +576,7 @@ export default function AdminDashboard() {
 
   const loadChallenges = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/challenges');
+      const res = await axios.get('/api/challenges');
       setChallenges(res.data || []);
       setStats(prev => ({ ...prev, totalChallenges: res.data?.length || 0 }));
     } catch (error) {
@@ -585,10 +586,39 @@ export default function AdminDashboard() {
 
   const loadAssets = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/assets');
+      const res = await axios.get('/api/assets');
       setAssets(res.data || []);
     } catch (error) {
       console.error('Failed to load assets:', error);
+    }
+  };
+
+  const toggleAssetSelection = (filename) => {
+    const newSelected = new Set(selectedAssets);
+    if (newSelected.has(filename)) {
+      newSelected.delete(filename);
+    } else {
+      newSelected.add(filename);
+    }
+    setSelectedAssets(newSelected);
+  };
+
+  const handleBulkDelete = async () => {
+    if (!window.confirm(`Are you sure you want to delete ${selectedAssets.size} assets?`)) return;
+
+    let deletedCount = 0;
+    for (const filename of selectedAssets) {
+      try {
+        await axios.delete(`/api/assets/${filename}`);
+        deletedCount++;
+      } catch (error) {
+        console.error(`Failed to delete ${filename}:`, error);
+      }
+    }
+
+    if (deletedCount > 0) {
+      setSelectedAssets(new Set());
+      loadAssets();
     }
   };
 
@@ -603,7 +633,7 @@ export default function AdminDashboard() {
         formData.append('asset', file);
         formData.append('category', 'general'); // Can be changed to dropdown value
 
-        await axios.post('http://localhost:5000/api/assets/upload', formData, {
+        await axios.post('/api/assets/upload', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
@@ -620,7 +650,7 @@ export default function AdminDashboard() {
   const handleDeleteAsset = async (filename) => {
     if (!confirm('Delete this asset? This cannot be undone.')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/assets/${filename}`);
+      await axios.delete(`/api/assets/${filename}`);
       await loadAssets();
       alert('Asset deleted successfully');
     } catch (error) {
@@ -719,7 +749,7 @@ export default function AdminDashboard() {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/ai/generate-question', payload, {
+      const response = await axios.post('/api/ai/generate-question', payload, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setAiGeneratedQuestion(response.data);
@@ -749,7 +779,7 @@ export default function AdminDashboard() {
     try {
       const token = localStorage.getItem('adminToken');
       const response = await axios.put(
-        `http://localhost:5000/api/users/${userId}`,
+        `/api/users/${userId}`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -789,7 +819,7 @@ export default function AdminDashboard() {
     if (!confirm('Delete this user? This will remove all their progress.')) return;
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.delete(`http://localhost:5000/api/users/${userId}`, {
+      await axios.delete(`/api/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       await loadUsers();
@@ -806,7 +836,7 @@ export default function AdminDashboard() {
   const handleDeleteSubmission = async (submissionId) => {
     if (!confirm('Delete this submission?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/submissions/${submissionId}`);
+      await axios.delete(`/api/submissions/${submissionId}`);
       await loadSubmissions();
       alert('Submission deleted successfully');
     } catch (error) {
@@ -817,7 +847,7 @@ export default function AdminDashboard() {
   const handleReEvaluate = async (submissionId) => {
     if (!confirm('Re-evaluate this submission?')) return;
     try {
-      await axios.post(`http://localhost:5000/api/evaluate`, { submissionId });
+      await axios.post(`/api/evaluate`, { submissionId });
       await loadSubmissions();
       alert('Re-evaluation complete!');
     } catch (error) {
@@ -828,9 +858,9 @@ export default function AdminDashboard() {
   const handleSaveCourse = async (courseData) => {
     try {
       if (editingCourse?.id) {
-        await axios.put(`http://localhost:5000/api/courses/${editingCourse.id}`, courseData);
+        await axios.put(`/api/courses/${editingCourse.id}`, courseData);
       } else {
-        await axios.post('http://localhost:5000/api/courses', courseData);
+        await axios.post('/api/courses', courseData);
       }
       await loadCourses();
       setShowCourseModal(false);
@@ -844,7 +874,7 @@ export default function AdminDashboard() {
   const handleDeleteCourse = async (courseId) => {
     if (!confirm('Delete this course? This will affect all users enrolled.')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/courses/${courseId}`);
+      await axios.delete(`/api/courses/${courseId}`);
       await loadCourses();
       alert('Course deleted successfully');
     } catch (error) {
@@ -855,9 +885,9 @@ export default function AdminDashboard() {
   const handleSaveChallenge = async (challengeData) => {
     try {
       if (editingChallenge?.id) {
-        await axios.put(`http://localhost:5000/api/challenges/${editingChallenge.id}`, challengeData);
+        await axios.put(`/api/challenges/${editingChallenge.id}`, challengeData);
       } else {
-        await axios.post('http://localhost:5000/api/challenges', challengeData);
+        await axios.post('/api/challenges', challengeData);
       }
       await loadChallenges();
       setShowChallengeModal(false);
@@ -871,7 +901,7 @@ export default function AdminDashboard() {
   const handleDeleteChallenge = async (challengeId) => {
     if (!confirm('Delete this challenge?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/challenges/${challengeId}`);
+      await axios.delete(`/api/challenges/${challengeId}`);
       await loadChallenges();
       alert('Challenge deleted successfully');
     } catch (error) {
@@ -879,7 +909,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const filteredUsers = users.filter(u => 
+  const filteredUsers = users.filter(u =>
     u.username?.toLowerCase().includes(userSearch.toLowerCase()) ||
     u.userId?.toLowerCase().includes(userSearch.toLowerCase())
   );
@@ -892,25 +922,31 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold">🛡️ Admin Dashboard</h1>
-              <p className="text-indigo-100 mt-1">Comprehensive platform management</p>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center text-white text-lg">
+                🛡️
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+                <p className="text-xs text-gray-500">Platform Management</p>
+              </div>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => navigate('/')}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                title="Go to Home"
               >
                 🏠 Home
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
               >
-                🚪 Logout
+                Logout
               </button>
             </div>
           </div>
@@ -918,27 +954,27 @@ export default function AdminDashboard() {
       </header>
 
       {/* Navigation Tabs */}
-      <div className="bg-white border-b shadow-sm sticky top-0 z-10">
+      <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-1">
+          <div className="flex gap-6 overflow-x-auto">
             {[
-              { id: 'overview', label: '📊 Overview', icon: '📊' },
-              { id: 'users', label: '👥 Users', icon: '👥' },
-              { id: 'courses', label: '📚 Courses', icon: '📚' },
-              { id: 'questions', label: '❓ Questions', icon: '❓' },
-              { id: 'submissions', label: '📝 Submissions', icon: '📝' },
-              // { id: 'ai-agent', label: '🤖 Question AI Agent', icon: '🤖' },
-              { id: 'assets', label: '📁 Assets', icon: '📁' }
+              { id: 'overview', label: 'Overview', icon: '📊' },
+              { id: 'users', label: 'Users', icon: '👥' },
+              { id: 'courses', label: 'Courses', icon: '📚' },
+              { id: 'questions', label: 'Questions', icon: '❓' },
+              { id: 'submissions', label: 'Submissions', icon: '📝' },
+              // { id: 'ai-agent', label: 'AI Agent', icon: '🤖' },
+              { id: 'assets', label: 'Assets', icon: '📁' }
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-4 font-semibold transition-colors border-b-4 ${
-                  activeTab === tab.id
-                    ? 'border-indigo-600 text-indigo-600 bg-indigo-50'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
+                className={`flex items-center gap-2 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
               >
+                <span>{tab.icon}</span>
                 {tab.label}
               </button>
             ))}
@@ -954,79 +990,106 @@ export default function AdminDashboard() {
             <p className="mt-4 text-gray-600">Loading data...</p>
           </div>
         ) : (
-          <>
+          <div>
             {/* Overview Tab */}
             {activeTab === 'overview' && (
               <div>
                 <h2 className="text-2xl font-bold mb-6">Platform Overview</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
-                    <div className="text-sm opacity-90 mb-2">Total Users</div>
-                    <div className="text-4xl font-bold">{stats.totalUsers}</div>
-                    <div className="mt-2 text-xs opacity-75">Registered accounts</div>
+                  <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                      <div className="text-gray-500 text-sm font-medium uppercase tracking-wide">Total Users</div>
+                      <div className="text-3xl font-bold text-gray-900 mt-2">{stats.totalUsers}</div>
+                    </div>
+                    <div className="mt-4 text-xs text-gray-400">Registered accounts</div>
                   </div>
-                  <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
-                    <div className="text-sm opacity-90 mb-2">Total Courses</div>
-                    <div className="text-4xl font-bold">{stats.totalCourses}</div>
-                    <div className="mt-2 text-xs opacity-75">Available courses</div>
+                  <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                      <div className="text-gray-500 text-sm font-medium uppercase tracking-wide">Total Courses</div>
+                      <div className="text-3xl font-bold text-gray-900 mt-2">{stats.totalCourses}</div>
+                    </div>
+                    <div className="mt-4 text-xs text-gray-400">Available learning paths</div>
                   </div>
-                  <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-lg p-6 text-white">
-                    <div className="text-sm opacity-90 mb-2">Submissions</div>
-                    <div className="text-4xl font-bold">{stats.totalSubmissions}</div>
-                    <div className="mt-2 text-xs opacity-75">Total attempts</div>
+                  <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                      <div className="text-gray-500 text-sm font-medium uppercase tracking-wide">Submissions</div>
+                      <div className="text-3xl font-bold text-gray-900 mt-2">{stats.totalSubmissions}</div>
+                    </div>
+                    <div className="mt-4 text-xs text-gray-400">Total attempts</div>
                   </div>
                 </div>
 
                 {/* Quick Actions */}
-                <div className="bg-white rounded-lg shadow p-6 mb-6">
-                  <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="mb-8">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <button
                       onClick={() => {
                         setEditingCourse(null);
                         setShowCourseModal(true);
                       }}
-                      className="p-4 border-2 border-green-200 rounded-lg hover:bg-green-50 transition-colors"
+                      className="group p-4 bg-white border border-gray-200 rounded-xl hover:border-gray-400 hover:shadow-sm transition-all text-left"
                     >
-                      <div className="text-3xl mb-2">➕</div>
-                      <div className="font-semibold">Add Course</div>
+                      <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 group-hover:bg-gray-100">
+                        <span className="text-lg">➕</span>
+                      </div>
+                      <div className="font-semibold text-gray-900">Add New Course</div>
+                      <div className="text-xs text-gray-500 mt-1">Create a new learning path</div>
                     </button>
+
                     <button
                       onClick={() => setActiveTab('users')}
-                      className="p-4 border-2 border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+                      className="group p-4 bg-white border border-gray-200 rounded-xl hover:border-gray-400 hover:shadow-sm transition-all text-left"
                     >
-                      <div className="text-3xl mb-2">👥</div>
-                      <div className="font-semibold">View Users</div>
+                      <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 group-hover:bg-gray-100">
+                        <span className="text-lg">👥</span>
+                      </div>
+                      <div className="font-semibold text-gray-900">Manage Users</div>
+                      <div className="text-xs text-gray-500 mt-1">View registered students</div>
                     </button>
+
                     <button
                       onClick={() => setActiveTab('submissions')}
-                      className="p-4 border-2 border-orange-200 rounded-lg hover:bg-orange-50 transition-colors"
+                      className="group p-4 bg-white border border-gray-200 rounded-xl hover:border-gray-400 hover:shadow-sm transition-all text-left"
                     >
-                      <div className="text-3xl mb-2">📝</div>
-                      <div className="font-semibold">View Submissions</div>
+                      <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 group-hover:bg-gray-100">
+                        <span className="text-lg">📝</span>
+                      </div>
+                      <div className="font-semibold text-gray-900">Review Submissions</div>
+                      <div className="text-xs text-gray-500 mt-1">Grade student work</div>
                     </button>
                   </div>
                 </div>
 
                 {/* Recent Activity */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-bold mb-4">Recent Submissions</h3>
-                  <div className="space-y-2">
-                    {submissions.slice(0, 5).map(sub => (
-                      <div key={sub.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <div className="font-semibold">{sub.candidateName}</div>
-                          <div className="text-sm text-gray-600">{sub.challengeId}</div>
+                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-100">
+                    <h3 className="text-lg font-bold text-gray-900">Recent Submissions</h3>
+                  </div>
+                  <div className="divide-y divide-gray-100">
+                    {submissions.length === 0 ? (
+                      <div className="p-6 text-center text-gray-500 text-sm">No recent activity</div>
+                    ) : (
+                      submissions.slice(0, 5).map(sub => (
+                        <div key={sub.id} className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold text-gray-600">
+                              {sub.candidateName?.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="font-medium text-sm text-gray-900">{sub.candidateName}</div>
+                              <div className="text-xs text-gray-500">{sub.challengeId}</div>
+                            </div>
+                          </div>
+                          <div className={`px-2 py-1 rounded text-xs font-medium border ${sub.status === 'passed' ? 'bg-green-50 border-green-200 text-green-700' :
+                            sub.status === 'failed' ? 'bg-red-50 border-red-200 text-red-700' :
+                              'bg-yellow-50 border-yellow-200 text-yellow-700'
+                            }`}>
+                            {sub.status || 'PENDING'}
+                          </div>
                         </div>
-                        <div className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                          sub.status === 'passed' ? 'bg-green-100 text-green-700' :
-                          sub.status === 'failed' ? 'bg-red-100 text-red-700' :
-                          'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          {sub.status}
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
@@ -1067,11 +1130,10 @@ export default function AdminDashboard() {
                             <select
                               value={user.role || 'student'}
                               onChange={(e) => handleChangeUserRole(user.id || user.userId, e.target.value)}
-                              className={`px-3 py-1 rounded-full text-xs font-semibold border-2 ${
-                                user.role === 'admin' 
-                                  ? 'bg-purple-100 text-purple-800 border-purple-300' 
-                                  : 'bg-blue-100 text-blue-800 border-blue-300'
-                              }`}
+                              className={`px-3 py-1 rounded-full text-xs font-semibold border-2 ${user.role === 'admin'
+                                ? 'bg-purple-100 text-purple-800 border-purple-300'
+                                : 'bg-blue-100 text-blue-800 border-blue-300'
+                                }`}
                             >
                               <option value="student">Student</option>
                               <option value="admin">Admin</option>
@@ -1098,53 +1160,64 @@ export default function AdminDashboard() {
             {activeTab === 'courses' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold">Courses Management</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Courses</h2>
                   <button
                     onClick={() => {
                       setEditingCourse(null);
                       setShowCourseModal(true);
                     }}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-black text-sm font-medium transition-colors"
                   >
                     + Add New Course
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {courses.map(course => (
-                    <div key={course.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                      <div className="h-32 bg-gradient-to-br from-indigo-500 to-purple-600"></div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-bold mb-2">{course.title}</h3>
-                        <p className="text-gray-600 text-sm mb-4">{course.description}</p>
-                        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                          <span>{course.totalLevels || 0} Levels</span>
-                          <span>{course.difficulty || 'N/A'}</span>
+                    <div key={course.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-gray-400 hover:shadow-sm transition-all group">
+                      <div className="h-24 bg-gray-100 flex items-center justify-center border-b border-gray-100">
+                        <span className="text-4xl">📚</span>
+                      </div>
+                      <div className="p-5">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{course.title}</h3>
+                          <span className="px-2 py-0.5 rounded text-[10px] uppercase font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+                            {course.difficulty || 'General'}
+                          </span>
                         </div>
+                        <p className="text-gray-600 text-xs mb-4 line-clamp-2">{course.description}</p>
+
+                        <div className="flex items-center text-xs text-gray-500 mb-4">
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                            {course.totalLevels || 0} Levels
+                          </span>
+                        </div>
+
                         <div className="flex flex-col gap-2">
                           <button
                             onClick={() => {
                               setSelectedQuestionCourseId(course.id);
                               setActiveTab('questions');
                             }}
-                            className="w-full px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
+                            className="w-full px-3 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-black font-medium transition-colors"
                           >
-                            📝 Manage Questions
+                            Manage Questions
                           </button>
-                          <div className="flex gap-2">
+                          <div className="grid grid-cols-2 gap-2">
                             <button
                               onClick={() => {
                                 setEditingCourse(course);
                                 setShowCourseModal(true);
                               }}
-                              className="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
+                              className="px-3 py-2 bg-white border border-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors"
                             >
-                              ✏️ Edit
+                              Edit
                             </button>
                             <button
                               onClick={() => handleDeleteCourse(course.id)}
-                              className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+                              className="px-3 py-2 bg-white border border-red-200 text-red-600 text-sm rounded-lg hover:bg-red-50 transition-colors"
                             >
-                              🗑️ Delete
+                              Delete
                             </button>
                           </div>
                         </div>
@@ -1169,11 +1242,10 @@ export default function AdminDashboard() {
                         <button
                           key={course.id}
                           onClick={() => setSelectedQuestionCourseId(course.id)}
-                          className={`w-full text-left px-3 py-2 rounded-lg border transition-colors ${
-                            selectedQuestionCourseId === course.id
-                              ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
-                              : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                          }`}
+                          className={`w-full text-left px-3 py-2 rounded-lg border transition-colors ${selectedQuestionCourseId === course.id
+                            ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+                            : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                            }`}
                         >
                           <div className="font-semibold leading-tight">{course.title}</div>
                           <div className="text-xs text-gray-500">{course.totalLevels || 0} levels</div>
@@ -1191,7 +1263,7 @@ export default function AdminDashboard() {
                         courseId={selectedQuestionCourse.id}
                         courseName={selectedQuestionCourse.title}
                         standalone
-                        onClose={() => {}}
+                        onClose={() => { }}
                       />
                     ) : (
                       <div className="bg-white rounded-lg shadow p-6 text-center text-gray-600">
@@ -1215,11 +1287,10 @@ export default function AdminDashboard() {
                           setSubmissionViewMode('grouped');
                           loadSubmissions();
                         }}
-                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                          submissionViewMode === 'grouped'
-                            ? 'bg-white text-indigo-600 shadow'
-                            : 'text-gray-600 hover:text-gray-900'
-                        }`}
+                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${submissionViewMode === 'grouped'
+                          ? 'bg-white text-indigo-600 shadow'
+                          : 'text-gray-600 hover:text-gray-900'
+                          }`}
                       >
                         📋 Grouped by Test
                       </button>
@@ -1228,11 +1299,10 @@ export default function AdminDashboard() {
                           setSubmissionViewMode('individual');
                           loadSubmissions();
                         }}
-                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                          submissionViewMode === 'individual'
-                            ? 'bg-white text-indigo-600 shadow'
-                            : 'text-gray-600 hover:text-gray-900'
-                        }`}
+                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${submissionViewMode === 'individual'
+                          ? 'bg-white text-indigo-600 shadow'
+                          : 'text-gray-600 hover:text-gray-900'
+                          }`}
                       >
                         📄 Individual
                       </button>
@@ -1248,14 +1318,14 @@ export default function AdminDashboard() {
                     )}
                   </div>
                 </div>
-                
+
                 {submissionViewMode === 'grouped' ? (
-                  <GroupedSubmissionsList 
+                  <GroupedSubmissionsList
                     sessions={groupedSessions}
                     onViewDetails={handleViewSubmissionDetails}
                   />
                 ) : (
-                  <SubmissionList 
+                  <SubmissionList
                     submissions={filteredSubmissions}
                     onReEvaluate={handleReEvaluate}
                     onDelete={handleDeleteSubmission}
@@ -1322,11 +1392,10 @@ export default function AdminDashboard() {
                           {assets.slice(0, 10).map((asset) => (
                             <label
                               key={asset.filename}
-                              className={`border rounded-lg p-3 cursor-pointer flex items-start gap-3 transition ${
-                                aiSelectedAssets.includes(asset.filename)
-                                  ? 'border-indigo-500 bg-indigo-50'
-                                  : 'border-gray-200 hover:border-gray-300'
-                              }`}
+                              className={`border rounded-lg p-3 cursor-pointer flex items-start gap-3 transition ${aiSelectedAssets.includes(asset.filename)
+                                ? 'border-indigo-500 bg-indigo-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                                }`}
                             >
                               <input
                                 type="checkbox"
@@ -1365,11 +1434,10 @@ export default function AdminDashboard() {
                             key={resource.id}
                             onClick={() => handleAiLibraryToggle(resource.id)}
                             type="button"
-                            className={`text-left border rounded-lg p-3 transition ${
-                              aiSelectedLibraries.includes(resource.id)
-                                ? 'border-green-500 bg-green-50'
-                                : 'border-gray-200 hover:border-gray-300'
-                            }`}
+                            className={`text-left border rounded-lg p-3 transition ${aiSelectedLibraries.includes(resource.id)
+                              ? 'border-green-500 bg-green-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                              }`}
                           >
                             <div className="flex items-center justify-between mb-1">
                               <span className="font-semibold text-gray-900 text-sm">{resource.name}</span>
@@ -1500,123 +1568,18 @@ export default function AdminDashboard() {
 
             {/* Assets Tab */}
             {activeTab === 'assets' && (
-              <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold">Asset Manager</h2>
-                  <label className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer transition">
-                    {uploadingAsset ? 'Uploading...' : '📤 Upload Asset'}
-                    <input
-                      type="file"
-                      multiple
-                      onChange={handleUploadAsset}
-                      disabled={uploadingAsset}
-                      className="hidden"
-                      accept="image/*,.html,.css,.js,.json"
-                    />
-                  </label>
-                </div>
-
-                {/* Search Bar */}
-                <div className="mb-6">
-                  <input
-                    type="text"
-                    placeholder="Search assets by filename..."
-                    value={assetSearch}
-                    onChange={(e) => setAssetSearch(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-
-                {/* Assets Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {assets
-                    .filter(asset => 
-                      asset.filename.toLowerCase().includes(assetSearch.toLowerCase())
-                    )
-                    .map((asset, index) => (
-                      <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                        {/* Preview */}
-                        <div className="h-48 bg-gray-100 flex items-center justify-center">
-                          {asset.type?.startsWith('image/') ? (
-                            <img 
-                              src={asset.url} 
-                              alt={asset.filename}
-                              className="max-h-full max-w-full object-contain"
-                            />
-                          ) : (
-                            <div className="text-center text-gray-500">
-                              <div className="text-4xl mb-2">
-                                {asset.filename.endsWith('.html') ? '📄' : 
-                                 asset.filename.endsWith('.css') ? '🎨' : 
-                                 asset.filename.endsWith('.js') ? '⚡' : 
-                                 asset.filename.endsWith('.json') ? '📋' : '📁'}
-                              </div>
-                              <div className="text-sm">{asset.filename.split('.').pop().toUpperCase()}</div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Info */}
-                        <div className="p-4">
-                          <h3 className="font-semibold truncate mb-2">{asset.filename}</h3>
-                          <div className="text-xs text-gray-600 mb-3">
-                            <div>Size: {(asset.size / 1024).toFixed(2)} KB</div>
-                            <div>Uploaded: {new Date(asset.uploadedAt).toLocaleDateString()}</div>
-                            <div className="text-blue-600 font-mono truncate mt-1">
-                              {asset.path}
-                            </div>
-                          </div>
-
-                          {/* Action Buttons */}
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => copyToClipboard(asset.path)}
-                              className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition"
-                            >
-                              📋 Copy Path
-                            </button>
-                            <button
-                              onClick={() => copyToClipboard(asset.url)}
-                              className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
-                            >
-                              🔗 Copy URL
-                            </button>
-                            <button
-                              onClick={() => handleDeleteAsset(asset.filename)}
-                              className="px-3 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
-                            >
-                              🗑️
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-
-                {/* Empty State */}
-                {assets.length === 0 && (
-                  <div className="text-center py-12 bg-white rounded-lg">
-                    <div className="text-6xl mb-4">📁</div>
-                    <h3 className="text-xl font-semibold mb-2">No Assets Yet</h3>
-                    <p className="text-gray-600 mb-4">Upload images, HTML, CSS, or JS files to get started</p>
-                    <label className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer transition">
-                      Upload Your First Asset
-                      <input
-                        type="file"
-                        multiple
-                        onChange={handleUploadAsset}
-                        disabled={uploadingAsset}
-                        className="hidden"
-                        accept="image/*,.html,.css,.js,.json"
-                      />
-                    </label>
-                  </div>
-                )}
-              </div>
+              <AssetsTab
+                assets={assets}
+                onLoadAssets={loadAssets}
+              />
             )}
-          </>
+          </div>
         )}
       </div>
+
+      {/* End of content */}
+
+
 
       {/* Submission Detail Modal */}
       {detailModal.open && (
