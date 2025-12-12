@@ -101,8 +101,8 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
-app.use(bodyParser.json({ limit: '10mb' })); // Reduced from 50mb for security
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(bodyParser.json({ limit: '50mb' })); // Increased to 50mb
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 // Trust proxy (important for rate limiting behind reverse proxy)
 app.set('trust proxy', 1);

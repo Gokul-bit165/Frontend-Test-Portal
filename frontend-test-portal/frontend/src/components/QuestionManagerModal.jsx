@@ -211,10 +211,15 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
       text = text.slice(1);
     }
 
-    // Auto-detect delimiter from the first line (headers usually don't contain quoted newlines)
+    // Auto-detect delimiter
     const firstLineEnd = text.indexOf('\n');
     const firstLine = text.slice(0, firstLineEnd > -1 ? firstLineEnd : text.length);
-    const delimiter = firstLine.includes('\t') ? '\t' : ',';
+
+    let delimiter = ',';
+    if (firstLine.includes('\t')) delimiter = '\t';
+    else if (firstLine.includes(';') && !firstLine.includes(',')) delimiter = ';';
+
+    console.log(`[CSV Parse] Detected delimiter: "${delimiter === '\t' ? '\\t' : delimiter}"`);
 
     const rows = [];
     let currentRow = [];
@@ -264,6 +269,7 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
 
     // Extract headers (clean them up)
     const headers = rows[0].map(h => h.trim().replace(/^"|"$/g, '').replace(/^\ufeff/, ''));
+    console.log('[CSV Parse] Headers:', headers);
 
     // Map rows to objects
     return rows.slice(1).map(values => {
@@ -332,7 +338,7 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
         console.log('JSON parse failed, trying CSV/TSV...');
         const csvRows = parseCSV(levelQuestionData);
         if (csvRows.length > 0) {
-          parsedData = csvRows.map(row => {
+          parsedData = csvRows.map((row, idx) => {
             // Helper to find value by checking multiple possible keys case-insensitively
             const getValue = (keys) => {
               if (typeof keys === 'string') keys = [keys];
@@ -353,12 +359,16 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
             const instructions = getValue(['instructions', 'instruction', 'instr']);
             const description = getValue(['description', 'desc', 'descriptior', 'descript']);
 
+            // Debug missing crucial fields
+            const title = getValue(['title', 'name']);
+            if (!title) console.warn(`[CSV Map] Row ${idx} missing title. Keys present:`, Object.keys(row));
+
             return {
               id: getValue(['id', 'questionId']) || `q-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
               courseId: getValue(['courseId', 'course']) || courseId,
               level: parseInt(getValue(['level']) || selectedLevel),
               questionNumber: parseInt(getValue(['questionNumber', 'questionN', 'qNo', 'num']) || 0),
-              title: getValue(['title', 'name']),
+              title: title,
               description: description || '',
               instructions: instructions || '',
               points: parseInt(getValue(['points', 'score']) || 100),
@@ -389,7 +399,10 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
         throw new Error('Data must be an array of questions (parsing returned 0 items).');
       }
 
+      console.log(`[Upload] Sending ${parsedData.length} items to backend...`);
       const response = await uploadLevelQuestionBank(courseId, selectedLevel, parsedData, currentRandomizeCount);
+      console.log('[Upload] Response:', response.data);
+
       const { added, updated, skipped, errors } = response.data || {};
 
       if (skipped > 0 || (errors && errors.length > 0)) {
@@ -408,6 +421,7 @@ export default function QuestionManagerModal({ courseId, courseName, onClose, st
       await loadQuestions();
       await loadLevelSettings();
     } catch (error) {
+      console.error('Upload catch:', error);
       addToast('Upload failed: ' + (error.response?.data?.error || error.message), 'error');
     } finally {
       setUploading(false);

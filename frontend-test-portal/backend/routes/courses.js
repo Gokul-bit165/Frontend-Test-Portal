@@ -1105,7 +1105,7 @@ router.get('/:courseId/levels/:level/template', (req, res) => {
  * Upload question bank for a specific level
  * Body: { questions: [...], randomizeCount: 2 }
  */
-router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
+router.post('/:courseId/levels/:level/questions/bulk', async (req, res) => {
   try {
     const { courseId, level } = req.params;
     const { questions, randomizeCount } = req.body;
@@ -1140,14 +1140,15 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
     let skippedCount = 0;
     const errors = [];
 
-    questions.forEach((question, index) => {
+    // Use for...of loop to handle async/await
+    for (const [index, question] of questions.entries()) {
       try {
         // Validate required fields
         if (!question.id || !question.title) {
           console.warn(`[Bulk Upload] Skipping Q${index}: Missing id/title`, question);
           errors.push(`Question ${index + 1}: Missing required fields (id, title)`);
           skippedCount++;
-          return;
+          continue;
         }
 
         // Force the level to match the URL parameter
@@ -1155,27 +1156,50 @@ router.post('/:courseId/levels/:level/questions/bulk', (req, res) => {
           ...question,
           courseId: courseId,
           level: parseInt(level),
-          createdAt: question.createdAt || new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          createdAt: question.createdAt || new Date(),
+          updatedAt: new Date()
         };
 
-        // Check if question ID already exists
+        // 1. Update/Create in Database
+        let dbResult = null;
+        try {
+          // Check if exists in DB first (to decide whether to update or create)
+          // Note: create() handles ID collision by erroring usually, but our model doesn't seem to have upsert. 
+          // We will try update first, if null/error, try create.
+          const existing = await ChallengeModel.findById(questionData.id);
+
+          if (existing) {
+            await ChallengeModel.update(questionData.id, questionData);
+            updatedCount++;
+          } else {
+            await ChallengeModel.create(questionData);
+            addedCount++;
+          }
+        } catch (dbErr) {
+          console.error(`[Bulk Upload] DB Error Q${index} (${questionData.id}):`, dbErr.message);
+          // If DB fails, we still try to update JSON for legacy support, or we should treat it as error?
+          // Let's treat it as error to ensure consistency.
+          throw dbErr;
+        }
+
+        // 2. Update/Create in JSON File (Legacy/Backup)
         const existingIndex = challenges.findIndex(c => c.id === question.id);
         if (existingIndex !== -1) {
           // Update existing question
-          challenges[existingIndex] = { ...challenges[existingIndex], ...questionData };
-          updatedCount++;
+          challenges[existingIndex] = { ...challenges[existingIndex], ...questionData, updatedAt: new Date().toISOString() };
         } else {
           // Add new question
-          challenges.push(questionData);
-          addedCount++;
+          challenges.push({ ...questionData, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
         }
+
       } catch (err) {
         console.error(`[Bulk Upload] Error processing Q${index}:`, err);
         errors.push(`Question ${index + 1}: ${err.message}`);
         skippedCount++;
+        // If we counted it as added/updated before error, we ideally rollback, but simple decrement for now 
+        // (though if DB succeeded but JSON failed, we are in inconsistent state. Priority is DB).
       }
-    });
+    }
 
     console.log(`[Bulk Upload] Complete. Added: ${addedCount}, Updated: ${updatedCount}, Skipped: ${skippedCount}`);
 
